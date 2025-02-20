@@ -17,7 +17,7 @@ Thumbs.db
 # Frontend (Angular)
 node_modules/
 dist/
-.angular/cache/
+.angular/
 *.json-c  # Angular Language Service cache
 .editorconfig # Si no quieres que se versionen las configs de editor
 
