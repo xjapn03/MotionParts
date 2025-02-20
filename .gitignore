@@ -1,0 +1,69 @@
+# Generales
+.DS_Store
+Thumbs.db
+.idea/        # IntelliJ IDEA
+*.iws
+*.iml
+*.ipr
+.vscode/     # VS Code
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Frontend (Angular)
+node_modules/
+dist/
+.angular/cache/
+*.json-c  # Angular Language Service cache
+.editorconfig # Si no quieres que se versionen las configs de editor
+
+# Backend (Spring Boot)
+target/
+build/       # General build artifacts
+*.log
+.mvn/wrapper/ # Maven Wrapper (si usas Maven)
+.gradle/caches/
+.gradle/daemon/
+.gradle/wrapper/gradle-wrapper.jar # Se versiona el wrapper, pero no la caché
+!gradle/wrapper/gradle-wrapper.jar # Excepción para el wrapper JAR
+bin/         # Binarios de compilación (generalmente en target, pero puede haber configuraciones distintas)
+!**/src/main/**/bin/   # Excepción para binarios de main (si es necesario)
+!**/src/test/**/bin/   # Excepción para binarios de test (si es necesario)
+
+# Archivos de configuración sensibles (¡MUY IMPORTANTE!)
+application*.properties
+application*.yml
+.env  # Archivos de entorno (si los usas)
+
+# Sistemas operativos y archivos temporales
+.envrc
+*.swp
+*~
+*.tmp
+*.bak
+*.lock
+
+# IDEs y editores (puedes ajustar según tu preferencia)
+out/
+!**/src/main/**/out/   # Excepción para out de main (si es necesario)
+!**/src/test/**/out/   # Excepción para out de test (si es necesario)
+/nbproject/private/   # NetBeans
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Otros
+HELP.md       # Archivo de ayuda (si no quieres que se versionen los cambios)
+.gitattributes # Archivo de atributos Git (si no quieres que se versionen los cambios)
+
+# Excepciones para build (si usas subdirectorios específicos)
+!**/src/main/**/build/  # No ignorar los build dentro de src/main
+!**/src/test/**/build/  # No ignorar los build dentro de src/test
+
+# Archivos específicos que SI quieres versionar (ejemplos)
+# !/path/to/important/file.txt
