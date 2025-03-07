@@ -10,17 +10,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF en APIs REST
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/public/**").permitAll() // Permite acceso sin autenticación a /login
+                .requestMatchers("/public/**", "/api/auth/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("http://localhost:4200", true) // 🔥 Redirige a Angular tras login
-                .permitAll()
-            )
             .logout(logout -> logout.permitAll());
-
+    
         return http.build();
     }
     
