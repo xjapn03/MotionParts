@@ -15,14 +15,17 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // Inyectar AuthService en el constructor
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        String token = authService.authenticate(request);
-        return ResponseEntity.ok(new AuthResponse(token));
+        try {
+            String token = authService.authenticate(request);
+            return ResponseEntity.ok(new AuthResponse(token));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
     }
 }
