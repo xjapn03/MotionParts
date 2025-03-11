@@ -35,7 +35,7 @@ bin/         # Binarios de compilación (generalmente en target, pero puede habe
 !**/src/test/**/bin/   # Excepción para binarios de test (si es necesario)
 
 # Archivos de configuración sensibles (¡MUY IMPORTANTE!)
-application*.properties
+#application*.properties
 application*.yml
 .env  # Archivos de entorno (si los usas)
 

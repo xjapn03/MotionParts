@@ -14,7 +14,6 @@ public class User {
     private String email;
     private String password;
     private String username;
-    private String last_name;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
@@ -35,8 +34,8 @@ public class User {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
-    public String getLastName() { return last_name; }
-    public void setLastName(String last_name) { this.last_name = last_name; }
+    //public String getLastName() { return last_name; }
+    //public void setLastName(String last_name) { this.last_name = last_name; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
