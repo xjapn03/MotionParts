@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-purple-800 p-6">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Lista de Productos</h2>
+
+  <!-- Filtros -->
+  <div class="flex flex-wrap gap-3 justify-center mb-6">
+    <input 
+      type="text" 
+      placeholder="Buscar producto..." 
+      [formControl]="searchTerm"
+      class="w-64 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
+
+    <select [formControl]="categoriaFiltro" class="border rounded-lg p-2">
+      <option value="">Todas las categorías</option>
+      <option value="Electrónica">Electrónica</option>
+      <option value="Accesorios">Accesorios</option>
+    </select>
+
+    <select [formControl]="precioFiltro" class="border rounded-lg p-2">
+      <option value="">Cualquier precio</option>
+      <option value="500">Menos de $500</option>
+      <option value="1000">Menos de $1000</option>
+      <option value="2000">Menos de $2000</option>
+    </select>
+
+    <select [formControl]="ordenarPor" class="border rounded-lg p-2">
+      <option value="">Ordenar</option>
+      <option value="asc">A-Z</option>
+      <option value="desc">Z-A</option>
+    </select>
+  </div>
+
+  <!-- Lista de productos -->
+  <div class="container mx-auto max-w-6xl">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div *ngFor="let producto of productosFiltrados" 
+           class="bg-white shadow-lg rounded-xl overflow-hidden transform transition hover:scale-105 hover:shadow-2xl cursor-pointer"
+           (click)="verDetalles(producto)">
+        
+        <img [src]="producto.imagenes[0]" alt="{{ producto.nombre }}" class="w-full h-48 object-cover">
+        
+        <div class="p-4">
+          <h3 class="text-xl font-semibold text-gray-700">{{ producto.nombre }}</h3>
+          <p class="text-sm text-gray-500">{{ producto.categoria }}</p>
+          <p class="text-blue-600 font-semibold text-lg mt-2">${{ producto.precio }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DETALLES DEL PRODUCTO -->
+  <div *ngIf="productoSeleccionado" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg p-6 max-w-2xl relative">
+      <button (click)="cerrarModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+        ✖
+      </button>
+      
+      <h2 class="text-2xl font-bold text-gray-800">{{ productoSeleccionado.nombre }}</h2>
+      
+      <!-- Slider de imágenes -->
+      <div class="flex space-x-2 overflow-x-auto mt-4">
+        <img *ngFor="let img of productoSeleccionado.imagenes" [src]="img" 
+             class="w-24 h-24 object-cover rounded-lg cursor-pointer border border-gray-300">
+      </div>
+
+      <p class="mt-4 text-gray-600">{{ productoSeleccionado.descripcion }}</p>
+      <p class="text-xl text-blue-600 font-bold mt-2">${{ productoSeleccionado.precio }}</p>
+    </div>
+  </div>
+</div>
