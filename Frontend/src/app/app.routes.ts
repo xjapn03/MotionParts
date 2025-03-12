@@ -5,6 +5,6 @@ import { LoginComponent } from './modules/home/login/login.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'home', component: HomeComponent }, // Página principal
-  { path: '**', redirectTo: 'login' }, // Redirigir a login por defecto
+  { path: '**', redirectTo: 'home' }, // Redirigir a login por defecto
   { path: '', component: HomeComponent },
 ];
