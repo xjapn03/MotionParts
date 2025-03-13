@@ -1,7 +1,5 @@
 package com.motionParts.ecommerce.Models;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 
 @Entity
