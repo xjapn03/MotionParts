@@ -19,83 +19,76 @@ export class ProductosComponent {
 
   productos = [
     { 
-      nombre: 'Laptop', 
+      nombre: 'Filtros de aire', 
       precio: 2500, 
-      categoria: 'Electrónica', 
+      categoria: 'Motor y Componentes', 
       descripcion: 'Potente laptop con procesador de última generación y pantalla HD.',
       imagenes: [
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqrIaOoNLKb_PGfc_nS4s3IVBC8x7x9nYOqQ&s',
-        'https://m.media-amazon.com/images/I/81ZKz5D1t2L._AC_SX679_.jpg'
+        'https://www.rodi.es/blog/wp-content/uploads/2018/03/filtro-aire-coche-revision.jpg',
       ]
     },
     { 
-      nombre: 'Teléfono', 
+      nombre: 'Baterias', 
       precio: 1200, 
-      categoria: 'Electrónica', 
+      categoria: 'Sistema Eléctrico y Electrónico', 
       descripcion: 'Teléfono inteligente con cámara de alta resolución y batería de larga duración.',
       imagenes: [
-        'https://m.media-amazon.com/images/I/71S8U9VzLTL._AC_UF894,1000_QL80_.jpg',
-        'https://m.media-amazon.com/images/I/71pVZ6DdOVL._AC_SX679_.jpg'
+        'https://walmartsv.vtexassets.com/arquivos/ids/298572/Bateria-LTH-24r530-amp-12-v-1-4194.jpg?v=638145022476200000',
+        
       ]
     },
     { 
-      nombre: 'Tablet', 
+      nombre: 'Radiadores', 
       precio: 800, 
-      categoria: 'Electrónica', 
+      categoria: 'Enfriamiento y Calefacción', 
       descripcion: 'Tablet con pantalla táctil de 10 pulgadas y almacenamiento de 128GB.',
       imagenes: [
-        'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-2022-hero-blue-wifi-select',
-        'https://m.media-amazon.com/images/I/61i8Vjb17SL._AC_SX679_.jpg'
+        'https://i5.walmartimages.com/seo/Ledkingdomus-Radiator-For-2010-2016-Chevy-Cruze-Eco-LTZ-LS-LT-1-4L-1-8L-Aluminum_670507b6-8abf-4307-8612-37c70465f223.6c569cfac453652d2f54e72b213ca67e.jpeg'
       ]
     },
     { 
-      nombre: 'Tablet', 
+      nombre: 'Llantas', 
       precio: 800, 
-      categoria: 'Electrónica', 
+      categoria: 'Llantas y Rines', 
       descripcion: 'Tablet con pantalla táctil de 10 pulgadas y almacenamiento de 128GB.',
       imagenes: [
-        'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-2022-hero-blue-wifi-select',
-        'https://m.media-amazon.com/images/I/61i8Vjb17SL._AC_SX679_.jpg'
+        'https://www.rojassa.com/wp-content/uploads/2014/10/medida-de-llantas-para-su-carro.jpg'
       ]
     },
     { 
-      nombre: 'Tablet', 
+      nombre: 'Faros delanteros', 
       precio: 800, 
-      categoria: 'Electrónica', 
+      categoria: 'Iluminación y Carrocería', 
       descripcion: 'Tablet con pantalla táctil de 10 pulgadas y almacenamiento de 128GB.',
       imagenes: [
-        'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-2022-hero-blue-wifi-select',
-        'https://m.media-amazon.com/images/I/61i8Vjb17SL._AC_SX679_.jpg'
+        'https://m.media-amazon.com/images/I/71dMY0fvyDL._AC_UF894,1000_QL80_.jpg'
       ]
     },
     { 
-      nombre: 'Tablet', 
+      nombre: 'Cajas de cambios', 
       precio: 800, 
-      categoria: 'Electrónica', 
+      categoria: 'Transmisión y Embrague', 
       descripcion: 'Tablet con pantalla táctil de 10 pulgadas y almacenamiento de 128GB.',
       imagenes: [
-        'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-2022-hero-blue-wifi-select',
-        'https://m.media-amazon.com/images/I/61i8Vjb17SL._AC_SX679_.jpg'
+        'https://static.motor.es/fotos-diccionario/2019/07//caja-de-cambios_1564050378.jpg'
       ]
     },
     { 
-      nombre: 'Tablet', 
+      nombre: 'Bombas de freno', 
       precio: 800, 
-      categoria: 'Electrónica', 
+      categoria: 'Frenos y Seguridad', 
       descripcion: 'Tablet con pantalla táctil de 10 pulgadas y almacenamiento de 128GB.',
       imagenes: [
-        'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-2022-hero-blue-wifi-select',
-        'https://m.media-amazon.com/images/I/61i8Vjb17SL._AC_SX679_.jpg'
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnwUOWcio9OHJYqHu_1DWw0AZMxy6CgfsBWw&s'
       ]
     },
     { 
-      nombre: 'Tablet', 
+      nombre: 'Rótulas', 
       precio: 800, 
-      categoria: 'Electrónica', 
+      categoria: 'Suspensión y Dirección', 
       descripcion: 'Tablet con pantalla táctil de 10 pulgadas y almacenamiento de 128GB.',
       imagenes: [
-        'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-2022-hero-blue-wifi-select',
-        'https://m.media-amazon.com/images/I/61i8Vjb17SL._AC_SX679_.jpg'
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTArwG26C4dQPYLCYCOz6lUuNN-Ccy-AQtdlg&s'
       ]
     }
   ];

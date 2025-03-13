@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-purple-800 p-6">
-  <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Lista de Productos</h2>
+  <h2 class="text-3xl font-bold text-center text-white mb-6">Lista de Productos</h2>
 
   <!-- Filtros -->
   <div class="flex flex-wrap gap-3 justify-center mb-6">
@@ -12,8 +12,15 @@
 
     <select [formControl]="categoriaFiltro" class="border rounded-lg p-2">
       <option value="">Todas las categorías</option>
-      <option value="Electrónica">Electrónica</option>
-      <option value="Accesorios">Accesorios</option>
+      <option value="Motor y Componentes">Motor y Componentes</option>
+      <option value="Sistema Eléctrico y Electrónico">Sistema Eléctrico y Electrónico</option>
+      <option value="Enfriamiento y Calefacción">Enfriamiento y Calefacción</option>
+      <option value="Llantas y Rines">Llantas y Rines</option>
+      <option value="Iluminación y Carrocería">Iluminación y Carrocería</option>
+      <option value="Transmisión y Embrague">Transmisión y Embrague</option>
+      <option value="Frenos y Seguridad">Frenos y Seguridad</option>
+      <option value="Suspensión y Dirección">Suspensión y Dirección</option>
+      <option value="Suspensión y Dirección">Escape y Emisiones</option>
     </select>
 
     <select [formControl]="precioFiltro" class="border rounded-lg p-2">
