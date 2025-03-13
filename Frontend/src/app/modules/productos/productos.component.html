@@ -12,28 +12,17 @@
 
     <select [formControl]="categoriaFiltro" class="border rounded-lg p-2">
       <option value="">Todas las categorías</option>
-      <option value="Motor y Componentes">Motor y Componentes</option>
-      <option value="Sistema Eléctrico y Electrónico">Sistema Eléctrico y Electrónico</option>
-      <option value="Enfriamiento y Calefacción">Enfriamiento y Calefacción</option>
-      <option value="Llantas y Rines">Llantas y Rines</option>
-      <option value="Iluminación y Carrocería">Iluminación y Carrocería</option>
-      <option value="Transmisión y Embrague">Transmisión y Embrague</option>
-      <option value="Frenos y Seguridad">Frenos y Seguridad</option>
-      <option value="Suspensión y Dirección">Suspensión y Dirección</option>
-      <option value="Suspensión y Dirección">Escape y Emisiones</option>
+      <!-- Otras opciones... -->
     </select>
 
     <select [formControl]="precioFiltro" class="border rounded-lg p-2">
       <option value="">Cualquier precio</option>
-      <option value="500">Menos de $500</option>
-      <option value="1000">Menos de $1000</option>
-      <option value="2000">Menos de $2000</option>
+      <!-- Otras opciones... -->
     </select>
 
     <select [formControl]="ordenarPor" class="border rounded-lg p-2">
       <option value="">Ordenar</option>
-      <option value="asc">A-Z</option>
-      <option value="desc">Z-A</option>
+      <!-- Otras opciones... -->
     </select>
   </div>
 
@@ -56,22 +45,42 @@
   </div>
 
   <!-- MODAL DETALLES DEL PRODUCTO -->
-  <div *ngIf="productoSeleccionado" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white rounded-lg p-6 max-w-2xl relative">
-      <button (click)="cerrarModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
-        ✖
-      </button>
-      
-      <h2 class="text-2xl font-bold text-gray-800">{{ productoSeleccionado.nombre }}</h2>
-      
-      <!-- Slider de imágenes -->
-      <div class="flex space-x-2 overflow-x-auto mt-4">
-        <img *ngFor="let img of productoSeleccionado.imagenes" [src]="img" 
-             class="w-24 h-24 object-cover rounded-lg cursor-pointer border border-gray-300">
+  <div *ngIf="productoSeleccionado" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 p-6">
+    <div class="product-container p-6 bg-white shadow-lg rounded-xl max-w-4xl mx-auto z-50">
+      <!-- Imagen principal -->
+      <div class="image-container">
+        <img [src]="productoSeleccionado.imagenes[0]" alt="Main Product Image" class="main-image w-full h-64 object-cover">
+        <!-- Imágenes secundarias -->
+        <div class="thumbnail-images mt-4">
+          <img *ngFor="let img of productoSeleccionado.imagenes; let i = index" 
+               [src]="img" 
+               class="thumbnail w-20 h-20 object-cover mr-2 cursor-pointer" 
+               (click)="setMainImage(i)">
+        </div>
       </div>
 
-      <p class="mt-4 text-gray-600">{{ productoSeleccionado.descripcion }}</p>
-      <p class="text-xl text-blue-600 font-bold mt-2">${{ productoSeleccionado.precio }}</p>
+      <div class="product-info mt-4">
+        <h3 class="text-2xl font-semibold text-gray-700">{{ productoSeleccionado.nombre }}</h3>
+        <p class="text-gray-600">{{ productoSeleccionado.descripcion }}</p>
+        <p class="text-lg text-blue-600 font-semibold mt-2">${{ productoSeleccionado.precio }}</p>
+
+        <!-- Selector de cantidad -->
+        <div class="quantity-selector mt-4">
+          <label for="cantidad" class="block text-lg">Cantidad:</label>
+          <button (click)="decreaseQuantity()" class="quantity-btn text-2xl p-2 bg-gray-200 rounded-full">-</button>
+          <input type="number" [(ngModel)]="cantidad" min="1" id="cantidad" class="quantity-input p-2 border rounded-md w-16 text-center mx-2">
+          <button (click)="increaseQuantity()" class="quantity-btn text-2xl p-2 bg-gray-200 rounded-full">+</button>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="mt-4 flex gap-4">
+          <button (click)="buyNow()" class="buy-now-btn px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Comprar Ahora</button>
+          <button (click)="addToCart()" class="add-to-cart-btn px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Agregar al Carrito</button>
+        </div>
+
+        <!-- Botón para cerrar el modal -->
+        <button (click)="cerrarModal()" class="mt-4 text-red-500 hover:text-red-700">Cerrar</button>
+      </div>
     </div>
   </div>
 </div>

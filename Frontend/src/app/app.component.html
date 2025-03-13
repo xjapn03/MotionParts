@@ -12,8 +12,8 @@
                         <div class="ml-10 flex items-baseline space-x-4">
                             <a href="/home" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Inicio</a>
                             <a href="/products" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Productos</a>
-                            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contacto</a>
-                            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">A cerca</a>
+                            <a href="/contact" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Contacto</a>
+                            <a href="" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">A cerca</a>
                             <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">FAQ</a>
                         </div>
                     </div>
@@ -22,21 +22,23 @@
                     <div class="ml-4 flex items-center md:ml-6">
                         <!-- Botón de Notificaciones -->
                         <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none">
-                            <span class="absolute -inset-1.5"></span>
+                            <span  class="absolute -inset-1.5"></span>
                             <span class="sr-only">View notifications</span>
                             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                             </svg>
                         </button>
-                        <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none">
-                            <span class="absolute -inset-1.5"></span>
-                            <span class="sr-only">CarShop</span>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                <path d="M3 2.5C2.72386 2.5 2.5 2.72386 2.5 3C2.5 3.27614 2.72386 3.5 3 3.5V2.5ZM5 3L5.49853 2.96165C5.47849 2.70115 5.26127 2.5 5 2.5V3ZM21 6L21.4969 6.05522C21.5126 5.91386 21.4674 5.77251 21.3726 5.66654C21.2777 5.56057 21.1422 5.5 21 5.5V6ZM5.23077 6L4.73224 6.03835L5.23077 6ZM18.3387 15.1187L18.3743 15.6174L18.3387 15.1187ZM7.98405 15.8583L7.94842 15.3596L7.98405 15.8583ZM3 3.5H5V2.5H3V3.5ZM8.01967 16.357L18.3743 15.6174L18.303 14.6199L7.94842 15.3596L8.01967 16.357ZM20.6809 13.3998L21.4969 6.05522L20.5031 5.94478L19.687 13.2894L20.6809 13.3998ZM4.50147 3.03835L4.73224 6.03835L5.7293 5.96165L5.49853 2.96165L4.50147 3.03835ZM4.73224 6.03835L5.34892 14.0551L6.34597 13.9784L5.7293 5.96165L4.73224 6.03835ZM21 5.5H5.23077V6.5H21V5.5ZM18.3743 15.6174C19.5774 15.5315 20.5477 14.5987 20.6809 13.3998L19.687 13.2894C19.6071 14.0087 19.0249 14.5684 18.303 14.6199L18.3743 15.6174ZM7.94842 15.3596C7.12529 15.4183 6.40926 14.8012 6.34597 13.9784L5.34892 14.0551C5.4544 15.4264 6.64779 16.455 8.01967 16.357L7.94842 15.3596Z" fill="#ffffff"/>
-                                <rect x="8.5" y="20.5" width="0.01" height="0.01" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>
-                                <rect x="17.5" y="20.5" width="0.01" height="0.01" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
+                        <a href="/cart">
+                          <button type="button" class="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none">
+                              <span class="absolute -inset-1.5"></span>
+                              <span class="sr-only">CarShop</span>
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                  <path d="M3 2.5C2.72386 2.5 2.5 2.72386 2.5 3C2.5 3.27614 2.72386 3.5 3 3.5V2.5ZM5 3L5.49853 2.96165C5.47849 2.70115 5.26127 2.5 5 2.5V3ZM21 6L21.4969 6.05522C21.5126 5.91386 21.4674 5.77251 21.3726 5.66654C21.2777 5.56057 21.1422 5.5 21 5.5V6ZM5.23077 6L4.73224 6.03835L5.23077 6ZM18.3387 15.1187L18.3743 15.6174L18.3387 15.1187ZM7.98405 15.8583L7.94842 15.3596L7.98405 15.8583ZM3 3.5H5V2.5H3V3.5ZM8.01967 16.357L18.3743 15.6174L18.303 14.6199L7.94842 15.3596L8.01967 16.357ZM20.6809 13.3998L21.4969 6.05522L20.5031 5.94478L19.687 13.2894L20.6809 13.3998ZM4.50147 3.03835L4.73224 6.03835L5.7293 5.96165L5.49853 2.96165L4.50147 3.03835ZM4.73224 6.03835L5.34892 14.0551L6.34597 13.9784L5.7293 5.96165L4.73224 6.03835ZM21 5.5H5.23077V6.5H21V5.5ZM18.3743 15.6174C19.5774 15.5315 20.5477 14.5987 20.6809 13.3998L19.687 13.2894C19.6071 14.0087 19.0249 14.5684 18.303 14.6199L18.3743 15.6174ZM7.94842 15.3596C7.12529 15.4183 6.40926 14.8012 6.34597 13.9784L5.34892 14.0551C5.4544 15.4264 6.64779 16.455 8.01967 16.357L7.94842 15.3596Z" fill="#ffffff"/>
+                                  <rect x="8.5" y="20.5" width="0.01" height="0.01" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>
+                                  <rect x="17.5" y="20.5" width="0.01" height="0.01" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/>
+                              </svg>
+                          </button>
+                      </a>
 
                         <!-- Menú de perfil -->
                         <div class="relative ml-3">
