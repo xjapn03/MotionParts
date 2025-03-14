@@ -40,3 +40,14 @@ export class AppComponent {
     this.router.navigate(['/login']); // Redirigir de forma correcta
   }
 }
+
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./src/**/*.{html,ts}"
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
