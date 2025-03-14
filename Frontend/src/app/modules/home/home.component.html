@@ -1,30 +1,72 @@
 
     <!-- Sección Principal (Hero) -->
-    <section id="hero" class="bg-blue-700 text-white text-center py-16">
-        <h2 class="text-4xl font-extrabold mb-4">Bienvenido a Mi Página</h2>
-        <p class="text-xl mb-6">Explora los mejores servicios y contenido para tu negocio.</p>
-        <a href="#about" class="bg-orange-500 text-white py-2 px-6 rounded-lg text-lg hover:bg-orange-400">Saber más</a>
+    <section id="hero" class="relative bg-blue-700 text-white text-center py-40 h-screen" style="background-image: url('https://www.namesnack.com/images/namesnack-auto-parts-supply-business-names-5996x3374-20200915.jpeg?crop=16:9,smart&width=1200&dpr=2'); background-size: cover; background-position: center;">
+        <!-- Capa de overlay -->
+        <div class="absolute inset-0 bg-black opacity-70"></div>
+        
+        <h2 class="text-6xl font-extrabold mb-6 tracking-wide text-white relative z-10" style="font-family: 'Poppins', sans-serif; text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);">
+            MOTION PARTS
+        </h2>
     </section>
-
-
-
-    <!-- Sección Servicios (Services) -->
-    <section id="services" class="py-16 bg-gray-50 text-center">
-        <h2 class="text-3xl font-bold mb-8">Productos de la mejor calidad</h2>
-        <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-            <div class="bg-cover bg-center p-6 rounded-lg shadow-lg" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2FwAbQkbehxT5km1VG9rS5c8uKRRWSHPxiA&s');">
-                <h3 class="text-2xl font-semibold text--500 mb-4">Motores</h3>
-            </div>
-            <div class="bg-cover bg-center p-6 rounded-lg shadow-lg" style="background-image: url('https://d100mj7v0l85u5.cloudfront.net/s3fs-public/2023-03/fabricantes-de-llantas-en-mexico.jpg');">
-                <h3 class="text-2xl font-semibold text-green-500 mb-4">Servicio 2</h3>
-                <p class="text-white">Descripción del servicio 2.</p>
-            </div>
-            <div class="bg-cover bg-center p-6 rounded-lg shadow-lg" style="background-image: url('https://bateriascea.com.ar/wp-content/uploads/que-tan-buena-es-la-bateria-mac.webp');">
-                <h3 class="text-2xl font-semibold text-blue-500 mb-4">Servicio 3</h3>
-                <p class="text-white">Descripción del servicio 3.</p>
+    
+    <!-- Sección Productos con Carrusel (Swiper) -->
+    <section id="products" class="relative py-50 bg-transparent ">
+        <div class="absolute inset-x-0 bottom-0 bg-white shadow-lg rounded-t-3xl mx-auto pb-12 pt-8 z-20" style="width: 80%; max-width: 1200px; height: 600px; background: rgba(31,41,55,var(--tw-bg-opacity));">
+            <h2 class="text-3xl font-bold text-center mb-8 text-white">Productos en oferta</h2>
+            
+            <!-- Carrusel Swiper -->
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="p-6 rounded-lg shadow-lg" 
+                            style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2FwAbQkbehxT5km1VG9rS5c8uKRRWSHPxiA&s'); 
+                                   background-size: cover; 
+                                   background-position: center; 
+                                   height: 200px; /* Ajusta la altura */
+                                   width: 400px; /* Ajusta el ancho */
+                                   margin-left: 100px; /* Despega la imagen de la parte izquierda */
+                                   box-sizing: border-box;">
+                            <h3 class="text-2xl font-semibold text-white mb-4">Motores</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="swiper-slide">
+                        <div class="p-6 rounded-lg shadow-lg" 
+                            style="background-image: url('https://d100mj7v0l85u5.cloudfront.net/s3fs-public/2023-03/fabricantes-de-llantas-en-mexico.jpg'); 
+                                   background-size: cover;
+                                   background-size: cover;
+                                   align-items: center;
+                                   margin-left: 100px;
+                                   background-position: center; 
+                                   height: 200px; /* Ajusta la altura */
+                                   width: 400px; /* Hace que el contenedor sea cuadrado */
+                                   padding: 10px; /* Espacio entre la imagen y el borde */
+                                   box-sizing: border-box;">
+                            <h3 class="text-2xl font-semibold text-white mb-4">Llantas</h3>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="p-6 rounded-lg shadow-lg" 
+                            style="background-image: url('https://www.nissanuniversidad.com/static/agency-go-virtual/Nissan/Landings/Baterias/nissan-2023-baterias-grupo_de_baterias-d.jpg'); 
+                                   margin-left: 100px;
+                                   align-items: center;
+                                   background-position: center; 
+                                   height: 200px; /* Ajusta la altura */
+                                   width: 400px; /* Hace que el contenedor sea cuadrado */
+                                   box-sizing: border-box;">
+                            <h3 class="text-2xl font-semibold text-white mb-4">Baterías</h3>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Flechas de navegación con color de fondo ajustado -->
+                <div class="swiper-button-next" ></div>
+                <div class="swiper-button-prev" ></div>
             </div>
         </div>
     </section>
+    
+    
     
         <!-- Sección Acerca de (About) -->
         <section id="about" class="py-16 bg-white text-center">
