@@ -70,7 +70,7 @@ Antes de comenzar, asegúrate de tener instalados los siguientes componentes:
 3. **Levantar el Backend**
    ```sh
    cd backend
-   ./mvnw spring-boot:run
+   ./gradlew bootrun
    ```
 
 4. **Iniciar el Frontend**
