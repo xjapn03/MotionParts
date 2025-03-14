@@ -23,7 +23,20 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  saveUser(user: any): void {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  getUser(): any {
+    return JSON.parse(localStorage.getItem('user') || '{}');
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
+  }
+
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
   }
 }
