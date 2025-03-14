@@ -1,0 +1,5 @@
+.active {
+  background-color: #1a202c; /* Color oscuro */
+  color: white !important;
+  border-radius: 5px;
+}

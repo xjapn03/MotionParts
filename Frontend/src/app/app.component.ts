@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -11,43 +11,35 @@ import { AuthService } from './core/services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterModule], // Importar módulos necesarios
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'nombre-del-proyecto-angular';
   user: { username?: string; image?: string } = {}; // Definir user
+  isDropdownOpen = false; // Estado del menú
 
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  constructor() {
-    this.getUserInfo();
+  ngOnInit() {
+    this.authService.user$.subscribe((user: any) => { // Especificamos el tipo explícitamente
+      this.user = user || {}; // Se actualiza el usuario automáticamente
+    });
   }
 
-  getUserInfo() {
-    const token = this.authService.getToken();
-    if (token) {
-      // Aquí deberías decodificar el token o hacer una petición al backend
-      this.user = { username: 'Usuario', image: 'assets/default-user.png' };
-    }
+
+  //logica del carrito pendiente ==========
+  cartItemCount = 0
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen; // Alternar entre abierto/cerrado
   }
 
   logout() {
     this.authService.logout();
-    this.user = {};
     this.router.navigate(['/login']); // Redirigir a la página de login
+    this.isDropdownOpen = false; // Cerrar el menú al cerrar sesión
   }
 
   goToLogin() {
     this.router.navigate(['/login']); // Redirigir de forma correcta
   }
 }
-
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./src/**/*.{html,ts}"
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};

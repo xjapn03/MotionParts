@@ -1,99 +1,127 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { ProductService } from '../../core/services/products.service';
+import { Product } from '../../../app/core/models/product.model';
+import { CategoryService } from '../../core/services/category.service';
+import { Category } from '../../core/models/category.model';
+
+
 
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule], // Asegura que CommonModule está importado
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.css']
 })
-export class ProductosComponent {
+export class ProductosComponent implements OnInit {
   searchTerm = new FormControl('');
   categoriaFiltro = new FormControl('');
   precioFiltro = new FormControl('');
   ordenarPor = new FormControl('');
 
-  productoSeleccionado: any = null;
-  cantidad: number = 1; // Cantidad por defecto
+  productos: Product[] = [];
+  productosFiltrados: Product[] = [];
+  productoSeleccionado: Product | null = null;
+  cantidad: number = 1;
 
-  productos = [
-    { 
-      nombre: 'Filtros de aire', 
-      precio: 2500, 
-      categoria: 'Motor y Componentes', 
-      descripcion: 'Potente laptop con procesador de última generación y pantalla HD.',
-      imagenes: [
-        'https://www.rodi.es/blog/wp-content/uploads/2018/03/filtro-aire-coche-revision.jpg',
-      ]
-    },
-    { 
-      nombre: 'Filtros de aire', 
-      precio: 2500, 
-      categoria: 'Motor y Componentes', 
-      descripcion: 'Potente laptop con procesador de última generación y pantalla HD.',
-      imagenes: [
-        'https://www.rodi.es/blog/wp-content/uploads/2018/03/filtro-aire-coche-revision.jpg',
-      ]
-    },
-    { 
-      nombre: 'Filtros de aire', 
-      precio: 2500, 
-      categoria: 'Motor y Componentes', 
-      descripcion: 'Potente laptop con procesador de última generación y pantalla HD.',
-      imagenes: [
-        'https://www.rodi.es/blog/wp-content/uploads/2018/03/filtro-aire-coche-revision.jpg',
-      ]
-    },
-    { 
-      nombre: 'Filtros de aire', 
-      precio: 2500, 
-      categoria: 'Motor y Componentes', 
-      descripcion: 'Potente laptop con procesador de última generación y pantalla HD.',
-      imagenes: [
-        'https://www.rodi.es/blog/wp-content/uploads/2018/03/filtro-aire-coche-revision.jpg',
-      ]
-    },
-    // Resto de productos...
-  ];
+  categorias: Category[] = [];
 
-  get productosFiltrados() {
-    let productosFiltrados = this.productos;
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService
+  ) {}
 
-    // Filtrar por nombre
-    if (this.searchTerm.value) {
-      productosFiltrados = productosFiltrados.filter(p =>
-        p.nombre.toLowerCase().includes(this.searchTerm.value!.toLowerCase())
-      );
-    }
+  ngOnInit() {
+    this.cargarProductos();
+    this.cargarCategorias(); // ✅ Cargar categorías desde el backend
 
-    // Filtrar por categoría
-    if (this.categoriaFiltro.value) {
-      productosFiltrados = productosFiltrados.filter(p =>
-        p.categoria === this.categoriaFiltro.value
-      );
-    }
-
-    // Filtrar por precio
-    if (this.precioFiltro.value) {
-      const precioMax = parseInt(this.precioFiltro.value, 10);
-      productosFiltrados = productosFiltrados.filter(p => p.precio <= precioMax);
-    }
-
-    // Ordenar alfabéticamente
-    if (this.ordenarPor.value === 'asc') {
-      productosFiltrados = productosFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
-    } else if (this.ordenarPor.value === 'desc') {
-      productosFiltrados = productosFiltrados.sort((a, b) => b.nombre.localeCompare(a.nombre));
-    }
-
-    return productosFiltrados;
+    // Aplicar filtros automáticamente cuando cambian los valores de los filtros
+    this.searchTerm.valueChanges.subscribe(() => this.aplicarFiltros());
+    this.categoriaFiltro.valueChanges.subscribe(() => this.aplicarFiltros());
+    this.precioFiltro.valueChanges.subscribe(() => this.aplicarFiltros());
+    this.ordenarPor.valueChanges.subscribe(() => this.aplicarFiltros());
   }
 
-  verDetalles(producto: any) {
+  cargarCategorias() {
+    this.categoryService.getCategories().subscribe({
+      next: (data: any[]) => { // Asegurar que `data` es un array
+        this.categorias = data.map(categoria => ({
+          id: categoria.id_category, // 👈 Renombramos id_category a id
+          name: categoria.name,
+          description: categoria.description
+        }));
+        console.log("Categorías obtenidas:", this.categorias); // Verificar transformación
+      },
+      error: (error: any) => {
+        console.error('Error al obtener categorías', error);
+      }
+    });
+  }
+
+  onImageError(event: any) {
+    if (!event.target.dataset.errorHandled) {
+      event.target.dataset.errorHandled = "true"; // Evita bucle
+      event.target.src = 'assets/products/productDefault.jpg'; // ✅ Ruta corregida
+    }
+  }
+
+  cargarProductos() {
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        this.productos = data.map(producto => ({
+          ...producto,
+          image: producto.image
+            ? `assets/products/${producto.image}`
+            : 'assets/products/productDefault.jpg' // ✅ Ruta corregida
+        }));
+        this.aplicarFiltros();
+      },
+      error: (error) => {
+        console.error('Error al obtener productos', error);
+      }
+    });
+  }
+
+  aplicarFiltros() {
+    console.log("Productos antes de filtrar:", this.productos);
+
+    // Asegurar que `categoriaFiltro.value` tenga un valor válido
+    const categoriaSeleccionada = this.categoriaFiltro.value ?? ''; // 👈 Evitar undefined
+    console.log("Categoría seleccionada después de validar:", categoriaSeleccionada);
+    console.log("Tipo de categoría seleccionada:", typeof categoriaSeleccionada);
+
+    this.productosFiltrados = this.productos.filter(producto => {
+        const coincideBusqueda = this.searchTerm.value
+            ? producto.name.toLowerCase().includes(this.searchTerm.value.toLowerCase())
+            : true;
+
+        const coincideCategoria = categoriaSeleccionada !== ''
+            ? Number(producto.category_id) === Number(categoriaSeleccionada)
+            : true;
+
+        const coincidePrecio = this.precioFiltro.value
+            ? producto.price <= +this.precioFiltro.value
+            : true;
+
+        return coincideBusqueda && coincideCategoria && coincidePrecio;
+    });
+
+    console.log("Productos después de filtrar:", this.productosFiltrados);
+
+    // Ordenar productos
+    if (this.ordenarPor.value === 'asc') {
+        this.productosFiltrados.sort((a, b) => a.price - b.price);
+    } else if (this.ordenarPor.value === 'desc') {
+        this.productosFiltrados.sort((a, b) => b.price - a.price);
+    }
+  }
+
+  verDetalles(producto: Product) {
     this.productoSeleccionado = producto;
+    this.cantidad = 1;
   }
 
   cerrarModal() {
@@ -110,28 +138,17 @@ export class ProductosComponent {
     }
   }
 
-  setMainImage(index: number) {
-    this.productoSeleccionado.imagenes[0] = this.productoSeleccionado.imagenes[index];
-  }
-
   buyNow() {
-    alert('Compra realizada');
-    this.cerrarModal();
+    console.log(`Comprando ${this.cantidad} unidad(es) de ${this.productoSeleccionado?.name}`);
   }
 
   addToCart() {
-    alert('Producto agregado al carrito');
+    console.log(`Agregado al carrito: ${this.cantidad} unidad(es) de ${this.productoSeleccionado?.name}`);
   }
+
+  // Obtener el nombre de la categoría en base al ID
+  getCategoryName(category_id: number): string {
+    return this.categorias.find(cat => cat.id === category_id)?.name || 'Desconocida'; // ✅ Usar `name`
+  }
+
 }
-
-
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./src/**/*.{html,ts}"
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};

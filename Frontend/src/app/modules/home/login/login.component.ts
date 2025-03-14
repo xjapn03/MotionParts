@@ -31,6 +31,11 @@ export class LoginComponent {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           this.authService.saveToken(response.token);
+
+          // Simulando un usuario real, en producción debería venir desde el backend
+          const userData = { username: this.loginForm.value.username, image: 'assets/default-user.png' };
+          this.authService.saveUser(userData);
+
           this.router.navigate(['/home']); // Redirigir al home
         },
         error: () => {

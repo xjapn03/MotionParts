@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product as ProductModel } from '../models/product.model'; // Renombrado
-
-export interface Product {
-  id: number;
-  name: string;
-  category: string;
-}
+import { Product } from '../models/product.model'; // Renombrado
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +11,7 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  getProducts(): Observable<ProductModel[]> { // Cambiado a ProductModel[]
-    return this.http.get<ProductModel[]>(this.apiUrl);
+  getProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.apiUrl);
   }
 }

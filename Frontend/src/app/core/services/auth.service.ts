@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { LoginRequest, AuthResponse } from '../models/login.model';
 
 @Injectable({
@@ -8,6 +8,9 @@ import { LoginRequest, AuthResponse } from '../models/login.model';
 })
 export class AuthService {
   private apiUrl = 'http://localhost:8080/api/auth/login'; // URL del backend
+  private userSubject = new BehaviorSubject<any>(this.getUser()); // Estado del usuario
+  user$ = this.userSubject.asObservable(); // Observable para detectar cambios en el usuario
+
 
   constructor(private http: HttpClient) {}
 
@@ -25,6 +28,7 @@ export class AuthService {
 
   saveUser(user: any): void {
     localStorage.setItem('user', JSON.stringify(user));
+    this.userSubject.next(user);
   }
 
   getUser(): any {
@@ -38,5 +42,6 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    this.userSubject.next(null); // Notificamos que el usuario ha cerrado sesión
   }
 }

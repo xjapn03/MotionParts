@@ -3,7 +3,7 @@ package com.motionParts.ecommerce.Models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "category")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
