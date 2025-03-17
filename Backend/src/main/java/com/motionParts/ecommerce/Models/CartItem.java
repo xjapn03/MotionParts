@@ -8,30 +8,36 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int cart_id;
-    private int product_id;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id", nullable = false)
+    private ShoppingCart shoppingCart;
+
+    private Long productId;
     private int quantity;
-    private double unit_price;
+    private double unitPrice;
 
     public CartItem() {}
 
-    public CartItem(int cart_id, int product_id, int quantity, double unit_price) {
-        this.cart_id = cart_id;
-        this.product_id = product_id;
+    public CartItem(ShoppingCart shoppingCart, Long productId, int quantity, double unitPrice) {
+        this.shoppingCart = shoppingCart;
+        this.productId = productId;
         this.quantity = quantity;
-        this.unit_price = unit_price;
+        this.unitPrice = unitPrice;
     }
 
     public Long getId() { return id; }
-    public int getCart_id() { return cart_id; }
-    public void setCart_id(int cart_id) { this.cart_id = cart_id; }
+    public void setId(Long id) { this.id = id; }
 
-    public int getProduct_id() { return product_id; }
-    public void setProduct_id(int product_id) { this.product_id = product_id; }
+    public ShoppingCart getShoppingCart() { return shoppingCart; }
+    public void setShoppingCart(ShoppingCart shoppingCart) { this.shoppingCart = shoppingCart; }
+
+    public Long getProductId() { return productId; }
+    public void setProductId(Long productId) { this.productId = productId; }
 
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public double getUnit_price() { return unit_price; }
-    public void setUnit_price(double unit_price) { this.unit_price = unit_price; }
+    public double getUnitPrice() { return unitPrice; }
+    public void setUnitPrice(double unitPrice) { this.unitPrice = unitPrice; }
 }
