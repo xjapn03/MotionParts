@@ -1,0 +1,28 @@
+.faq-container {
+    max-width: 600px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .faq-item {
+    background: #f4f4f4;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .faq-item:hover {
+    background: #e0e0e0;
+  }
+  
+  h3 {
+    margin: 0;
+  }
+  
+  p {
+    margin-top: 10px;
+    color: #333;
+  }
+  

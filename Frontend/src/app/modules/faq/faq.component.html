@@ -1,0 +1,17 @@
+<div class="faq-container">
+  <h2>Preguntas Frecuentes</h2>
+
+  @for (item of [
+    { question: '¿Qué es este servicio?', answer: 'Proporcionamos asistencia en tecnología y automatización.', open: false },
+    { question: '¿Cómo puedo hacer una pregunta?', answer: 'Solo escríbela en el chat y recibirás ayuda.', open: false },
+    { question: '¿Es este servicio gratuito?', answer: 'Sí, puedes hacer preguntas sin costo.', open: false }
+  ]; track item) {
+  
+    <div class="faq-item" (click)="item.open = !item.open">
+      <h3>{{ item.question }}</h3>
+      @if (item.open) {
+        <p>{{ item.answer }}</p>
+      }
+    </div>
+  }
+</div>
