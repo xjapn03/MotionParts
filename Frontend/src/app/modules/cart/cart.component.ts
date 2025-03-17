@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ShoppingCartService } from '../../core/services/shoppingCart.service';
 import { ShoppingCart } from '../../core/models/shoppingCart.model';
 
 @Component({
   selector: 'app-shopping-cart',
+  standalone: true, // Si el componente es independiente
+  imports: [CommonModule], // Importa CommonModule para usar *ngIf y *ngFor
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
