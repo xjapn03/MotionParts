@@ -1,42 +1,48 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService } from '../../core/services/cart.service';
-import { CommonModule } from '@angular/common';
-
-
+import { ShoppingCartService } from '../../core/services/shoppingCart.service';
+import { ShoppingCart } from '../../core/models/shoppingCart.model';
 
 @Component({
-  selector: 'app-cart',
-  imports: [CommonModule],
+  selector: 'app-shopping-cart',
   templateUrl: './cart.component.html',
-  styleUrl: './cart.component.css'
+  styleUrls: ['./cart.component.css'],
 })
-export class CartComponent implements OnInit {
-  cartItems: any[] = [];
+export class ShoppingCartComponent implements OnInit {
+  shoppingCarts: ShoppingCart[] = [];
+  cartTotals: { [cartId: number]: number } = {};
+  errorMessage: string | null = null;
 
-  constructor(private cartService: CartService) {}
+  constructor(private shoppingCartService: ShoppingCartService) {}
 
-  ngOnInit() {
-    this.cartService.getCart().subscribe(items => {
-      this.cartItems = items;
-    });
+  ngOnInit(): void {
+    this.loadShoppingCarts();
   }
 
-  removeItem(index: number) {
-    this.cartService.removeFromCart(index);
+  // Cargar todos los carritos
+  loadShoppingCarts(): void {
+    this.shoppingCartService.getShoppingCarts().subscribe(
+      (data: ShoppingCart[]) => {
+        this.shoppingCarts = data;
+        this.errorMessage = null;
+      },
+      (error) => {
+        this.errorMessage = 'Error al cargar los carritos. Inténtalo de nuevo más tarde.';
+        console.error('Error fetching shopping carts', error);
+      }
+    );
   }
 
-  clearCart() {
-    this.cartService.clearCart();
+  // Calcular el total de un carrito
+  calculateTotal(cartId: number): void {
+    this.shoppingCartService.calculateCartTotal(cartId).subscribe(
+      (total: number) => {
+        this.cartTotals[cartId] = total;
+        this.errorMessage = null;
+      },
+      (error) => {
+        this.errorMessage = 'Error al calcular el total del carrito.';
+        console.error('Error calculating cart total', error);
+      }
+    );
   }
 }
-
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./src/**/*.{html,ts}"
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
