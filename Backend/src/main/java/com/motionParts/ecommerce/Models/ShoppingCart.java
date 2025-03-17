@@ -7,17 +7,20 @@ import jakarta.persistence.*;
 public class ShoppingCart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_cart;
-    private Long client_id;
-    
+    private Long id;  // Cambio de id_cart -> id
+
+    @Column(name = "client_id", nullable = false)
+    private Long clientId;  // Cambio de client_id -> clientId (camelCase)
+
     public ShoppingCart() {}
-    
-    public ShoppingCart(Long client_id) {
-        this.client_id = client_id;
+
+    public ShoppingCart(Long clientId) {
+        this.clientId = clientId;
     }
-    
-    public Long getId_cart() { return id_cart; }
-    public void setId_cart(Long id_cart) { this.id_cart = id_cart; }
-    public Long getClient_id() { return client_id; }
-    public void setClient_id(Long client_id) { this.client_id = client_id; }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Long getClientId() { return clientId; }
+    public void setClientId(Long clientId) { this.clientId = clientId; }
 }

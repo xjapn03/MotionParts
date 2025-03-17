@@ -1,47 +1,46 @@
 package com.motionParts.ecommerce.Controllers;
 
 import com.motionParts.ecommerce.Models.ShoppingCart;
-import com.motionParts.ecommerce.services.ShoppingCartService; // <-- IMPORTANTE
+import com.motionParts.ecommerce.services.ShoppingCartService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/shoppingCarts")
+@RequestMapping("/api/shopping-carts")
 public class ShoppingCartController {
 
     @Autowired
     private ShoppingCartService shoppingCartService;
 
     @GetMapping
-    public List<ShoppingCart> getAllCarts() {
-        return shoppingCartService.getAllCarts();
+    public List<ShoppingCart> listAllCarts() { // Cambio de getAllCarts -> listAllCarts
+        return shoppingCartService.listAllCarts();
     }
 
     @GetMapping("/{id}")
-    public ShoppingCart getCartById(@PathVariable Long id) {
-        return shoppingCartService.getCartById(id);
+    public ShoppingCart findCartById(@PathVariable Long id) { // Cambio de getCartById -> findCartById
+        return shoppingCartService.findCartById(id);
     }
 
     @GetMapping("/client/{clientId}")
-    public List<ShoppingCart> getCartsByClientId(@PathVariable Long clientId) {
-        return shoppingCartService.getCartsByClientId(clientId);
+    public List<ShoppingCart> findCartsByClient(@PathVariable Long clientId) { // Cambio de getCartsByClientId -> findCartsByClient
+        return shoppingCartService.findCartsByClient(clientId);
     }
 
     @PostMapping
-    public ShoppingCart createCart(@RequestBody ShoppingCart cart) {
-        return shoppingCartService.saveCart(cart);
+    public ShoppingCart createShoppingCart(@RequestBody ShoppingCart cart) { // Cambio de createCart -> createShoppingCart
+        return shoppingCartService.createShoppingCart(cart);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCart(@PathVariable Long id) {
-        shoppingCartService.deleteCart(id);
+    public void removeCart(@PathVariable Long id) { // Cambio de deleteCart -> removeCart
+        shoppingCartService.removeCart(id);
     }
 
     @GetMapping("/{cartId}/total")
-    public double getCartTotal(@PathVariable Long cartId) {
-        return shoppingCartService.getTotalCartPrice(cartId);
+    public double calculateCartTotal(@PathVariable Long cartId) { // Cambio de getCartTotal -> calculateCartTotal
+        return shoppingCartService.calculateCartTotal(cartId);
     }
-
 }

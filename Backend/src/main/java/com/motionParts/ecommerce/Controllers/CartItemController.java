@@ -1,4 +1,4 @@
-package com.motionParts.ecommerce.controllers;
+package com.motionParts.ecommerce.Controllers;
 
 import com.motionParts.ecommerce.Models.CartItem;
 import com.motionParts.ecommerce.services.CartItemService;
@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/cartItems")
+@RequestMapping("/api/cart-items")
 public class CartItemController {
     @Autowired
     private CartItemService cartItemService;
@@ -20,7 +19,7 @@ public class CartItemController {
     }
 
     @GetMapping("/{id}")
-    public Optional<CartItem> getCartItemById(@PathVariable Long id) {
+    public CartItem getCartItemById(@PathVariable Long id) {
         return cartItemService.getCartItemById(id);
     }
 
@@ -32,6 +31,11 @@ public class CartItemController {
     @PostMapping
     public CartItem createCartItem(@RequestBody CartItem cartItem) {
         return cartItemService.saveCartItem(cartItem);
+    }
+
+    @PutMapping("/{id}")
+    public CartItem updateCartItem(@PathVariable Long id, @RequestBody CartItem cartItem) {
+        return cartItemService.updateCartItem(id, cartItem);
     }
 
     @DeleteMapping("/{id}")

@@ -1,4 +1,4 @@
-package com.motionParts.ecommerce.Repositories;
+package com.motionParts.ecommerce.repositories;
 
 import com.motionParts.ecommerce.Models.ShoppingCart;
 import org.springframework.data.jpa.repository.JpaRepository;
