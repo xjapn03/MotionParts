@@ -9,33 +9,19 @@
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <a routerLink="/home"
-                 routerLinkActive="active"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a routerLink="/home" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 Inicio
               </a>
-
-              <a routerLink="/products"
-                 routerLinkActive="active"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a routerLink="/products" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 Productos
               </a>
-
-              <a routerLink="/contact"
-                 routerLinkActive="active"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a routerLink="/contact" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 Contacto
               </a>
-
-              <a routerLink="/about"
-                 routerLinkActive="active"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a routerLink="/about" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 Acerca
               </a>
-
-              <a routerLink="/faq"
-                 routerLinkActive="active"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a routerLink="/faq" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 FAQ
               </a>
             </div>
@@ -45,7 +31,7 @@
         <div class="hidden md:block">
           <div class="ml-4 flex items-center md:ml-6">
             <!-- Icono del carrito -->
-            <a routerLink="/cart" class="relative text-gray-300 hover:text-white">
+            <button (click)="openCartModal()" class="relative text-gray-300 hover:text-white">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L4 3M7 13a4 4 0 1 0 8 0m-8 0a4 4 0 1 1 8 0" />
               </svg>
@@ -53,7 +39,7 @@
               <span *ngIf="cartItemCount > 0" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-1 rounded-full">
                 {{ cartItemCount }}
               </span>
-            </a>
+            </button>
 
             <!-- Menú de perfil -->
             <!-- Si el usuario NO está autenticado -->
@@ -88,13 +74,33 @@
       </div>
     </div>
   </nav>
+
+  <!-- Modal del carrito -->
+  <div *ngIf="isCartModalOpen" class="modal">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+      <h2 class="text-lg font-bold">Carrito de Compras</h2>
+      <div *ngIf="cartItems.length === 0" class="text-gray-500">Tu carrito está vacío.</div>
+
+      <ul *ngIf="cartItems.length > 0" class="mt-2">
+        <li *ngFor="let item of cartItems" class="border-b py-2 flex justify-between">
+          <span>{{ item.name }}</span>
+          <span class="font-bold">${{ item.price }}</span>
+        </li>
+      </ul>
+
+      <div class="mt-4 flex justify-between">
+        <button class="bg-gray-500 text-white px-4 py-2 rounded" (click)="closeCartModal()">Cerrar</button>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded" routerLink="/cart">Ver más</button>
+      </div>
+    </div>
+  </div>
+
   <router-outlet></router-outlet>
 </div>
 
 
 <!-- Footer container -->
-<footer
-  class="bg-zinc-50 text-center text-surface/75 dark:bg-neutral-700 dark:text-white/75 lg:text-left bg-gray-800">
+<footer class="bg-zinc-50 text-center text-surface/75 dark:bg-neutral-700 dark:text-white/75 lg:text-left bg-gray-800">
 
 
 

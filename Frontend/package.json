@@ -21,6 +21,7 @@
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
+    "swiper": "^11.2.5",
     "tailwindcss": "^4.0.14",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -31,6 +32,7 @@
     "@angular/compiler-cli": "^19.1.0",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^22.13.10",
+    "@types/swiper": "^5.4.3",
     "jasmine-core": "~5.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
