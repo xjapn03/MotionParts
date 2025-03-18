@@ -30,11 +30,8 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
-          this.authService.saveToken(response.token);
-
-          // Simulando un usuario real, en producción debería venir desde el backend
-          const userData = { username: this.loginForm.value.username, image: 'assets/default-user.png' };
-          this.authService.saveUser(userData);
+          // ✅ Ya no es necesario llamar a `saveToken()` y `saveUser()`
+          console.log('Inicio de sesión exitoso:', response);
 
           this.router.navigate(['/home']); // Redirigir al home
         },
@@ -45,4 +42,3 @@ export class LoginComponent {
     }
   }
 }
-

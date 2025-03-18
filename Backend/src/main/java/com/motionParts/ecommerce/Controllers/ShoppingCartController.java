@@ -1,11 +1,10 @@
 package com.motionParts.ecommerce.Controllers;
 
-import com.motionParts.ecommerce.Models.ShoppingCart;
+import com.motionParts.ecommerce.dto.ShoppingCartDTO;
 import com.motionParts.ecommerce.services.ShoppingCartService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/shopping-carts")
@@ -14,33 +13,46 @@ public class ShoppingCartController {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
-    @GetMapping
-    public List<ShoppingCart> listAllCarts() { // Cambio de getAllCarts -> listAllCarts
-        return shoppingCartService.listAllCarts();
+    // ✅ Obtener el carrito activo del usuario autenticado
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ShoppingCartDTO> getActiveCartByUser(@PathVariable Long userId) {
+        ShoppingCartDTO cartDTO = shoppingCartService.findActiveCartByUser(userId);
+        return ResponseEntity.ok(cartDTO);
     }
+
 
     @GetMapping("/{id}")
-    public ShoppingCart findCartById(@PathVariable Long id) { // Cambio de getCartById -> findCartById
-        return shoppingCartService.findCartById(id);
-    }
-
-    @GetMapping("/client/{clientId}")
-    public List<ShoppingCart> findCartsByClient(@PathVariable Long clientId) { // Cambio de getCartsByClientId -> findCartsByClient
-        return shoppingCartService.findCartsByClient(clientId);
+    public ResponseEntity<ShoppingCartDTO> findCartById(@PathVariable Long id) {
+        ShoppingCartDTO cartDTO = shoppingCartService.getCartById(id);
+        return ResponseEntity.ok(cartDTO);
     }
 
     @PostMapping
-    public ShoppingCart createShoppingCart(@RequestBody ShoppingCart cart) { // Cambio de createCart -> createShoppingCart
-        return shoppingCartService.createShoppingCart(cart);
+    public ResponseEntity<ShoppingCartDTO> createShoppingCart(@RequestParam Long userId) {
+        ShoppingCartDTO cartDTO = shoppingCartService.createShoppingCart(userId);
+        return ResponseEntity.ok(cartDTO);
+    }
+
+    @PutMapping("/{id}/complete")
+    public ResponseEntity<ShoppingCartDTO> completeShoppingCart(@PathVariable Long id) {
+        shoppingCartService.completeShoppingCart(id);
+        return ResponseEntity.ok(shoppingCartService.getCartById(id));
+    }
+
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<ShoppingCartDTO> cancelShoppingCart(@PathVariable Long id) {
+        shoppingCartService.cancelShoppingCart(id);
+        return ResponseEntity.ok(shoppingCartService.getCartById(id));
     }
 
     @DeleteMapping("/{id}")
-    public void removeCart(@PathVariable Long id) { // Cambio de deleteCart -> removeCart
+    public ResponseEntity<Void> removeCart(@PathVariable Long id) {
         shoppingCartService.removeCart(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{cartId}/total")
-    public double calculateCartTotal(@PathVariable Long cartId) { // Cambio de getCartTotal -> calculateCartTotal
-        return shoppingCartService.calculateCartTotal(cartId);
+    public ResponseEntity<Double> calculateCartTotal(@PathVariable Long cartId) {
+        return ResponseEntity.ok(shoppingCartService.calculateCartTotal(cartId));
     }
 }

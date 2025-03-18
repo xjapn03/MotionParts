@@ -1,7 +1,9 @@
-import { CartItem } from "./cartItem.model";
+import { CartItem } from './cartItem.model';
 
 export interface ShoppingCart {
     id: number;
-    clientId: number;
+    username: string;
     cartItems: CartItem[];
-  }
+    status: string;
+    totalCartPrice: number;
+}

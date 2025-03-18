@@ -1,18 +1,23 @@
-<div *ngIf="errorMessage" class="error-message">
-  {{ errorMessage }}
-</div>
+<div *ngIf="shoppingCart">
+  <h2>Carrito de {{ shoppingCart.username }} - Estado: {{ shoppingCart.status }}</h2>
+  <p>Total: {{ shoppingCart.totalCartPrice | currency }}</p>
 
-<div *ngFor="let cart of shoppingCarts">
-  <h3>Carrito ID: {{ cart.id }}</h3>
-  <p>Cliente ID: {{ cart.clientId }}</p>
-  <button (click)="calculateTotal(cart.id)">Calcular Total</button>
-  <p *ngIf="cartTotals[cart.id] !== undefined">Total: {{ cartTotals[cart.id] }}</p>
-
-  <h4>Ítems:</h4>
-  <ul>
-    <li *ngFor="let item of cart.cartItems">
-      Producto ID: {{ item.productId }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unitPrice }}
-    </li>
-  </ul>
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of shoppingCart.cartItems; trackBy: trackByItemId">
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.unitPrice | currency }}</td>
+        <td>{{ item.totalPrice | currency }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-  

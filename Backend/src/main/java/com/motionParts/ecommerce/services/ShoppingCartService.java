@@ -2,13 +2,18 @@ package com.motionParts.ecommerce.services;
 
 import com.motionParts.ecommerce.Models.CartItem;
 import com.motionParts.ecommerce.Models.ShoppingCart;
+import com.motionParts.ecommerce.Models.ShoppingCartStatus;
+import com.motionParts.ecommerce.Models.User;
+import com.motionParts.ecommerce.dto.CartItemDTO;
+import com.motionParts.ecommerce.dto.ShoppingCartDTO;
 import com.motionParts.ecommerce.repositories.CartItemRepository;
 import com.motionParts.ecommerce.repositories.ShoppingCartRepository;
+import com.motionParts.ecommerce.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ShoppingCartService {
@@ -19,46 +24,117 @@ public class ShoppingCartService {
     @Autowired
     private CartItemRepository cartItemRepository;
 
-    // Obtener todos los carritos
-    public List<ShoppingCart> listAllCarts() {
-        return shoppingCartRepository.findAll();
+    @Autowired
+    private UserRepository userRepository;
+
+    // ✅ Obtener todos los carritos en formato DTO
+    public List<ShoppingCartDTO> getAllShoppingCartsDTO() {
+        List<ShoppingCart> carts = shoppingCartRepository.findAll();
+        return carts.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    // Obtener carrito por ID
-    public ShoppingCart findCartById(Long id) {
-        return shoppingCartRepository.findById(id)
+    // ✅ Buscar carrito por ID
+    public ShoppingCartDTO getCartById(Long id) {
+        ShoppingCart cart = shoppingCartRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Carrito no encontrado con ID: " + id));
+        return convertToDTO(cart);
     }
 
-    // Obtener carritos por ID de cliente
-    public List<ShoppingCart> findCartsByClient(Long clientId) {
-        return shoppingCartRepository.findByClientId(clientId);
+    // ✅ Buscar carrito activo del usuario
+    public ShoppingCartDTO findActiveCartByUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+    
+        ShoppingCart cart = shoppingCartRepository.findByUserAndStatus(user, ShoppingCartStatus.ACTIVE)
+                .stream().findFirst() // ✅ Tomamos el primer carrito si existe
+                .orElseThrow(() -> new RuntimeException("No se encontró un carrito activo para el usuario."));
+    
+        return convertToDTO(cart);
     }
 
-    // Crear o actualizar carrito
-    public ShoppingCart createShoppingCart(ShoppingCart cart) {
-        return shoppingCartRepository.save(cart);
-    }
-
-    // Eliminar carrito por ID
-    public void removeCart(Long id) {
-        if (!shoppingCartRepository.existsById(id)) {
-            throw new RuntimeException("No se puede eliminar. Carrito no encontrado con ID: " + id);
+    // ✅ Crear un nuevo carrito solo si el usuario no tiene uno activo
+    public ShoppingCartDTO createShoppingCart(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+    
+        List<ShoppingCart> existingCarts = shoppingCartRepository.findByUserAndStatus(user, ShoppingCartStatus.ACTIVE);
+        if (!existingCarts.isEmpty()) { // ✅ Verificamos si la lista tiene elementos
+            throw new RuntimeException("El usuario ya tiene un carrito activo.");
         }
+    
+        ShoppingCart cart = new ShoppingCart(user, ShoppingCartStatus.ACTIVE);
+        shoppingCartRepository.save(cart);
+        return convertToDTO(cart);
+    }
+
+    // ✅ Completar un carrito
+    public ShoppingCartDTO completeShoppingCart(Long id) {
+        ShoppingCart cart = shoppingCartRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Carrito no encontrado con ID: " + id));
+
+        if (!cart.getStatus().equals(ShoppingCartStatus.ACTIVE)) {
+            throw new RuntimeException("Solo se pueden completar carritos activos.");
+        }
+
+        cart.setStatus(ShoppingCartStatus.COMPLETED);
+        shoppingCartRepository.save(cart);
+        return convertToDTO(cart);
+    }
+
+    // ✅ Cancelar un carrito
+    public ShoppingCartDTO cancelShoppingCart(Long id) {
+        ShoppingCart cart = shoppingCartRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Carrito no encontrado con ID: " + id));
+
+        if (!cart.getStatus().equals(ShoppingCartStatus.ACTIVE)) {
+            throw new RuntimeException("Solo se pueden cancelar carritos activos.");
+        }
+
+        cart.setStatus(ShoppingCartStatus.CANCELLED);
+        shoppingCartRepository.save(cart);
+        return convertToDTO(cart);
+    }
+
+    // ✅ Eliminar un carrito solo si está cancelado
+    public void removeCart(Long id) {
+        ShoppingCart cart = shoppingCartRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Carrito no encontrado con ID: " + id));
+
+        if (!cart.getStatus().equals(ShoppingCartStatus.CANCELLED)) {
+            throw new RuntimeException("Solo se pueden eliminar carritos cancelados.");
+        }
+
         shoppingCartRepository.deleteById(id);
     }
 
-    // Calcular el total del carrito
+    // ✅ Calcular el total del carrito
     public double calculateCartTotal(Long cartId) {
-        Optional<ShoppingCart> cart = shoppingCartRepository.findById(cartId);
-        if (cart.isEmpty()) {
-            throw new RuntimeException("Carrito no encontrado con ID: " + cartId);
-        }
-
         List<CartItem> cartItems = cartItemRepository.findByShoppingCartId(cartId);
         return cartItems.stream()
                 .mapToDouble(item -> item.getQuantity() * item.getUnitPrice())
                 .sum();
     }
-}
 
+    // ✅ Convertir ShoppingCart en ShoppingCartDTO
+    private ShoppingCartDTO convertToDTO(ShoppingCart cart) {
+        List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream()
+                .map(item -> new CartItemDTO(
+                    item.getId(),
+                    cart.getId(),
+                    item.getProduct(), // ✅ Pasamos el objeto `Product`
+                    item.getQuantity(),
+                    item.getUnitPrice(),
+                    item.getTotalPrice()
+                )).collect(Collectors.toList());
+
+        double totalCartPrice = cartItemDTOs.stream().mapToDouble(CartItemDTO::getTotalPrice).sum();
+
+        return new ShoppingCartDTO(
+                cart.getId(),
+                cart.getUser().getUsername(),
+                cartItemDTOs,
+                cart.getStatus().name(),
+                totalCartPrice
+        );
+    }
+}

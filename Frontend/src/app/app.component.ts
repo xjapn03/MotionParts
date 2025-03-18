@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
+import { ShoppingCartService } from './core/services/shoppingCart.service';
+import { ShoppingCart } from './core/models/shoppingCart.model';
+import { CartItem } from './core/models/cartItem.model';
 
 @Component({
   selector: 'app-root',
@@ -17,15 +20,11 @@ export class AppComponent implements OnInit {
   isDropdownOpen = false; // Estado del menú desplegable
   isCartModalOpen = false; // Estado del modal del carrito
   cartItemCount = 0; // Contador de elementos en el carrito
+  cartItems: CartItem[] = []; // Ahora es un array dinámico basado en datos reales
 
   private authService = inject(AuthService);
   private router = inject(Router);
-
-  cartItems = [
-    { name: 'Producto 1', price: 20 },
-    { name: 'Producto 2', price: 35 },
-    { name: 'Producto 3', price: 15 }
-  ];
+  private shoppingCartService = inject(ShoppingCartService);
 
   ngOnInit() {
     // Suscribirse al usuario autenticado
@@ -33,8 +32,8 @@ export class AppComponent implements OnInit {
       this.user = user || {}; // Se actualiza el usuario automáticamente
     });
 
-    // Actualizar el contador del carrito
-    this.updateCartCount();
+    // Cargar el carrito desde el backend
+    this.loadShoppingCart();
   }
 
   toggleDropdown() {
@@ -51,25 +50,38 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/login']); // Redirigir de forma correcta
   }
 
-  // Evita la redirección y abre el modal del carrito
   openCartModal() {
     if (this.cartItems.length > 0) {
       this.isCartModalOpen = true;
     }
-  }  
+  }
 
   closeCartModal() {
     this.isCartModalOpen = false;
   }
 
-  // Cierra el modal y redirige al carrito
   goToCart() {
     this.closeCartModal();
     this.router.navigate(['/cart']);
   }
 
-  updateCartCount() {
+  private loadShoppingCart() {
+    this.authService.user$.subscribe((user: any) => {
+      if (user?.id) {  // Asegurar que el usuario tiene un ID
+        this.shoppingCartService.getUserShoppingCart(user.id).subscribe({
+          next: (cart: ShoppingCart) => {
+            this.cartItems = cart.cartItems;
+            this.updateCartCount();
+          },
+          error: (error) => {
+            console.error('Error al obtener el carrito', error);
+          }
+        });
+      }
+    });
+  }
+
+  private updateCartCount() {
     this.cartItemCount = this.cartItems.length;
   }
 }
-

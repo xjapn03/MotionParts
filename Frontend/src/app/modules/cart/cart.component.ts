@@ -2,50 +2,43 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShoppingCartService } from '../../core/services/shoppingCart.service';
 import { ShoppingCart } from '../../core/models/shoppingCart.model';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-shopping-cart',
-  standalone: true, // Si el componente es independiente
-  imports: [CommonModule], // Importa CommonModule para usar *ngIf y *ngFor
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
+  imports: [CommonModule]
 })
 export class ShoppingCartComponent implements OnInit {
-  shoppingCarts: ShoppingCart[] = [];
-  cartTotals: { [cartId: number]: number } = {};
-  errorMessage: string | null = null;
+  shoppingCart: ShoppingCart | null = null; // ✅ Ahora solo manejamos un carrito
 
-  constructor(private shoppingCartService: ShoppingCartService) {}
+  constructor(
+    private shoppingCartService: ShoppingCartService,
+    private authService: AuthService // ✅ Inyectamos AuthService para obtener el usuario
+  ) {}
 
   ngOnInit(): void {
-    this.loadShoppingCarts();
+    this.authService.user$.subscribe((user: any) => {
+      console.log('Usuario autenticado:', user); // 👀 Ver si hay usuario
+
+      if (user?.id) {
+        this.shoppingCartService.getUserShoppingCart(user.id).subscribe({
+          next: (data) => {
+            console.log('Carrito obtenido:', data); // 👀 Ver si llega la data
+            this.shoppingCart = data;
+          },
+          error: (error) => {
+            console.error('Error al obtener el carrito del usuario', error);
+          }
+        });
+      } else {
+        console.warn('No se encontró un usuario autenticado.');
+      }
+    });
   }
 
-  // Cargar todos los carritos
-  loadShoppingCarts(): void {
-    this.shoppingCartService.getShoppingCarts().subscribe(
-      (data: ShoppingCart[]) => {
-        this.shoppingCarts = data;
-        this.errorMessage = null;
-      },
-      (error) => {
-        this.errorMessage = 'Error al cargar los carritos. Inténtalo de nuevo más tarde.';
-        console.error('Error fetching shopping carts', error);
-      }
-    );
-  }
-
-  // Calcular el total de un carrito
-  calculateTotal(cartId: number): void {
-    this.shoppingCartService.calculateCartTotal(cartId).subscribe(
-      (total: number) => {
-        this.cartTotals[cartId] = total;
-        this.errorMessage = null;
-      },
-      (error) => {
-        this.errorMessage = 'Error al calcular el total del carrito.';
-        console.error('Error calculating cart total', error);
-      }
-    );
+  trackByItemId(index: number, item: any): number {
+    return item.id;
   }
 }
