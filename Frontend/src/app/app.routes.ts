@@ -6,9 +6,14 @@ import { ContactComponent } from './modules/contact/contact.component';
 import { ShoppingCartComponent  } from './modules/cart/cart.component';
 import { AcercaComponent } from './modules/acerca/acerca.component';
 import { FaqComponent } from './modules/faq/faq.component';
+import { AdminComponent } from './modules/admin/admin.component';
+import { UsersComponent } from './modules/admin/users/users.component';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'users', component: UsersComponent },
+  { path: 'admin', component: AdminComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'products', component: ProductosComponent },
   { path: 'acerca', component: AcercaComponent },

@@ -1,0 +1,25 @@
+<div class="min-h-screen bg-gray-100">
+    <!-- Sidebar -->
+    <div class="flex flex-row">
+      <div class="w-64 bg-blue-800 p-5 text-white">
+        <h1 class="text-xl font-semibold mb-5">Admin Dashboard</h1>
+        <ul>
+
+          <li><a routerLink="/users" class="block p-2 hover:bg-blue-700">Usuarios</a></li>
+          <li><a routerLink="/productos" class="block p-2 hover:bg-blue-700">Productos</a></li>
+          <li><a routerLink="/categorias" class="block p-2 hover:bg-blue-700">Categorías</a></li>
+          <li><a routerLink="/ordenes" class="block p-2 hover:bg-blue-700">Órdenes</a></li>
+          <li><a routerLink="/facturas" class="block p-2 hover:bg-blue-700">Facturas</a></li>
+          <li><a routerLink="/ventas" class="block p-2 hover:bg-blue-700">Ventas</a></li>
+          <li><a routerLink="/reportes" class="block p-2 hover:bg-blue-700">Reportes</a></li>
+        </ul>
+      </div>
+
+
+      <router-outlet></router-outlet>
+  
+      <!-- Main Content -->
+      <div class="flex-1 p-10">
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,24 @@
+/* Puedes agregar ajustes personalizados aquí si es necesario */
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+  }
+  
+  button {
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  
+
+/* src/styles.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

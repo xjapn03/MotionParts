@@ -1,0 +1,87 @@
+<div class="max-w-4xl mx-auto p-5 bg-white shadow-lg rounded-lg">
+    <h2 class="text-3xl font-semibold mb-6 text-center text-gray-700">Gestión de Usuarios</h2>
+  
+    <!-- Formulario de Crear/Editar Usuario -->
+    <form (ngSubmit)="onSubmit()" #usuarioForm="ngForm" class="space-y-4">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+        <input
+          type="text"
+          id="name"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          [(ngModel)]="usuario.name"
+          name="name"
+          required
+        />
+      </div>
+  
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Correo</label>
+        <input
+          type="email"
+          id="email"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          [(ngModel)]="usuario.email"
+          name="email"
+          required
+        />
+      </div>
+  
+      <div>
+        <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
+        <input
+          type="text"
+          id="role"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          [(ngModel)]="usuario.role"
+          name="role"
+          required
+        />
+      </div>
+  
+      <button
+        type="submit"
+        class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
+      >
+        {{ usuario.id ? 'Actualizar Usuario' : 'Crear Usuario' }}
+      </button>
+    </form>
+  
+    <hr class="my-6" />
+  
+    <!-- Tabla de Usuarios -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-300 rounded-md shadow-md">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="p-3 text-left text-sm font-medium text-gray-700">Nombre</th>
+            <th class="p-3 text-left text-sm font-medium text-gray-700">Correo</th>
+            <th class="p-3 text-left text-sm font-medium text-gray-700">Rol</th>
+            <th class="p-3 text-left text-sm font-medium text-gray-700">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of usuarios" class="border-b hover:bg-gray-50">
+            <td class="p-3 text-sm text-gray-700">{{ user.name }}</td>
+            <td class="p-3 text-sm text-gray-700">{{ user.email }}</td>
+            <td class="p-3 text-sm text-gray-700">{{ user.role }}</td>
+            <td class="p-3 space-x-2">
+              <button
+                class="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                (click)="onEditar(user)"
+              >
+                Editar
+              </button>
+              <button
+                class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-600"
+                (click)="onEliminar(user.id)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
