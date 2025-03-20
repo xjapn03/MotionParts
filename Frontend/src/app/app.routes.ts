@@ -9,9 +9,13 @@ import { FaqComponent } from './modules/faq/faq.component';
 import { AdminComponent } from './modules/admin/admin.component';
 import { UsersComponent } from './modules/admin/users/users.component';
 import { ProductsComponent } from './modules/admin/products/products.component';
+import { InvoicesComponent } from './modules/admin/invoices/invoices.component';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+
+  { path: 'invoices', component: InvoicesComponent },
   { path: 'adminproducts', component: ProductsComponent },
   { path: 'users', component: UsersComponent },
   { path: 'admin', component: AdminComponent },
