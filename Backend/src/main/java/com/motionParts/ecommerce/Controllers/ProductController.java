@@ -18,12 +18,14 @@ public class ProductController {
     // Obtener todos los productos en formato DTO
     @GetMapping
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+        List<ProductDTO> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
     }
 
     // Obtener un producto por ID en formato DTO
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+        ProductDTO product = productService.getProductById(id);
+        return ResponseEntity.ok(product);
     }
 }

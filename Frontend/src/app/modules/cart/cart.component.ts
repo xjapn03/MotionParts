@@ -11,25 +11,21 @@ import { AuthService } from '../../core/services/auth.service';
   imports: [CommonModule]
 })
 export class ShoppingCartComponent implements OnInit {
-  shoppingCart: ShoppingCart | null = null; // ✅ Ahora solo manejamos un carrito
+  shoppingCart: ShoppingCart | null = null; //Ahora solo manejamos un carrito
 
   constructor(
     private shoppingCartService: ShoppingCartService,
-    private authService: AuthService // ✅ Inyectamos AuthService para obtener el usuario
+    private authService: AuthService //Inyectamos AuthService para obtener el usuario
   ) {}
 
   ngOnInit(): void {
     this.authService.user$.subscribe((user: any) => {
-      console.log('Usuario autenticado:', user); // 👀 Ver si hay usuario
-
       if (user?.id) {
         this.shoppingCartService.getUserShoppingCart(user.id).subscribe({
           next: (data) => {
-            console.log('Carrito obtenido:', data); // 👀 Ver si llega la data
             this.shoppingCart = data;
           },
           error: (error) => {
-            console.error('Error al obtener el carrito del usuario', error);
           }
         });
       } else {

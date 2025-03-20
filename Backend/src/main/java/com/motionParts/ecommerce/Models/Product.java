@@ -1,34 +1,36 @@
 package com.motionParts.ecommerce.Models;
 
 import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
-@Table(name = "products") // Asegúrate de que coincide con tu tabla en PostgreSQL
-
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String description;
     private int price;
     private int stock;
-    private int category_id;
     private String reference;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
-    // Constructor vacío (necesario para JPA)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductCategory> productCategories = new ArrayList<>();
+
+    // Constructor vacío necesario para JPA
     public Product() {}
 
-    public Product(String name, String description, int price, int stock, int category_id, String reference) {
+    public Product(String name, String description, int price, int stock, String reference) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
-        this.category_id = category_id;
         this.reference = reference;
     }
 
@@ -48,16 +50,15 @@ public class Product {
     public int getStock() { return stock; }
     public void setStock(int stock) { this.stock = stock; }
 
-    public int getCategory_id() { return category_id; }
-    public void setCategory_id(int category_id) { this.category_id = category_id; }
-
     public String getReference() { return reference; }
     public void setReference(String reference) { this.reference = reference; }
 
-    public LocalDateTime getCreatedDateTime() {return created_at; }
+    public LocalDateTime getCreated_at() { return created_at; }
+    public void setCreated_at(LocalDateTime created_at) { this.created_at = created_at; }
 
-    public LocalDateTime getUpdatedLocalDateTime() {return updated_at; }
+    public LocalDateTime getUpdated_at() { return updated_at; }
+    public void setUpdated_at(LocalDateTime updated_at) { this.updated_at = updated_at; }
 
-
-
+    public List<ProductCategory> getProductCategories() { return productCategories; }
+    public void setProductCategories(List<ProductCategory> productCategories) { this.productCategories = productCategories; }
 }

@@ -7,18 +7,17 @@ import { Product } from '../../../app/core/models/product.model';
 import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
 
-
-
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule], // Asegura que CommonModule está importado
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.css']
 })
 export class ProductosComponent implements OnInit {
   searchTerm = new FormControl('');
-  categoriaFiltro = new FormControl('');
+  categoriaPadreFiltro = new FormControl('');
+  subcategoriaFiltro = new FormControl('');
   precioFiltro = new FormControl('');
   ordenarPor = new FormControl('');
 
@@ -28,6 +27,8 @@ export class ProductosComponent implements OnInit {
   cantidad: number = 1;
 
   categorias: Category[] = [];
+  categoriasPadre: Category[] = [];
+  subcategorias: Category[] = [];
 
   constructor(
     private productService: ProductService,
@@ -36,24 +37,23 @@ export class ProductosComponent implements OnInit {
 
   ngOnInit() {
     this.cargarProductos();
-    this.cargarCategorias(); // ✅ Cargar categorías desde el backend
+    this.cargarCategorias();
 
-    // Aplicar filtros automáticamente cuando cambian los valores de los filtros
+    // Aplicar filtros automáticamente cuando cambian los valores
     this.searchTerm.valueChanges.subscribe(() => this.aplicarFiltros());
-    this.categoriaFiltro.valueChanges.subscribe(() => this.aplicarFiltros());
+    this.categoriaPadreFiltro.valueChanges.subscribe(() => this.cargarSubcategorias());
+    this.subcategoriaFiltro.valueChanges.subscribe(() => this.aplicarFiltros());
     this.precioFiltro.valueChanges.subscribe(() => this.aplicarFiltros());
     this.ordenarPor.valueChanges.subscribe(() => this.aplicarFiltros());
   }
 
   cargarCategorias() {
     this.categoryService.getCategories().subscribe({
-      next: (data: any[]) => { // Asegurar que `data` es un array
-        this.categorias = data.map(categoria => ({
-          id: categoria.id_category, // 👈 Renombramos id_category a id
-          name: categoria.name,
-          description: categoria.description
-        }));
-        console.log("Categorías obtenidas:", this.categorias); // Verificar transformación
+      next: (data: Category[]) => {
+        this.categorias = data;
+        // Filtrar solo categorías padre (las que no tienen `parent`)
+        this.categoriasPadre = this.categorias.filter(cat => !cat.parent);
+        console.log("Categorías obtenidas:", this.categorias);
       },
       error: (error: any) => {
         console.error('Error al obtener categorías', error);
@@ -61,10 +61,25 @@ export class ProductosComponent implements OnInit {
     });
   }
 
+  cargarSubcategorias() {
+    const categoriaSeleccionada = Number(this.categoriaPadreFiltro.value);
+
+    if (!categoriaSeleccionada) {
+      this.subcategorias = [];
+      this.subcategoriaFiltro.setValue(''); // Resetear subcategoría si no hay categoría padre
+      this.aplicarFiltros();
+      return;
+    }
+
+    this.subcategorias = this.categorias.filter(cat => cat.parent?.id === categoriaSeleccionada);
+    this.subcategoriaFiltro.setValue('');
+    this.aplicarFiltros();
+  }
+
   onImageError(event: any) {
     if (!event.target.dataset.errorHandled) {
-      event.target.dataset.errorHandled = "true"; // Evita bucle
-      event.target.src = 'assets/products/productDefault.jpg'; // ✅ Ruta corregida
+      event.target.dataset.errorHandled = "true";
+      event.target.src = 'assets/products/productDefault.jpg';
     }
   }
 
@@ -75,7 +90,7 @@ export class ProductosComponent implements OnInit {
           ...producto,
           image: producto.image
             ? `assets/products/${producto.image}`
-            : 'assets/products/productDefault.jpg' // ✅ Ruta corregida
+            : 'assets/products/productDefault.jpg'
         }));
         this.aplicarFiltros();
       },
@@ -86,36 +101,43 @@ export class ProductosComponent implements OnInit {
   }
 
   aplicarFiltros() {
-    console.log("Productos antes de filtrar:", this.productos);
+    const categoriaId = Number(this.categoriaPadreFiltro.value) || null;
+    const subcategoriaId = Number(this.subcategoriaFiltro.value) || null;
 
-    // Asegurar que `categoriaFiltro.value` tenga un valor válido
-    const categoriaSeleccionada = this.categoriaFiltro.value ?? ''; // 👈 Evitar undefined
-    console.log("Categoría seleccionada después de validar:", categoriaSeleccionada);
-    console.log("Tipo de categoría seleccionada:", typeof categoriaSeleccionada);
+    // Obtener todas las subcategorías de la categoría padre seleccionada
+    let subcategoriasIds: number[] = [];
+    if (categoriaId) {
+      subcategoriasIds = this.categorias
+        .filter(cat => cat.parent?.id === categoriaId)
+        .map(cat => cat.id);
+    }
 
     this.productosFiltrados = this.productos.filter(producto => {
-        const coincideBusqueda = this.searchTerm.value
-            ? producto.name.toLowerCase().includes(this.searchTerm.value.toLowerCase())
-            : true;
+      const coincideBusqueda = this.searchTerm.value
+        ? producto.name.toLowerCase().includes(this.searchTerm.value.toLowerCase())
+        : true;
 
-        const coincideCategoria = categoriaSeleccionada !== ''
-            ? Number(producto.category_id) === Number(categoriaSeleccionada)
-            : true;
+      // Verificar si el producto pertenece a la categoría padre o alguna de sus subcategorías
+      const coincideCategoria = categoriaId
+        ? producto.categoryIds.some(catId => catId === categoriaId || subcategoriasIds.includes(catId))
+        : true;
 
-        const coincidePrecio = this.precioFiltro.value
-            ? producto.price <= +this.precioFiltro.value
-            : true;
+      const coincideSubcategoria = subcategoriaId
+        ? producto.categoryIds.includes(subcategoriaId)
+        : true;
 
-        return coincideBusqueda && coincideCategoria && coincidePrecio;
+      const coincidePrecio = this.precioFiltro.value
+        ? producto.price <= +this.precioFiltro.value
+        : true;
+
+      return coincideBusqueda && coincideCategoria && coincideSubcategoria && coincidePrecio;
     });
-
-    console.log("Productos después de filtrar:", this.productosFiltrados);
 
     // Ordenar productos
     if (this.ordenarPor.value === 'asc') {
-        this.productosFiltrados.sort((a, b) => a.price - b.price);
+      this.productosFiltrados.sort((a, b) => a.price - b.price);
     } else if (this.ordenarPor.value === 'desc') {
-        this.productosFiltrados.sort((a, b) => b.price - a.price);
+      this.productosFiltrados.sort((a, b) => b.price - a.price);
     }
   }
 
@@ -147,8 +169,15 @@ export class ProductosComponent implements OnInit {
   }
 
   // Obtener el nombre de la categoría en base al ID
-  getCategoryName(category_id: number): string {
-    return this.categorias.find(cat => cat.id === category_id)?.name || 'Desconocida'; // ✅ Usar `name`
-  }
+  getCategoryName(categoryIds: number[]): string {
+    if (!categoryIds || categoryIds.length === 0) return "Sin categoría";
 
+    // Filtra las categorías que coinciden con los IDs del producto
+    const categoryNames = this.categorias
+      .filter(cat => categoryIds.includes(cat.id))
+      .map(cat => cat.name);
+
+    // Devuelve los nombres separados por comas
+    return categoryNames.join(", ");
+  }
 }

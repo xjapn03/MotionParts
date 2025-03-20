@@ -5,8 +5,8 @@ export interface Product {
   description: string;
   price: number;
   stock: number;
-  category_id: number;
+  categoryIds: number[]; // 🔹 Ahora es un array en lugar de un solo número
   created_at: string;
   updated_at: string;
-  image?: string
+  image?: string;
 }

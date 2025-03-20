@@ -1,5 +1,7 @@
 package com.motionParts.ecommerce.dto;
 
+import java.util.List;
+
 public class ProductDTO {
     private Long id;
     private String reference;
@@ -7,16 +9,18 @@ public class ProductDTO {
     private String description;
     private int stock;
     private double price;
+    private List<CategoryDTO> categories; // ✅ Ahora usa CategoryDTO en lugar de Long
 
     public ProductDTO() {}
 
-    public ProductDTO(Long id, String reference, String name, String description, int stock, double price) {
+    public ProductDTO(Long id, String reference, String name, String description, int stock, double price, List<CategoryDTO> categories) {
         this.id = id;
         this.reference = reference;
         this.name = name;
         this.description = description;
         this.stock = stock;
         this.price = price;
+        this.categories = categories;
     }
 
     public Long getId() { return id; }
@@ -36,4 +40,7 @@ public class ProductDTO {
 
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
+
+    public List<CategoryDTO> getCategories() { return categories; }
+    public void setCategories(List<CategoryDTO> categories) { this.categories = categories; }
 }
