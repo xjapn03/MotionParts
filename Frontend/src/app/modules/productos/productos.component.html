@@ -2,43 +2,46 @@
   <h2 class="text-3xl font-bold text-center text-white mb-6">Lista de Productos</h2>
 
   <!-- Filtros -->
-  <div class="flex flex-wrap gap-3 justify-center mb-6">
-    <input
-      type="text"
-      placeholder="Buscar producto..."
-      [formControl]="searchTerm"
-      class="w-64 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
+    <div class="flex flex-wrap gap-3 justify-center mb-6">
+      <input
+        type="text"
+        placeholder="Buscar producto..."
+        [formControl]="searchTerm"
+        class="w-64 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
 
-    <!-- Selector de Categorías Principales -->
-    <select [formControl]="categoriaPadreFiltro" class="border rounded-lg p-2">
-      <option value="">Selecciona una categoría</option>
-      <option *ngFor="let categoria of categoriasPadre" [ngValue]="categoria.id">
-        {{ categoria.name }}
-      </option>
-    </select>
+      <!-- Selector de Categorías Principales -->
+      <select [formControl]="categoriaPadreFiltro" class="border rounded-lg p-2">
+        <option [ngValue]="null">Selecciona una categoría</option>
+        <option *ngFor="let categoria of categoriasPadre" [ngValue]="categoria.id">
+          {{ categoria.name }}
+        </option>
+      </select>
 
-    <!-- Selector de Subcategorías (solo aparece si hay subcategorías) -->
-    <select *ngIf="subcategorias?.length" [formControl]="subcategoriaFiltro" class="border rounded-lg p-2">
-      <option value="">Selecciona una subcategoría</option>
-      <option *ngFor="let subcategoria of subcategorias" [ngValue]="subcategoria.id">
-        {{ subcategoria.name }}
-      </option>
-    </select>
+      <!-- Selector de Subcategorías -->
+      <select *ngIf="subcategorias?.length" [formControl]="subcategoriaFiltro" class="border rounded-lg p-2">
+        <option [ngValue]="null">Selecciona una subcategoría</option>
+        <option *ngFor="let subcategoria of subcategorias" [ngValue]="subcategoria.id">
+          {{ subcategoria.name }}
+        </option>
+      </select>
 
-    <select [formControl]="precioFiltro" class="border rounded-lg p-2">
-      <option value="">Cualquier precio</option>
-      <option value="50">Menos de $50</option>
-      <option value="100">Menos de $100</option>
-      <option value="200">Menos de $200</option>
-    </select>
+      <!-- Selector de Precio -->
+      <select [formControl]="precioFiltro" class="border rounded-lg p-2">
+        <option [ngValue]="null">Cualquier precio</option>
+        <option [ngValue]="50">Menos de $50</option>
+        <option [ngValue]="100">Menos de $100</option>
+        <option [ngValue]="200">Menos de $200</option>
+      </select>
 
-    <select [formControl]="ordenarPor" class="border rounded-lg p-2">
-      <option value="">Ordenar</option>
-      <option value="asc">Precio: Menor a Mayor</option>
-      <option value="desc">Precio: Mayor a Menor</option>
-    </select>
+      <!-- Selector de Orden -->
+      <select [formControl]="ordenarPor" class="border rounded-lg p-2">
+        <option [ngValue]="null">Ordenar</option>
+        <option [ngValue]="'asc'">Precio: Menor a Mayor</option>
+        <option [ngValue]="'desc'">Precio: Mayor a Menor</option>
+      </select>
   </div>
+
 
   <!-- Lista de productos -->
   <div class="container mx-auto max-w-6xl">
@@ -47,7 +50,6 @@
            class="bg-white shadow-lg rounded-xl overflow-hidden transform transition hover:scale-105 hover:shadow-2xl cursor-pointer"
            (click)="verDetalles(producto)">
 
-        <!-- Imagen del producto con fallback -->
         <img [src]="producto.image || 'assets/products/productDefault.jpg'"
              alt="{{ producto.name }}"
              class="w-full h-48 object-cover"
@@ -55,7 +57,10 @@
 
         <div class="p-4">
           <h3 class="text-xl font-semibold text-gray-700">{{ producto.name }}</h3>
-          <p class="text-sm text-gray-500">Categoría: {{ getCategoryName(producto.categoryIds) }}</p>
+          <p class="text-sm text-gray-500">
+            Categoría: {{ getCategoryNames(producto) }}
+
+          </p>
           <p class="text-blue-600 font-semibold text-lg mt-2">${{ producto.price }}</p>
         </div>
       </div>
@@ -63,42 +68,57 @@
   </div>
 
   <!-- MODAL DETALLES DEL PRODUCTO -->
-  <div *ngIf="productoSeleccionado" class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 p-6">
-    <div class="product-container p-6 bg-white shadow-lg rounded-xl max-w-4xl mx-auto z-50">
-      <!-- Imagen principal con fallback -->
+  <div *ngIf="productoSeleccionado"
+       class="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50 p-6"
+       role="dialog"
+       [attr.aria-hidden]="!productoSeleccionado">
+    <div class="relative p-6 bg-white shadow-lg rounded-xl max-w-4xl mx-auto">
+      
+      <button (click)="cerrarModal()"
+              class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-2xl focus:outline-none">
+        &times;
+      </button>
+
       <div class="image-container">
         <img [src]="productoSeleccionado.image || 'assets/products/productDefault.jpg'"
-             alt="Imagen Principal"
-             class="main-image w-full h-64 object-cover"
+             alt="{{ productoSeleccionado.name }}"
+             class="w-full h-64 object-cover"
              (error)="onImageError($event)">
       </div>
 
-      <div class="product-info mt-4">
+      <div class="mt-4">
         <h3 class="text-2xl font-semibold text-gray-700">{{ productoSeleccionado.name }}</h3>
         <p class="text-gray-600">{{ productoSeleccionado.description }}</p>
+        <p class="text-sm text-gray-500">
+          Categoría: {{ getCategoryNames(productoSeleccionado) }}
+
+        </p>
         <p class="text-lg text-blue-600 font-semibold mt-2">${{ productoSeleccionado.price }}</p>
 
-        <!-- Selector de cantidad -->
-        <div class="quantity-selector mt-4 flex items-center">
+        <div class="mt-4 flex items-center">
           <label for="cantidad" class="text-lg mr-2">Cantidad:</label>
-          <button (click)="decreaseQuantity()" class="text-2xl px-4 py-2 bg-gray-200 rounded-full">-</button>
+          <button (click)="decreaseQuantity()"
+                  class="text-2xl px-4 py-2 bg-gray-200 rounded-full focus:outline-none">
+            -
+          </button>
           <input type="number" [(ngModel)]="cantidad" min="1" id="cantidad"
                  class="p-2 border rounded-md w-16 text-center mx-2">
-          <button (click)="increaseQuantity()" class="text-2xl px-4 py-2 bg-gray-200 rounded-full">+</button>
+          <button (click)="increaseQuantity()"
+                  class="text-2xl px-4 py-2 bg-gray-200 rounded-full focus:outline-none">
+            +
+          </button>
         </div>
 
-        <!-- Botones de acción -->
         <div class="mt-4 flex gap-4">
-          <button (click)="buyNow()" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+          <button (click)="buyNow()"
+                  class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none">
             Comprar Ahora
           </button>
-          <button (click)="addToCart()" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+          <button (click)="addToCart()"
+                  class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none">
             Agregar al Carrito
           </button>
         </div>
-
-        <!-- Botón para cerrar el modal -->
-        <button (click)="cerrarModal()" class="mt-4 text-red-500 hover:text-red-700">Cerrar</button>
       </div>
     </div>
   </div>

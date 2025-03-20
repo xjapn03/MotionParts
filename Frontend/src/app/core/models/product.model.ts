@@ -1,3 +1,5 @@
+import { Category } from "./category.model";
+
 export interface Product {
   id: number;
   reference: string;
@@ -5,7 +7,7 @@ export interface Product {
   description: string;
   price: number;
   stock: number;
-  categoryIds: number[]; // 🔹 Ahora es un array en lugar de un solo número
+  categories: Category[]; // 🔹 Cambiado de categoryIds a categories
   created_at: string;
   updated_at: string;
   image?: string;

@@ -296,6 +296,7 @@ CREATE TABLE public.products (
 
 ALTER TABLE public.products OWNER TO postgres;
 
+
 --
 -- TOC entry 221 (class 1259 OID 16416)
 -- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres

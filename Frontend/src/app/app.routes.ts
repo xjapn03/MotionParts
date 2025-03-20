@@ -9,18 +9,32 @@ import { FaqComponent } from './modules/faq/faq.component';
 import { AdminComponent } from './modules/admin/admin.component';
 import { UsersComponent } from './modules/admin/users/users.component';
 import { ProductsComponent } from './modules/admin/products/products.component';
+import { CategoriesComponent } from './modules/admin/categories/categories.component';
+import { OrdersComponent } from './modules/admin/orders/orders.component';
+import { InvoicesComponent } from './modules/admin/invoices/invoices.component';
+import { SalesReportComponent } from './modules/admin/sales-report/sales-report.component';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
-  { path: 'adminproducts', component: ProductsComponent },
-  { path: 'users', component: UsersComponent },
-  { path: 'admin', component: AdminComponent },
+  {
+    path: 'admin',
+    component: AdminComponent,
+    children: [
+      { path: 'users', component: UsersComponent },
+      { path: 'products', component: ProductsComponent },
+      { path: 'categories', component: CategoriesComponent },
+      { path: 'orders', component: OrdersComponent },
+      { path: 'invoices', component: InvoicesComponent },
+      { path: 'sales-report', component: SalesReportComponent }
+    ]
+  },
   { path: 'faq', component: FaqComponent },
   { path: 'products', component: ProductosComponent },
   { path: 'acerca', component: AcercaComponent },
-  { path: 'cart', component: ShoppingCartComponent  },
+  { path: 'cart', component: ShoppingCartComponent },
   { path: 'contact', component: ContactComponent },
-  { path: 'home', component: HomeComponent }, // Página principal
-  { path: '**', redirectTo: 'home' }, // Redirigir a login por defecto
-  { path: '', component: HomeComponent },
+  { path: 'home', component: HomeComponent },
+  { path: '**', redirectTo: 'home' },
+  { path: '', component: HomeComponent }
 ];

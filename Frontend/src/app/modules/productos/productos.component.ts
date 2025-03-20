@@ -16,10 +16,10 @@ import { Category } from '../../core/models/category.model';
 })
 export class ProductosComponent implements OnInit {
   searchTerm = new FormControl('');
-  categoriaPadreFiltro = new FormControl('');
-  subcategoriaFiltro = new FormControl('');
-  precioFiltro = new FormControl('');
-  ordenarPor = new FormControl('');
+  categoriaPadreFiltro = new FormControl(null);
+  subcategoriaFiltro = new FormControl(null);
+  precioFiltro = new FormControl(null);
+  ordenarPor = new FormControl(null);
 
   productos: Product[] = [];
   productosFiltrados: Product[] = [];
@@ -51,9 +51,7 @@ export class ProductosComponent implements OnInit {
     this.categoryService.getCategories().subscribe({
       next: (data: Category[]) => {
         this.categorias = data;
-        // Filtrar solo categorías padre (las que no tienen `parent`)
         this.categoriasPadre = this.categorias.filter(cat => !cat.parent);
-        console.log("Categorías obtenidas:", this.categorias);
       },
       error: (error: any) => {
         console.error('Error al obtener categorías', error);
@@ -62,25 +60,10 @@ export class ProductosComponent implements OnInit {
   }
 
   cargarSubcategorias() {
-    const categoriaSeleccionada = Number(this.categoriaPadreFiltro.value);
-
-    if (!categoriaSeleccionada) {
-      this.subcategorias = [];
-      this.subcategoriaFiltro.setValue(''); // Resetear subcategoría si no hay categoría padre
-      this.aplicarFiltros();
-      return;
-    }
-
-    this.subcategorias = this.categorias.filter(cat => cat.parent?.id === categoriaSeleccionada);
-    this.subcategoriaFiltro.setValue('');
+    const categoriaSeleccionada = this.categoriaPadreFiltro.value;
+    this.subcategorias = categoriaSeleccionada ? this.categorias.filter(cat => cat.parent?.id === categoriaSeleccionada) : [];
+    this.subcategoriaFiltro.setValue(null);
     this.aplicarFiltros();
-  }
-
-  onImageError(event: any) {
-    if (!event.target.dataset.errorHandled) {
-      event.target.dataset.errorHandled = "true";
-      event.target.src = 'assets/products/productDefault.jpg';
-    }
   }
 
   cargarProductos() {
@@ -88,9 +71,8 @@ export class ProductosComponent implements OnInit {
       next: (data) => {
         this.productos = data.map(producto => ({
           ...producto,
-          image: producto.image
-            ? `assets/products/${producto.image}`
-            : 'assets/products/productDefault.jpg'
+          image: producto.image ? `assets/products/${producto.image}` : 'assets/products/productDefault.jpg',
+          categories: producto.categories || []
         }));
         this.aplicarFiltros();
       },
@@ -101,39 +83,21 @@ export class ProductosComponent implements OnInit {
   }
 
   aplicarFiltros() {
-    const categoriaId = Number(this.categoriaPadreFiltro.value) || null;
-    const subcategoriaId = Number(this.subcategoriaFiltro.value) || null;
+    const categoriaId = this.categoriaPadreFiltro.value;
+    const subcategoriaId = this.subcategoriaFiltro.value;
 
-    // Obtener todas las subcategorías de la categoría padre seleccionada
-    let subcategoriasIds: number[] = [];
-    if (categoriaId) {
-      subcategoriasIds = this.categorias
-        .filter(cat => cat.parent?.id === categoriaId)
-        .map(cat => cat.id);
-    }
+    let subcategoriasIds: number[] = categoriaId ? this.categorias.filter(cat => cat.parent?.id === categoriaId).map(cat => cat.id) : [];
 
     this.productosFiltrados = this.productos.filter(producto => {
-      const coincideBusqueda = this.searchTerm.value
-        ? producto.name.toLowerCase().includes(this.searchTerm.value.toLowerCase())
-        : true;
-
-      // Verificar si el producto pertenece a la categoría padre o alguna de sus subcategorías
-      const coincideCategoria = categoriaId
-        ? producto.categoryIds.some(catId => catId === categoriaId || subcategoriasIds.includes(catId))
-        : true;
-
-      const coincideSubcategoria = subcategoriaId
-        ? producto.categoryIds.includes(subcategoriaId)
-        : true;
-
-      const coincidePrecio = this.precioFiltro.value
-        ? producto.price <= +this.precioFiltro.value
-        : true;
-
-      return coincideBusqueda && coincideCategoria && coincideSubcategoria && coincidePrecio;
+      const categoryIds = producto.categories.map(cat => cat.id);
+      return (
+        (!this.searchTerm.value || producto.name.toLowerCase().includes(this.searchTerm.value.toLowerCase())) &&
+        (!categoriaId || categoryIds.some(catId => catId === categoriaId || subcategoriasIds.includes(catId))) &&
+        (!subcategoriaId || categoryIds.includes(subcategoriaId)) &&
+        (!this.precioFiltro.value || producto.price <= +this.precioFiltro.value)
+      );
     });
 
-    // Ordenar productos
     if (this.ordenarPor.value === 'asc') {
       this.productosFiltrados.sort((a, b) => a.price - b.price);
     } else if (this.ordenarPor.value === 'desc') {
@@ -142,7 +106,7 @@ export class ProductosComponent implements OnInit {
   }
 
   verDetalles(producto: Product) {
-    this.productoSeleccionado = producto;
+    this.productoSeleccionado = { ...producto, categories: producto.categories || [] };
     this.cantidad = 1;
   }
 
@@ -168,16 +132,14 @@ export class ProductosComponent implements OnInit {
     console.log(`Agregado al carrito: ${this.cantidad} unidad(es) de ${this.productoSeleccionado?.name}`);
   }
 
-  // Obtener el nombre de la categoría en base al ID
-  getCategoryName(categoryIds: number[]): string {
-    if (!categoryIds || categoryIds.length === 0) return "Sin categoría";
+  getCategoryNames(producto: Product | null): string {
+    return producto?.categories?.length ? producto.categories.map(cat => cat.name).join(', ') : 'Sin categoría';
+  }
 
-    // Filtra las categorías que coinciden con los IDs del producto
-    const categoryNames = this.categorias
-      .filter(cat => categoryIds.includes(cat.id))
-      .map(cat => cat.name);
-
-    // Devuelve los nombres separados por comas
-    return categoryNames.join(", ");
+  onImageError(event: any) {
+    if (!event.target.dataset.errorHandled) {
+      event.target.dataset.errorHandled = "true";
+      event.target.src = 'assets/products/productDefault.jpg';
+    }
   }
 }
