@@ -1,56 +1,60 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-users',
-  imports: [FormsModule, CommonModule],
+  standalone: true,
+  imports: [FormsModule, CommonModule], // 🔥 Se eliminó AdminComponent
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css'
+  styleUrls: ['./users.component.css']
 })
 export class UsersComponent {
-  // Lista de usuarios (simulada)
+  searchTerm: string = '';
+  selectedCategory: string = '';
+  categorias: string[] = ['Admin', 'Vendedor', 'Cliente']; // Ejemplo de categorías
+
   usuarios = [
-    { id: 1, name: 'Juan Pérez', email: 'juan@ejemplo.com', role: 'Admin' },
-    { id: 2, name: 'Ana García', email: 'ana@ejemplo.com', role: 'Usuario' },
+    { id: 1, name: 'Juan Pérez', email: 'juan@example.com', role: 'Admin' },
+    { id: 2, name: 'Ana Gómez', email: 'ana@example.com', role: 'Cliente' },
+    { id: 3, name: 'Carlos López', email: 'carlos@example.com', role: 'Vendedor' },
   ];
 
-  usuario = { id: 0, name: '', email: '', role: '' }; // Usuario vacío para el formulario
+  usuario = { id: 0, name: '', email: '', role: '' }; // 🔥 Se cambió null a 0 para evitar errores
 
-  constructor() { }
-
-  ngOnInit(): void {
+  // Método para filtrar usuarios por nombre y categoría
+  get filteredUsers() {
+    return this.usuarios.filter((user) => {
+      return (
+        (!this.selectedCategory || user.role === this.selectedCategory) &&
+        (!this.searchTerm || user.name.toLowerCase().includes(this.searchTerm.toLowerCase()))
+      );
+    });
   }
 
-  // Simulación de crear o editar un usuario
-  onSubmit(): void {
-    if (this.usuario.id) {
-      // Actualizar usuario (si ya tiene id)
-      const index = this.usuarios.findIndex(u => u.id === this.usuario.id);
+  onSubmit() {
+    if (this.usuario.id !== 0) {
+      const index = this.usuarios.findIndex((u) => u.id === this.usuario.id);
       if (index !== -1) {
         this.usuarios[index] = { ...this.usuario };
       }
     } else {
-      // Crear un nuevo usuario (sin id)
-      this.usuario.id = this.usuarios.length + 1; // Asignamos un id incremental
+      this.usuario.id = this.usuarios.length + 1; // 🔥 Asegurar un ID numérico
       this.usuarios.push({ ...this.usuario });
     }
-    this.resetFormulario();
+    this.resetUsuario();
   }
 
-  // Llenar el formulario con los datos del usuario para editar
-  onEditar(usuario: any): void {
-    this.usuario = { ...usuario };
+  onEditar(user: any) {
+    this.usuario = { ...user };
   }
 
-  // Eliminar un usuario
-  onEliminar(id: number): void {
-    this.usuarios = this.usuarios.filter(user => user.id !== id);
+  onEliminar(id: number) {
+    this.usuarios = this.usuarios.filter((u) => u.id !== id);
   }
 
-  // Limpiar el formulario
-  resetFormulario(): void {
+  resetUsuario() {
     this.usuario = { id: 0, name: '', email: '', role: '' };
   }
-
 }
+

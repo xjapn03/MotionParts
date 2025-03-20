@@ -1,1 +1,96 @@
-<p>products works!</p>
+<div class="max-w-6xl mx-auto p-8 bg-gradient-to-r from-green-50 to-gray-100 shadow-xl rounded-lg">
+    <h2 class="text-4xl font-bold mb-8 text-center text-gray-800">Gestión de Productos</h2>
+  
+    <!-- Formulario de Producto -->
+    <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="bg-white p-6 rounded-lg shadow-md space-y-4">
+      <div>
+        <label class="block text-sm font-semibold text-gray-700">Nombre del Producto</label>
+        <input
+          type="text"
+          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          [(ngModel)]="product.name"
+          name="name"
+          required
+        />
+      </div>
+  
+      <div>
+        <label class="block text-sm font-semibold text-gray-700">Precio</label>
+        <input
+          type="number"
+          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          [(ngModel)]="product.price"
+          name="price"
+          required
+        />
+      </div>
+  
+      <div>
+        <label class="block text-sm font-semibold text-gray-700">Stock</label>
+        <input
+          type="number"
+          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          [(ngModel)]="product.stock"
+          name="stock"
+          required
+        />
+      </div>
+  
+      <button
+        type="submit"
+        class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition duration-300 shadow-md font-semibold"
+      >
+        {{ product.id ? 'Actualizar Producto' : 'Crear Producto' }}
+      </button>
+    </form>
+  
+    <!-- Buscador por ID -->
+    <div class="flex justify-between items-center my-6 p-4 bg-white rounded-lg shadow-md">
+      <input
+        type="number"
+        [(ngModel)]="searchId"
+        placeholder="Buscar por ID..."
+        class="w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+      />
+    </div>
+  
+    <hr class="my-6 border-gray-300" />
+  
+    <!-- Tabla de Productos -->
+    <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+      <table class="w-full text-left border border-gray-300 rounded-md">
+        <thead>
+          <tr class="bg-gray-200 text-gray-800">
+            <th class="p-4">ID</th>
+            <th class="p-4">Nombre</th>
+            <th class="p-4">Precio</th>
+            <th class="p-4">Stock</th>
+            <th class="p-4 text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts" class="border-b hover:bg-gray-100 transition">
+            <td class="p-4">{{ product.id }}</td>
+            <td class="p-4">{{ product.name }}</td>
+            <td class="p-4">{{ product.price | currency }}</td>
+            <td class="p-4">{{ product.stock }}</td>
+            <td class="p-4 text-center flex gap-2 justify-center">
+              <button
+                class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md"
+                (click)="onEdit(product)"
+              >
+                ✏ Editar
+              </button>
+              <button
+                class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 shadow-md"
+                (click)="onDelete(product.id)"
+              >
+                🗑 Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

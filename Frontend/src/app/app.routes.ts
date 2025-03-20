@@ -8,10 +8,11 @@ import { AcercaComponent } from './modules/acerca/acerca.component';
 import { FaqComponent } from './modules/faq/faq.component';
 import { AdminComponent } from './modules/admin/admin.component';
 import { UsersComponent } from './modules/admin/users/users.component';
-
+import { ProductsComponent } from './modules/admin/products/products.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'adminproducts', component: ProductsComponent },
   { path: 'users', component: UsersComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'faq', component: FaqComponent },
