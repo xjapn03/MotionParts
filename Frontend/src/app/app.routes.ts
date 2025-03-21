@@ -14,6 +14,7 @@ import { OrdersComponent } from './modules/admin/orders/orders.component';
 import { InvoicesComponent } from './modules/admin/invoices/invoices.component';
 import { SalesComponent } from './modules/admin/sales/sales.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { SalesComponent } from './modules/admin/sales/sales.component';
 
 
 export const routes: Routes = [
@@ -28,9 +29,14 @@ export const routes: Routes = [
       { path: 'categories', component: CategoriesComponent },
       { path: 'orders', component: OrdersComponent },
       { path: 'invoices', component: InvoicesComponent },
-      { path: 'sales', component: SalesComponent }
+      { path: 'sales-report', component: SalesReportComponent }
     ]
   },
+
+  { path: 'invoices', component: InvoicesComponent },
+  { path: 'adminproducts', component: ProductsComponent },
+  { path: 'users', component: UsersComponent },
+  { path: 'admin', component: AdminComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'products', component: ProductosComponent },
   { path: 'acerca', component: AcercaComponent },

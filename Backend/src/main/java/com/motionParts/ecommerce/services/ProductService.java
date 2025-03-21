@@ -7,7 +7,6 @@ import com.motionParts.ecommerce.repositories.ProductRepository;
 import com.motionParts.ecommerce.repositories.ProductCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +34,17 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
     }
 
+    // Actualizar la imagen de un producto
+    public ProductDTO updateProductImage(Long productId, String imageUrl) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + productId));
+
+        product.setImageUrl(imageUrl);
+        productRepository.save(product);
+
+        return convertToDTO(product);
+    }
+
     // Obtener las categorías asociadas a un producto
     public List<CategoryDTO> getCategoriesByProductId(Long productId) {
         return productCategoryRepository.findByProductId(productId)
@@ -58,6 +68,7 @@ public class ProductService {
                 product.getDescription(),
                 product.getStock(),
                 product.getPrice(),
+                product.getImageUrl(),  // Añadir la imagen en el DTO
                 categories
         );
     }
