@@ -12,7 +12,7 @@ import { ProductsComponent } from './modules/admin/products/products.component';
 import { CategoriesComponent } from './modules/admin/categories/categories.component';
 import { OrdersComponent } from './modules/admin/orders/orders.component';
 import { InvoicesComponent } from './modules/admin/invoices/invoices.component';
-import { SalesReportComponent } from './modules/admin/sales-report/sales-report.component';
+import { SalesComponent } from './modules/admin/sales/sales.component';
 
 
 export const routes: Routes = [
@@ -26,9 +26,14 @@ export const routes: Routes = [
       { path: 'categories', component: CategoriesComponent },
       { path: 'orders', component: OrdersComponent },
       { path: 'invoices', component: InvoicesComponent },
-      { path: 'sales-report', component: SalesReportComponent }
+      { path: 'sales-report', component: SalesComponent }
     ]
   },
+
+  { path: 'invoices', component: InvoicesComponent },
+  { path: 'adminproducts', component: ProductsComponent },
+  { path: 'users', component: UsersComponent },
+  { path: 'admin', component: AdminComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'products', component: ProductosComponent },
   { path: 'acerca', component: AcercaComponent },

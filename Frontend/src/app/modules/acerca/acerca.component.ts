@@ -8,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class AcercaComponent {
 
+  // Método para abrir un archivo en una nueva pestaña
+  openInNewTab(filePath: string): void {
+    const url = `assets/${filePath}`;  // Ruta al archivo dentro de la carpeta assets
+    window.open(url, '_blank');
+  }
 }

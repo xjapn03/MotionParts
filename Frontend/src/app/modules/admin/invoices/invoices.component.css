@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Si quieres personalizar estilos más allá de lo que ofrece Tailwind */
+
+/* Ejemplo de personalización */
+.container {
+    max-width: 1200px;
+  }
+  
