@@ -1,1 +1,51 @@
-<p>orders works!</p>
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Órdenes</h1>
+  
+    <div *ngFor="let order of orders" class="bg-white shadow-lg rounded-lg p-6 mb-6 border-l-4" [ngClass]="{
+      'border-blue-500': order.status === 'Pendiente',
+      'border-green-500': order.status === 'Entregado',
+      'border-red-500': order.status === 'Erróneo'
+    }">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-800">Orden: {{ order.id }}</h2>
+          <p class="text-sm text-gray-600">Fecha: {{ order.date }}</p>
+          <p class="text-sm text-gray-600">Cliente: {{ order.customer }}</p>
+          <p class="text-sm text-gray-600">Estado: <span [ngClass]="{
+            'text-blue-500': order.status === 'Pendiente',
+            'text-green-500': order.status === 'Entregado',
+            'text-red-500': order.status === 'Erróneo'
+          }">{{ order.status }}</span></p>
+        </div>
+        <div class="text-right">
+          <span class="text-lg font-semibold text-gray-900">Total: ${{ order.total }}</span>
+        </div>
+      </div>
+  
+      <table class="min-w-full mt-4 border-collapse">
+        <thead>
+          <tr>
+            <th class="py-2 px-4 border-b text-left text-sm text-gray-700">Descripción</th>
+            <th class="py-2 px-4 border-b text-left text-sm text-gray-700">Precio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of order.items">
+            <td class="py-2 px-4 border-b text-sm text-gray-600">{{ item.description }}</td>
+            <td class="py-2 px-4 border-b text-sm text-gray-600">${{ item.price }}</td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <button (click)="toggleDetails(order.id)" class="mt-4 text-sm text-blue-600 hover:underline">
+        {{ showDetails[order.id] ? 'Ocultar detalles' : 'Ver detalles' }}
+      </button>
+  
+      <div *ngIf="showDetails[order.id]" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-800">Detalles adicionales</h3>
+        <p class="text-sm text-gray-600">Dirección de Envío: {{ order.shippingAddress }}</p>
+        <p class="text-sm text-gray-600">Método de Pago: {{ order.paymentMethod }}</p>
+      </div>
+    </div>
+  </div>
+  
