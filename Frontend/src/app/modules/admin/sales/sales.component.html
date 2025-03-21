@@ -1,0 +1,62 @@
+<div class="max-w-6xl mx-auto p-8 bg-white shadow-lg rounded-lg">
+    <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Reporte de Ventas</h2>
+  
+    <!-- Filtros -->
+    <div class="flex justify-center space-x-4 mb-6">
+      <button class="px-4 py-2 bg-blue-500 text-white rounded-lg" (click)="selectedFilter='day'; applyFilter()">Día</button>
+      <button class="px-4 py-2 bg-blue-500 text-white rounded-lg" (click)="selectedFilter='week'; applyFilter()">Semana</button>
+      <button class="px-4 py-2 bg-blue-500 text-white rounded-lg" (click)="selectedFilter='month'; applyFilter()">Mes</button>
+    </div>
+  
+    <!-- Resumen -->
+    <div class="bg-gray-100 p-4 rounded-lg mb-6">
+      <p class="text-xl font-semibold">Total Productos Vendidos: {{ totalProductsSold }}</p>
+      <p class="text-xl font-semibold">Total Ingresos: ${{ totalRevenue | number }}</p>
+    </div>
+  
+    <!-- Gráfica de Ventas -->
+    <div class="mb-6">
+      <canvas id="salesChart"></canvas>
+    </div>
+  
+    <!-- Lista de ventas -->
+    <table class="w-full border-collapse border border-gray-300 mb-6">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="border border-gray-300 px-4 py-2">Producto</th>
+          <th class="border border-gray-300 px-4 py-2">Cantidad</th>
+          <th class="border border-gray-300 px-4 py-2">Precio</th>
+          <th class="border border-gray-300 px-4 py-2">Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sale of filteredSales" class="border-b hover:bg-gray-100">
+          <td class="border border-gray-300 px-4 py-2">{{ sale.name || sale.product }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ sale.quantity }}</td>
+          <td class="border border-gray-300 px-4 py-2">${{ sale.price | number }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ sale.date | date:'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Productos más vendidos -->
+    <div class="bg-gray-100 p-4 rounded-lg mb-6">
+      <h3 class="text-xl font-semibold mb-4">Productos Más Vendidos</h3>
+      <ul>
+        <li *ngFor="let product of topSellingProducts" class="mb-2">
+          {{ product.name || product.product }} - {{ product.quantity }} vendidos
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Productos menos vendidos -->
+    <div class="bg-gray-100 p-4 rounded-lg mb-6">
+      <h3 class="text-xl font-semibold mb-4">Productos Menos Vendidos</h3>
+      <ul>
+        <li *ngFor="let product of leastSellingProducts" class="mb-2">
+          {{ product.name || product.product }} - {{ product.quantity }} vendidos
+        </li>
+      </ul>
+    </div>
+  </div>
+  

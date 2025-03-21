@@ -1,1 +1,44 @@
-<p>invoices works!</p>
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Facturas</h1>
+  
+    <div *ngFor="let invoice of invoices" class="bg-white shadow-md rounded-lg p-4 mb-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-xl font-bold text-gray-800">Factura: {{ invoice.id }}</h2>
+          <p class="text-sm text-gray-600">Fecha: {{ invoice.date }}</p>
+          <p class="text-sm text-gray-600">Cliente: {{ invoice.customer }}</p>
+        </div>
+        <div class="text-right">
+          <span class="text-lg font-semibold text-gray-900">Total: ${{ invoice.total }}</span>
+        </div>
+      </div>
+  
+      <table class="min-w-full mt-4 border-collapse">
+        <thead>
+          <tr>
+            <th class="py-2 px-4 border-b text-left text-sm text-gray-700">Descripción</th>
+            <th class="py-2 px-4 border-b text-left text-sm text-gray-700">Precio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of invoice.items">
+            <td class="py-2 px-4 border-b text-sm text-gray-600">{{ item.description }}</td>
+            <td class="py-2 px-4 border-b text-sm text-gray-600">${{ item.price }}</td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <!-- Botón para alternar detalles -->
+      <button (click)="toggleDetails(invoice.id)" class="mt-4 text-sm text-blue-600 hover:underline">
+        {{ showDetails[invoice.id] ? 'Ocultar detalles' : 'Ver detalles' }}
+      </button>
+  
+      <!-- Detalles adicionales de la factura -->
+      <div *ngIf="showDetails[invoice.id]" class="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-800">Detalles adicionales</h3>
+        <p class="text-sm text-gray-600">Dirección de Envío: {{ invoice.shippingAddress }}</p>
+        <p class="text-sm text-gray-600">Método de Pago: {{ invoice.paymentMethod }}</p>
+      </div>
+    </div>
+  </div>
+  
