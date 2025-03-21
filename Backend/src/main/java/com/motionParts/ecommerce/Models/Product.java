@@ -17,21 +17,32 @@ public class Product {
     private int price;
     private int stock;
     private String reference;
+
+    // Nueva columna para la imagen
+    private String imageUrl;
+
+    @Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime created_at;
+
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updated_at;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductCategory> productCategories = new ArrayList<>();
 
-    // Constructor vacío necesario para JPA
+    // Constructor vacío para JPA
     public Product() {}
 
-    public Product(String name, String description, int price, int stock, String reference) {
+    // Constructor con imagen
+    public Product(String name, String description, int price, int stock, String reference, String imageUrl) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.reference = reference;
+        this.imageUrl = imageUrl;
+        this.created_at = LocalDateTime.now();
+        this.updated_at = LocalDateTime.now();
     }
 
     // Getters y Setters
@@ -52,6 +63,9 @@ public class Product {
 
     public String getReference() { return reference; }
     public void setReference(String reference) { this.reference = reference; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
     public LocalDateTime getCreated_at() { return created_at; }
     public void setCreated_at(LocalDateTime created_at) { this.created_at = created_at; }
