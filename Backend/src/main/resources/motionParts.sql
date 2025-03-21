@@ -295,6 +295,7 @@ CREATE TABLE public.products (
 
 
 ALTER TABLE public.products OWNER TO postgres;
+ALTER TABLE productos ADD COLUMN imagen_url TEXT NULL; --Text para no tener limite de caracteres
 
 --
 -- TOC entry 221 (class 1259 OID 16416)
