@@ -1,6 +1,7 @@
 package com.motionParts.ecommerce.Controllers;
 
 import com.motionParts.ecommerce.dto.ShoppingCartDTO;
+import com.motionParts.ecommerce.dto.CartItemDTO;
 import com.motionParts.ecommerce.services.ShoppingCartService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,18 @@ public class ShoppingCartController {
     @Autowired
     private ShoppingCartService shoppingCartService;
 
-    // ✅ Obtener el carrito activo del usuario autenticado
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<ShoppingCartDTO> getActiveCartByUser(@PathVariable Long userId) {
-        ShoppingCartDTO cartDTO = shoppingCartService.findActiveCartByUser(userId);
+    // ✅ Obtener el carrito activo del usuario autenticado 
+    @PostMapping("/users/{userId}/add")
+    public ResponseEntity<ShoppingCartDTO> addToCart(
+            @PathVariable Long userId,
+            @RequestBody CartItemDTO cartItemDto) { // ✅ Ahora usa CartItemDTO
+        ShoppingCartDTO updatedCart = shoppingCartService.addToCart(userId, cartItemDto);
+        return ResponseEntity.ok(updatedCart);
+    }
+    
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ShoppingCartDTO> getShoppingCartByUser(@PathVariable Long userId) {
+        ShoppingCartDTO cartDTO = shoppingCartService.getShoppingCartByUser(userId);
         return ResponseEntity.ok(cartDTO);
     }
 

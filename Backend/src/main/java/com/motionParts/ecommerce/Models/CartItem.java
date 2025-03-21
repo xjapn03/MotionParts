@@ -25,12 +25,17 @@ public class CartItem {
 
     public CartItem() {}
 
-    public CartItem(ShoppingCart shoppingCart, Product product, int quantity, double unitPrice) {
+    public CartItem(ShoppingCart shoppingCart, Product product, int quantity, double unitPrice, double totalPrice) {
         this.shoppingCart = shoppingCart;
         this.product = product;
-        this.quantity = Math.max(quantity, 0); // Evita valores negativos
-        this.unitPrice = Math.max(unitPrice, 0); // Evita valores negativos
-        this.calculateTotalPrice();
+        this.quantity = Math.max(quantity, 0);
+        this.unitPrice = Math.max(unitPrice, 0);
+        this.totalPrice = totalPrice; // ✅ Ahora acepta el totalPrice como parámetro
+    }
+    
+    // ✅ Método para modificar totalPrice manualmente
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public Long getId() { return id; }

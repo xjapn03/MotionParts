@@ -13,6 +13,7 @@ import { CategoriesComponent } from './modules/admin/categories/categories.compo
 import { OrdersComponent } from './modules/admin/orders/orders.component';
 import { InvoicesComponent } from './modules/admin/invoices/invoices.component';
 import { SalesReportComponent } from './modules/admin/sales-report/sales-report.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 
 export const routes: Routes = [
@@ -20,6 +21,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
+    canActivate: [AuthGuard], // 🔐 Protección con el guard
     children: [
       { path: 'users', component: UsersComponent },
       { path: 'products', component: ProductsComponent },

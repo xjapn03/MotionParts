@@ -58,7 +58,10 @@ public class CartItemService {
             cartItem = existingCartItem.get();
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
         } else {
-            cartItem = new CartItem(shoppingCart, product, quantity, product.getPrice());
+            double unitPrice = (double) product.getPrice(); // Conversión explícita
+            double totalPrice = unitPrice * quantity;
+            cartItem = new CartItem(shoppingCart, product, quantity, unitPrice, totalPrice);
+
         }
 
         cartItemRepository.save(cartItem);

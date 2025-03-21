@@ -2,8 +2,8 @@ import { Product } from "./product.model"; // Asegúrate de importar correctamen
 
 export interface CartItem {
   id: number;
-  shoppingCartId: number;
-  product: Product;  // 🔹 Debe coincidir con lo que envía el backend
+  shoppingCartId?: number;  // 🔹 Hacerlo opcional con '?'
+  product: Product;
   quantity: number;
   unitPrice: number;
   totalPrice: number;

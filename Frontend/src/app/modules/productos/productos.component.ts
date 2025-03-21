@@ -6,6 +6,8 @@ import { ProductService } from '../../core/services/products.service';
 import { Product } from '../../../app/core/models/product.model';
 import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
+import { ShoppingCartService } from '../../core/services/shoppingCart.service'; // Importa el servicio
+import { CartItem } from '../../core/models/cartItem.model';
 
 @Component({
   selector: 'app-productos',
@@ -32,7 +34,8 @@ export class ProductosComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private shoppingCartService: ShoppingCartService // Inyecta el servicio del carrito
   ) {}
 
   ngOnInit() {
@@ -129,8 +132,73 @@ export class ProductosComponent implements OnInit {
   }
 
   addToCart() {
-    console.log(`Agregado al carrito: ${this.cantidad} unidad(es) de ${this.productoSeleccionado?.name}`);
+    if (!this.productoSeleccionado) return;
+
+    const userId = this.getAuthenticatedUserId();
+
+    if (!userId) {
+      // 🟢 Usuario no autenticado → Agregar al carrito de invitados
+      const guestCartItem: CartItem = {
+        id: 0, // Se usa solo en backend
+        product: this.productoSeleccionado,
+        quantity: this.cantidad,
+        unitPrice: this.productoSeleccionado.price,
+        totalPrice: this.cantidad * this.productoSeleccionado.price
+      };
+
+      this.shoppingCartService.addToGuestCart(guestCartItem);
+      alert('✅ Producto agregado al carrito de invitados');
+      location.reload(); // 🔄 Recarga la página para reflejar el cambio
+      return;
+    }
+
+    // 🟢 Usuario autenticado → Agregar al carrito del backend
+    const shoppingCartId = this.getShoppingCartId(userId);
+    if (!shoppingCartId) {
+      console.error('❌ No se pudo obtener el ID del carrito');
+      alert('Error al obtener el carrito de compras.');
+      return;
+    }
+
+    const cartItem: CartItem = {
+      id: 0, // O dejar que el backend lo asigne
+      shoppingCartId: shoppingCartId,
+      product: this.productoSeleccionado,
+      quantity: this.cantidad,
+      unitPrice: this.productoSeleccionado.price,
+      totalPrice: this.cantidad * this.productoSeleccionado.price
+    };
+
+    this.shoppingCartService.addToCart(userId, cartItem).subscribe({
+      next: () => {
+        console.log('✅ Producto agregado al carrito');
+        alert('✅ Producto agregado al carrito con éxito');
+        location.reload(); // 🔄 Recarga la página para actualizar el estado
+      },
+      error: (err: any) => {
+        console.error('❌ Error al agregar al carrito', err);
+        alert('❌ Error al agregar al carrito');
+      }
+    });
   }
+
+
+
+
+  getShoppingCartId(userId: number): number | null {
+    // Aquí deberías hacer una llamada real al backend para obtener el carrito del usuario.
+    // Simulación de ID de carrito:
+    return userId ? 1 : null; // Reemplaza con una llamada real
+  }
+
+
+
+
+  getAuthenticatedUserId(): number | null {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user).id : null;
+  }
+
 
   getCategoryNames(producto: Product | null): string {
     return producto?.categories?.length ? producto.categories.map(cat => cat.name).join(', ') : 'Sin categoría';

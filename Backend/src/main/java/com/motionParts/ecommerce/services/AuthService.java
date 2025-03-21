@@ -2,6 +2,7 @@ package com.motionParts.ecommerce.services;
 
 import com.motionParts.ecommerce.dto.LoginRequest;
 import com.motionParts.ecommerce.Models.User;
+import com.motionParts.ecommerce.Models.Role;
 import com.motionParts.ecommerce.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,6 +14,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
@@ -41,16 +44,26 @@ public class AuthService {
             throw new BadCredentialsException("La contraseña es incorrecta");
         }
 
-        // Generar JWT real
+        // Generar JWT con roles
         return generateToken(user);
     }
 
     private String generateToken(User user) {
+        Set<String> roles = user.getRoles().stream()
+                                .map(Role::getName)
+                                .collect(Collectors.toSet());
+
         return Jwts.builder()
                 .setSubject(user.getUsername())
+                .claim("roles", roles) // ✅ Agregamos roles al token
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration)) // Expira según la config
-                .signWith(signingKey, SignatureAlgorithm.HS256) // ✅ Firma con `Key`
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public boolean isAdmin(User user) {
+        return user.getRoles().stream()
+                .anyMatch(role -> "ADMIN".equals(role.getName()));
     }
 }

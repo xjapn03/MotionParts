@@ -2,7 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LoginRequest, AuthResponse } from '../models/login.model';
+import { LoginRequest, AuthResponse, Role } from '../models/login.model'; // 🔥 Importamos Role
+import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
+
+interface DecodedToken {
+  sub: string;
+  roles: string[];
+  iat: number;
+  exp: number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +21,24 @@ export class AuthService {
   private userSubject = new BehaviorSubject<AuthResponse | null>(this.getUserFromStorage());
   user$ = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(this.apiUrl, credentials).pipe(
-      tap((response: AuthResponse) => this.saveSession(response))
+      tap((response: AuthResponse) => {
+        const decoded: DecodedToken = jwtDecode(response.token);
+        console.log('Token decodificado:', decoded); // 🛠 Debug
+
+        // 🔥 Transformar roles de string[] a Role[]
+        const formattedRoles: Role[] = decoded.roles.map((roleName, index) => ({
+          id: index, // Si el backend no devuelve IDs, asignamos índices temporales
+          name: roleName
+        }));
+
+        const userWithRoles: AuthResponse = { ...response, roles: formattedRoles };
+
+        this.saveSession(userWithRoles);
+      })
     );
   }
 
@@ -47,5 +69,12 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.userSubject.next(null);
+    this.router.navigate(['/home']);
+  }
+
+  // ✅ Ahora verifica correctamente los roles
+  hasRole(roleName: string): boolean {
+    const user = this.getUser();
+    return user?.roles?.some(role => role.name === roleName) ?? false;
   }
 }

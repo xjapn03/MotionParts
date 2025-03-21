@@ -33,6 +33,62 @@ public class ShoppingCartService {
         return carts.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
+    public ShoppingCartDTO getShoppingCartByUser(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+    
+        ShoppingCart cart = shoppingCartRepository.findByUserAndStatus(user, ShoppingCartStatus.ACTIVE)
+            .stream()
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("No se encontró un carrito activo para el usuario " + userId));
+    
+        return convertToDTO(cart);
+    }
+    
+
+    public ShoppingCartDTO addToCart(Long userId, CartItemDTO cartItemDto) {
+        // Verificar si el usuario existe
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+    
+        // Obtener el carrito activo del usuario o crearlo si no existe
+        ShoppingCart cart = shoppingCartRepository.findByUserAndStatus(user, ShoppingCartStatus.ACTIVE)
+                .stream().findFirst()
+                .orElseGet(() -> {
+                    ShoppingCart newCart = new ShoppingCart(user, ShoppingCartStatus.ACTIVE);
+                    return shoppingCartRepository.save(newCart);
+                });
+    
+        // Buscar si el producto ya está en el carrito
+        CartItem existingItem = cart.getCartItems().stream()
+                .filter(item -> item.getProduct().getId().equals(cartItemDto.getProduct().getId()))
+                .findFirst()
+                .orElse(null);
+    
+        if (existingItem != null) {
+            // Si el producto ya está en el carrito, aumentar la cantidad
+            existingItem.setQuantity(existingItem.getQuantity() + cartItemDto.getQuantity());
+            existingItem.setTotalPrice(existingItem.getQuantity() * existingItem.getUnitPrice());
+        } else {
+            // Si no existe, crear un nuevo CartItem y agregarlo al carrito
+            CartItem newItem = new CartItem(
+                    cart,
+                    cartItemDto.getProduct(),
+                    cartItemDto.getQuantity(),
+                    cartItemDto.getUnitPrice(),
+                    cartItemDto.getQuantity() * cartItemDto.getUnitPrice()
+            );
+            cart.getCartItems().add(newItem);
+            cartItemRepository.save(newItem);
+        }
+    
+        // Guardar el carrito actualizado
+        shoppingCartRepository.save(cart);
+    
+        // Retornar el carrito actualizado en formato DTO
+        return convertToDTO(cart);
+    }
+
     // ✅ Buscar carrito por ID
     public ShoppingCartDTO getCartById(Long id) {
         ShoppingCart cart = shoppingCartRepository.findById(id)

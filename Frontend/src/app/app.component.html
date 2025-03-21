@@ -9,25 +9,28 @@
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <a routerLink="/home" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a routerLink="/home" routerLinkActive="bg-gray-700 text-white"
+                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 Inicio
               </a>
-              <a routerLink="/products" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a routerLink="/products" routerLinkActive="bg-gray-700 text-white"
+                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 Productos
               </a>
-              <a routerLink="/contact" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a routerLink="/contact" routerLinkActive="bg-gray-700 text-white"
+                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 Contacto
               </a>
-
-              <a routerLink="/acerca"
-                 routerLinkActive="active"
+              <a routerLink="/acerca" routerLinkActive="bg-gray-700 text-white"
                  class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 Acerca
               </a>
-              <a routerLink="/faq" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a routerLink="/faq" routerLinkActive="bg-gray-700 text-white"
+                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 FAQ
               </a>
-              <a routerLink="/admin" routerLinkActive="active" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
+              <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="bg-gray-700 text-white"
+                class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
                 Admin
               </a>
             </div>
@@ -41,21 +44,18 @@
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L4 3M7 13a4 4 0 1 0 8 0m-8 0a4 4 0 1 1 8 0" />
               </svg>
-              <!-- Contador de productos en el carrito -->
               <span *ngIf="cartItemCount > 0" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-1 rounded-full">
                 {{ cartItemCount }}
               </span>
             </button>
 
             <!-- Menú de perfil -->
-            <!-- Si el usuario NO está autenticado -->
             <div *ngIf="!user.username" class="relative ml-3">
               <button type="button" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" (click)="goToLogin()">
                 Login
               </button>
             </div>
 
-            <!-- Si el usuario ESTÁ autenticado -->
             <div *ngIf="user.username" class="relative ml-3">
               <button type="button"
                       class="flex items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
@@ -69,10 +69,10 @@
               <!-- Dropdown Menu -->
               <div id="user-menu"
                    class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5"
-                   [class.hidden]="!isDropdownOpen">
+                   [hidden]="!isDropdownOpen">
                 <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
                 <a routerLink="/settings" class="block px-4 py-2 text-sm text-gray-700">Settings</a>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700" (click)="logout()">Sign out</a>
+                <button class="block px-4 py-2 text-sm text-gray-700 w-full text-left" (click)="logout()">Sign out</button>
               </div>
             </div>
           </div>

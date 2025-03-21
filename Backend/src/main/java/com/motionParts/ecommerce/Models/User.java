@@ -1,30 +1,52 @@
 package com.motionParts.ecommerce.Models;
 
-import java.time.LocalDateTime;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "users") // Asegúrate de que coincide con tu tabla en PostgreSQL
+@Table(name = "users")
 public class User {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(nullable = false)
+    @JsonIgnore // Evita que la contraseña se envíe en la respuesta
     private String password;
+
+    @Column(unique = true, nullable = false)
     private String username;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime created_at = LocalDateTime.now();
 
-    // Constructor vacío (necesario para JPA)
+    private LocalDateTime updated_at = LocalDateTime.now();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @JsonManagedReference // Evita la serialización recursiva
+    private Set<Role> roles = new HashSet<>();
+
     public User() {}
 
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.created_at = LocalDateTime.now();
+        this.updated_at = LocalDateTime.now();
     }
 
     // Getters y Setters
@@ -34,17 +56,18 @@ public class User {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
-    //public String getLastName() { return last_name; }
-    //public void setLastName(String last_name) { this.last_name = last_name; }
-
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public LocalDateTime getCreatedDateTime() {return created_at; }
+    public LocalDateTime getCreatedAt() { return created_at; }
+    public void setCreatedAt(LocalDateTime created_at) { this.created_at = created_at; }
 
-    public LocalDateTime getUpdatedLocalDateTime() {return updated_at; }
+    public LocalDateTime getUpdatedAt() { return updated_at; }
+    public void setUpdatedAt(LocalDateTime updated_at) { this.updated_at = updated_at; }
 
+    public Set<Role> getRoles() { return roles; }
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
 }
