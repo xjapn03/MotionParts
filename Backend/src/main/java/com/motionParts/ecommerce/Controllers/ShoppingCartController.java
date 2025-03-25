@@ -54,6 +54,17 @@ public class ShoppingCartController {
         return ResponseEntity.ok(shoppingCartService.getCartById(id));
     }
 
+    @PutMapping("/users/{userId}/update/{productId}")
+    public ResponseEntity<ShoppingCartDTO> updateCartItemQuantity(
+            @PathVariable Long userId,
+            @PathVariable Long productId,
+            @RequestBody CartItemDTO cartItemDto) {
+        
+        ShoppingCartDTO updatedCart = shoppingCartService.updateCartItemQuantity(userId, productId, cartItemDto.getQuantity());
+        return ResponseEntity.ok(updatedCart);
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeCart(@PathVariable Long id) {
         shoppingCartService.removeCart(id);
@@ -64,4 +75,20 @@ public class ShoppingCartController {
     public ResponseEntity<Double> calculateCartTotal(@PathVariable Long cartId) {
         return ResponseEntity.ok(shoppingCartService.calculateCartTotal(cartId));
     }
+
+    @DeleteMapping("/users/{userId}/remove/{productId}")
+    public ResponseEntity<ShoppingCartDTO> removeCartItem(
+            @PathVariable Long userId,
+            @PathVariable Long productId) {
+        ShoppingCartDTO updatedCart = shoppingCartService.removeCartItem(userId, productId);
+        return ResponseEntity.ok(updatedCart);
+    }
+
+    @DeleteMapping("/users/{userId}/clear")
+    public ResponseEntity<Void> clearUserCart(@PathVariable Long userId) {
+        shoppingCartService.clearUserCart(userId); // ✅ Llamada correcta al servicio
+        return ResponseEntity.noContent().build();
+    }
+    
+
 }

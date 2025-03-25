@@ -1,22 +1,50 @@
-<div *ngIf="shoppingCart">
-  <h2>Carrito de {{ shoppingCart.username }} - Estado: {{ shoppingCart.status }}</h2>
-  <p>Total: {{ shoppingCart.totalCartPrice | currency }}</p>
+<div *ngIf="shoppingCart" class="p-6 bg-white shadow-md rounded-lg">
+  <h2 class="text-2xl font-semibold mb-4">
+    Carrito de {{ shoppingCart.username }} - Estado: {{ shoppingCart.status }}
+  </h2>
+  <p class="text-lg font-semibold mb-4">Total: {{ getTotal() | currency }}</p>
 
-  <table>
+  <!-- ✅ Botón para vaciar el carrito -->
+  <button
+    (click)="emptyCart()"
+    class="mb-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition">
+    🗑️ Vaciar Carrito
+  </button>
+
+  <table class="w-full border-collapse">
     <thead>
-      <tr>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Precio Unitario</th>
-        <th>Total</th>
+      <tr class="bg-gray-100">
+        <th class="py-2 px-4 text-left">Acción</th>
+        <th class="py-2 px-4 text-left">Producto</th>
+        <th class="py-2 px-4 text-center">Cantidad</th>
+        <th class="py-2 px-4 text-right">Precio Unitario</th>
+        <th class="py-2 px-4 text-right">Total</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of shoppingCart.cartItems; trackBy: trackByItemId">
-        <td>{{ item.product.name }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>{{ item.unitPrice | currency }}</td>
-        <td>{{ item.totalPrice | currency }}</td>
+      <tr *ngFor="let item of cartItems; trackBy: trackByItemId" class="border-b">
+        <!-- Botón eliminar -->
+        <td class="py-2 px-4">
+          <button (click)="onRemoveCartItem(item)" class="text-red-600 hover:text-red-800">
+            🗑️
+          </button>
+        </td>
+
+        <td class="py-2 px-4">{{ item.product.name }}</td>
+
+        <!-- Controles de cantidad -->
+        <td class="py-2 px-4 flex justify-center items-center space-x-2">
+          <button (click)="onDecreaseQuantity(item)" class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">
+            ➖
+          </button>
+          <span class="text-lg font-semibold">{{ item.quantity }}</span>
+          <button (click)="onIncreaseQuantity(item)" class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300">
+            ➕
+          </button>
+        </td>
+
+        <td class="py-2 px-4 text-right">{{ item.product.price | currency }}</td>
+        <td class="py-2 px-4 text-right">{{ item.product.price * item.quantity | currency }}</td>
       </tr>
     </tbody>
   </table>

@@ -41,8 +41,18 @@ public class CartItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CartItemDTO> updateCartItem(@PathVariable Long id, @RequestParam int quantity) {
-        CartItemDTO updatedCartItem = cartItemService.updateCartItemQuantity(id, quantity);
+    public ResponseEntity<CartItemDTO> updateCartItem(@PathVariable Long id, @RequestBody CartItemDTO cartItemDTO) {
+        // Llamada al servicio para actualizar la cantidad
+        CartItemDTO updatedCartItem = cartItemService.updateCartItemQuantity(id, cartItemDTO.getQuantity());
         return ResponseEntity.ok(updatedCartItem);
     }
+
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCartItem(@PathVariable Long id) {
+        cartItemService.deleteCartItem(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
