@@ -8,100 +8,61 @@
             <img class="h-8 w-8" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
           </div>
 
-          <!-- Menú principal (visible en desktop) -->
-          <div class="hidden md:block">
-            <div class="ml-10 flex items-baseline space-x-4">
-              <a routerLink="/home" routerLinkActive="bg-gray-700 text-white"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                Inicio
-              </a>
-              <a routerLink="/products" routerLinkActive="bg-gray-700 text-white"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                Productos
-              </a>
-              <a routerLink="/contact" routerLinkActive="bg-gray-700 text-white"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                Contacto
-              </a>
-              <a routerLink="/acerca" routerLinkActive="bg-gray-700 text-white"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                Acerca
-              </a>
-              <a routerLink="/faq" routerLinkActive="bg-gray-700 text-white"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                FAQ
-              </a>
-              <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="bg-gray-700 text-white"
-                 class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">
-                Admin
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Icono del carrito y usuario -->
-        <div class="hidden md:block">
-          <div class="ml-4 flex items-center md:ml-6">
-            <!-- Icono del carrito -->
-            <button (click)="openCartModal()" class="relative text-gray-300 hover:text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L4 3M7 13a4 4 0 1 0 8 0m-8 0a4 4 0 1 1 8 0" />
-              </svg>
-              <span *ngIf="cartItemCount > 0" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-1 rounded-full">
-                {{ cartItemCount }}
-              </span>
-            </button>
-
-            <!-- Menú de perfil -->
-            <div *ngIf="!user.username" class="relative ml-3">
-              <button type="button" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" (click)="goToLogin()">
-                Login
-              </button>
-            </div>
-
-            <div *ngIf="user.username" class="relative ml-3">
-              <button type="button"
-                      class="flex items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
-                      (click)="toggleDropdown()">
-                <svg class="h-8 w-8 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 0112 15a9 9 0 016.879 2.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span class="text-gray-300 ml-2">{{ user.username }}</span>
-              </button>
-
-              <!-- Dropdown Menu -->
-              <div id="user-menu"
-                   class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5"
-                   [hidden]="!isDropdownOpen">
-                <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
-                <a routerLink="/settings" class="block px-4 py-2 text-sm text-gray-700">Settings</a>
-                <button class="block px-4 py-2 text-sm text-gray-700 w-full text-left" (click)="logout()">Sign out</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Botón de menú hamburguesa (solo en móviles) -->
-        <div class="md:hidden">
-          <button (click)="toggleMobileMenu()" class="text-gray-300 hover:text-white focus:outline-none">
-            <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-          </button>
-        </div>
-      </div>
+         
+   <!-- Menú principal (visible en desktop) -->
+   <div class="hidden md:block">
+    <div class="ml-10 flex items-baseline space-x-4">
+      <a routerLink="/home" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Inicio</a>
+      <a routerLink="/products" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Productos</a>
+      <a routerLink="/contact" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contacto</a>
+      <a routerLink="/acerca" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Acerca</a>
+      <a routerLink="/faq" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">FAQ</a>
+      <a *ngIf="isAdmin" routerLink="/admin" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Admin</a>
     </div>
+  </div>
+</div>
 
-    <!-- Menú móvil (se muestra con *ngIf) -->
-    <div *ngIf="isMobileMenuOpen" class="md:hidden bg-gray-700 px-4 py-3">
-      <a routerLink="/home" class="block py-2 text-gray-300 hover:text-white">Inicio</a>
-      <a routerLink="/products" class="block py-2 text-gray-300 hover:text-white">Productos</a>
-      <a routerLink="/contact" class="block py-2 text-gray-300 hover:text-white">Contacto</a>
-      <a routerLink="/acerca" class="block py-2 text-gray-300 hover:text-white">Acerca</a>
-      <a routerLink="/faq" class="block py-2 text-gray-300 hover:text-white">FAQ</a>
-      <a *ngIf="isAdmin" routerLink="/admin" class="block py-2 text-gray-300 hover:text-white">Admin</a>
-    </div>
-  </nav>
+<!-- Sección derecha: Login y Carrito con orden diferente en responsive -->
+<div class="flex items-center space-x-4 md:flex-row-reverse">
+
+  <!-- Botón Login -->
+  <div *ngIf="!user.username">
+    <button (click)="goToLogin()" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+      Login
+    </button>
+  </div>
+
+  <!-- Icono del carrito -->
+  <button (click)="openCartModal()" class="relative text-gray-300 hover:text-white">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L4 3M7 13a4 4 0 1 0 8 0m-8 0a4 4 0 1 1 8 0" />
+    </svg>
+    <span *ngIf="cartItemCount > 0" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold px-1 rounded-full">
+      {{ cartItemCount }}
+    </span>
+  </button>
+
+  <!-- Botón menú hamburguesa (solo en móviles) -->
+  <button (click)="toggleMobileMenu()" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
+    <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
+
+</div>
+</div>
+</div>
+
+<!-- Menú móvil (se muestra con *ngIf) -->
+<div *ngIf="isMobileMenuOpen" class="md:hidden bg-gray-700 px-4 py-3">
+<a routerLink="/home" class="block py-2 text-gray-300 hover:text-white">Inicio</a>
+<a routerLink="/products" class="block py-2 text-gray-300 hover:text-white">Productos</a>
+<a routerLink="/contact" class="block py-2 text-gray-300 hover:text-white">Contacto</a>
+<a routerLink="/acerca" class="block py-2 text-gray-300 hover:text-white">Acerca</a>
+<a routerLink="/faq" class="block py-2 text-gray-300 hover:text-white">FAQ</a>
+<a *ngIf="isAdmin" routerLink="/admin" class="block py-2 text-gray-300 hover:text-white">Admin</a>
+</div>
+</nav>
 </div>
 
  <!-- Modal del carrito (Sidebar) -->

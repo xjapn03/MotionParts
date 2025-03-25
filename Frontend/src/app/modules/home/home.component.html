@@ -1,124 +1,153 @@
 <!-- Sección Principal (Hero) -->
-<section id="hero" class="relative bg-blue-700 text-white text-center py-40 h-screen" style="background-image: url('https://www.namesnack.com/images/namesnack-auto-parts-supply-business-names-5996x3374-20200915.jpeg?crop=16:9,smart&width=1200&dpr=2'); background-size: cover; background-position: center;">
+<section id="hero" class="relative text-white text-center h-screen flex flex-col justify-center items-center" 
+    style="background-image: url('https://www.namesnack.com/images/namesnack-auto-parts-supply-business-names-5996x3374-20200915.jpeg?crop=16:9,smart&width=1200&dpr=2'); 
+           background-size: cover; background-position: center;">
+    
     <!-- Capa de overlay -->
     <div class="absolute inset-0 bg-black opacity-70"></div>
-    
-    <h2 class="text-6xl font-extrabold mb-6 tracking-wide text-white relative z-10" style="font-family: 'Poppins', sans-serif; text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);">
-        MOTION PARTS
-    </h2>
+
+    <!-- Contenido -->
+    <div class="relative z-10 text-center px-6 max-w-4xl">
+        <h2 class="text-6xl md:text-7xl font-extrabold mb-6 tracking-wide text-white" 
+            style="font-family: 'Poppins', sans-serif; text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);">
+            MOTION PARTS
+        </h2>
+
+        <p class="text-lg md:text-xl text-gray-300 mb-6">
+            Encuentra las mejores partes para el movimiento de tu motor con la mejor calidad y garantía del mercado.
+        </p>
+
+        <!-- Frase motivadora -->
+        <p class="text-xl md:text-2xl font-semibold text-white mb-8">
+            "Potencia, calidad y resistencia en cada pieza."
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4">
+            <a href="#nosotros" class="bg-gray-800 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+                Conócenos
+            </a>
+            <a href="#testimonios" class="bg-gray-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition">
+                Opiniones
+            </a>
+        </div>
+    </div>
 </section>
 
+<!-- Sección de estadísticas -->
+<section class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto flex flex-wrap justify-center text-center gap-10">
+        <div>
+            <h3 class="text-4xl font-bold text-yellow-400" id="clientes-contador">+5000</h3>
+            <p class="text-lg">Clientes satisfechos</p>
+        </div>
+        <div>
+            <h3 class="text-4xl font-bold text-yellow-400" id="ventas-contador">+12000</h3>
+            <p class="text-lg">Productos vendidos</p>
+        </div>
+        <div>
+            <h3 class="text-4xl font-bold text-yellow-400" id="experiencia-contador">10 años</h3>
+            <p class="text-lg">De experiencia</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Simulación de contador animado
+    function animateCounter(id, start, end, duration) {
+        let obj = document.getElementById(id);
+        let range = end - start;
+        let increment = range / (duration / 50);
+        let current = start;
+        let timer = setInterval(() => {
+            current += increment;
+            obj.innerText = Math.floor(current);
+            if (current >= end) {
+                obj.innerText = end;
+                clearInterval(timer);
+            }
+        }, 50);
+    }
+
+    window.onload = function() {
+        animateCounter("clientes-contador", 0, 5000, 2000);
+        animateCounter("ventas-contador", 0, 12000, 2000);
+        animateCounter("experiencia-contador", 0, 10, 1500);
+    };
+</script>
+
+
 <!-- Sección Productos con Carrusel (Swiper) -->
-<section id="products" class="relative py-50 bg-transparent">
-    <div class="absolute inset-x-0 bottom-0 bg-white shadow-lg rounded-t-3xl mx-auto pb-12 pt-8 z-20" style="width: 80%; max-width: 1200px; height: 600px; background: rgba(31,41,55,var(--tw-bg-opacity));">
+<section id="products" class="relative py-12 bg-transparent flex justify-center">
+    <div class="relative bg-gray-900 shadow-lg rounded-t-3xl w-full max-w-6xl mx-auto pb-12 pt-8 px-4 sm:px-6 lg:px-8">
         <h2 class="text-3xl font-bold text-center mb-8 text-white">Productos en oferta</h2>
         
         <!-- Carrusel Swiper -->
-        <div class="swiper">
+        <div class="swiper mySwiper w-full">
             <div class="swiper-wrapper">
                 <!-- Producto 1 -->
-                <div class="swiper-slide">
-                    <div class="product-card p-6 rounded-lg shadow-lg" 
-                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2FwAbQkbehxT5km1VG9rS5c8uKRRWSHPxiA&s'); 
-                               background-size: cover; 
-                               background-position: center; 
-                               height: 200px; 
-                               width: 400px; 
-                               margin-left: 100px; 
-                               box-sizing: border-box;">
-                        <h3 class="text-2xl font-semibold text-white mb-4">Motores</h3>
+                <div class="swiper-slide flex justify-center">
+                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
+                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2FwAbQkbehxT5km1VG9rS5c8uKRRWSHPxiA&s');">
+                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Motores</h3>
                     </div>
                 </div>
 
                 <!-- Producto 2 -->
-                <div class="swiper-slide">
-                    <div class="product-card p-6 rounded-lg shadow-lg" 
-                        style="background-image: url('https://d100mj7v0l85u5.cloudfront.net/s3fs-public/2023-03/fabricantes-de-llantas-en-mexico.jpg'); 
-                               background-size: cover;
-                               background-position: center; 
-                               height: 200px; 
-                               width: 400px; 
-                               padding: 10px; 
-                               box-sizing: border-box;">
-                        <h3 class="text-2xl font-semibold text-white mb-4">Llantas</h3>
+                <div class="swiper-slide flex justify-center">
+                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
+                        style="background-image: url('https://d100mj7v0l85u5.cloudfront.net/s3fs-public/2023-03/fabricantes-de-llantas-en-mexico.jpg');">
+                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Llantas</h3>
                     </div>
                 </div>
 
                 <!-- Producto 3 -->
-                <div class="swiper-slide">
-                    <div class="product-card p-6 rounded-lg shadow-lg" 
-                        style="background-image: url('https://www.nissanuniversidad.com/static/agency-go-virtual/Nissan/Landings/Baterias/nissan-2023-baterias-grupo_de_baterias-d.jpg'); 
-                               background-position: center; 
-                               height: 200px; 
-                               width: 400px; 
-                               box-sizing: border-box;">
-                        <h3 class="text-2xl font-semibold text-white mb-4">Baterías</h3>
+                <div class="swiper-slide flex justify-center">
+                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
+                        style="background-image: url('https://www.nissanuniversidad.com/static/agency-go-virtual/Nissan/Landings/Baterias/nissan-2023-baterias-grupo_de_baterias-d.jpg');">
+                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Baterías</h3>
                     </div>
                 </div>
 
-                <!-- Producto 4 (Nuevo) -->
-                <div class="swiper-slide">
-                    <div class="product-card p-6 rounded-lg shadow-lg" 
-                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNR6z421LHTFt8xUBcgIzipNghoJB4H6Jbfw&s'); 
-                               background-size: cover;
-                               background-position: center; 
-                               height: 200px; 
-                               width: 400px; 
-                               margin-left: 100px; 
-                               box-sizing: border-box;">
-                        <h3 class="text-2xl font-semibold text-white mb-4">Frenos</h3>
+                <!-- Producto 4 -->
+                <div class="swiper-slide flex justify-center">
+                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
+                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNR6z421LHTFt8xUBcgIzipNghoJB4H6Jbfw&s');">
+                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Frenos</h3>
                     </div>
                 </div>
 
-                <!-- Producto 5 (Nuevo) -->
-                <div class="swiper-slide">
-                    <div class="product-card p-6 rounded-lg shadow-lg" 
-                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCDAtZ1MZXfoZUPGBXRAuDyYrjtChyeCIm5A&s'); 
-                               background-size: cover;
-                               background-position: center; 
-                               height: 200px; 
-                               width: 400px; 
-                               margin-left: 100px; 
-                               box-sizing: border-box;">
-                        <h3 class="text-2xl font-semibold text-white mb-4">Luces</h3>
+                <!-- Producto 5 -->
+                <div class="swiper-slide flex justify-center">
+                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
+                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCDAtZ1MZXfoZUPGBXRAuDyYrjtChyeCIm5A&s');">
+                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Luces</h3>
                     </div>
                 </div>
 
-                <!-- Producto 6 (Nuevo) -->
-                <div class="swiper-slide">
-                    <div class="product-card p-6 rounded-lg shadow-lg" 
-                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfowsUuvrObdHG1qP7JBwuJEqwPB1OqW4EOA&s'); 
-                               background-size: cover;
-                               background-position: center; 
-                               height: 200px; 
-                               width: 400px; 
-                               margin-left: 100px; 
-                               box-sizing: border-box;">
-                        <h3 class="text-2xl font-semibold text-white mb-4">Correas de Auto</h3>
+                <!-- Producto 6 -->
+                <div class="swiper-slide flex justify-center">
+                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
+                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfowsUuvrObdHG1qP7JBwuJEqwPB1OqW4EOA&s');">
+                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Correas de Auto</h3>
                     </div>
                 </div>
 
-                <!-- Producto 7 (Nuevo) -->
-                <div class="swiper-slide">
-                    <div class="product-card p-6 rounded-lg shadow-lg" 
-                        style="background-image: url('https://www.bardahl.com.mx/wp-content/uploads/2019/01/Tipos-Transmisiones-Mantenimiento.jpg'); 
-                               background-size: cover;
-                               background-position: center; 
-                               height: 200px; 
-                               width: 400px; 
-                               margin-left: 100px; 
-                               box-sizing: border-box;">
-                        <h3 class="text-2xl font-semibold text-white mb-4">Transmisiones</h3>
+                <!-- Producto 7 -->
+                <div class="swiper-slide flex justify-center">
+                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
+                        style="background-image: url('https://www.bardahl.com.mx/wp-content/uploads/2019/01/Tipos-Transmisiones-Mantenimiento.jpg');">
+                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Transmisiones</h3>
                     </div>
                 </div>
             </div>
             
-            <!-- Flechas de navegación con color de fondo ajustado -->
+            <!-- Flechas de navegación -->
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
         </div>
     </div>
 </section>
+
 
 <!-- Sección Acerca de Nosotros -->
 <section class="about-section">
