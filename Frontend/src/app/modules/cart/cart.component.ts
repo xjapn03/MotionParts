@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router'; // ✅ Importar Router
 import { ShoppingCartService } from '../../core/services/shoppingCart.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CartItem } from '../../core/models/cartItem.model';
@@ -21,7 +22,8 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
 
   constructor(
     private shoppingCartService: ShoppingCartService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router // ✅ Inyectar Router aquí
   ) {}
 
   ngOnInit(): void {
@@ -110,5 +112,10 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+
+  onCheckout(): void {
+    this.router.navigate(['/checkout']);
+  }
+  
 }
 

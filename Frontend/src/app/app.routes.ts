@@ -13,6 +13,7 @@ import { CategoriesComponent } from './modules/admin/categories/categories.compo
 import { OrdersComponent } from './modules/admin/orders/orders.component';
 import { InvoicesComponent } from './modules/admin/invoices/invoices.component';
 import { SalesReportComponent } from './modules/admin/sales-report/sales-report.component';
+import { CheckoutComponent } from './modules/checkout/checkout.component';
 import { AuthGuard } from './core/guards/auth.guard';
 
 
@@ -35,6 +36,7 @@ export const routes: Routes = [
   { path: 'products', component: ProductosComponent },
   { path: 'acerca', component: AcercaComponent },
   { path: 'cart', component: ShoppingCartComponent },
+  { path: 'checkout', component: CheckoutComponent }, // ✅ Agregada la ruta de checkout
   { path: 'contact', component: ContactComponent },
   { path: 'home', component: HomeComponent },
   { path: '**', redirectTo: 'home' },
