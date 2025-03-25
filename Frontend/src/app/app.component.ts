@@ -23,7 +23,6 @@ export class AppComponent implements OnInit {
   isDropdownOpen = false; // Estado del menú desplegable
   isCartModalOpen = false; // Estado del modal del carrito
   isMobileMenuOpen = false;
-  isMobileMenuOpen = false;
   cartItemCount = 0; // Contador de elementos en el carrito
   cartItems$: Observable<CartItem[]> = new Observable<CartItem[]>();
 
@@ -113,26 +112,4 @@ export class AppComponent implements OnInit {
     this.shoppingCartService.decreaseQuantity(item);
   }
 
-  
-  increaseQuantity(item: any) {
-    item.quantity++;
-  }
-  
-  decreaseQuantity(item: any) {
-    if (item.quantity > 1) {
-      item.quantity--;
-    } else {
-      this.cartItems = this.cartItems.filter(i => i !== item); // Eliminar si la cantidad es 0
-    }
-  }
-  
-  getTotal() {
-    return this.cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
-  }
-  
-  toggleMobileMenu() {
-    this.isMobileMenuOpen = !this.isMobileMenuOpen;
-  }
 }
-
-
