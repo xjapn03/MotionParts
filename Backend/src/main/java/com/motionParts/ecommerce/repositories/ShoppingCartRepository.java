@@ -17,6 +17,9 @@ public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long
     // ✅ Buscar carritos de un usuario con estado específico
     List<ShoppingCart> findByUserAndStatus(User user, ShoppingCartStatus status);
 
+    Optional<ShoppingCart> findByUserIdAndStatus(Long userId, ShoppingCartStatus status);
+
+
     // ✅ Buscar un carrito por ID
     Optional<ShoppingCart> findById(Long id);
 }

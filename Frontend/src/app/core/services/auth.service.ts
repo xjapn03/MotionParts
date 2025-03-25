@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { LoginRequest, AuthResponse, Role } from '../models/login.model'; // 🔥 Importamos Role
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
+import { ShoppingCartService } from './shoppingCart.service'; // ✅ Importar el servicio de carrito
 
 interface DecodedToken {
   sub: string;
@@ -21,7 +22,11 @@ export class AuthService {
   private userSubject = new BehaviorSubject<AuthResponse | null>(this.getUserFromStorage());
   user$ = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private shoppingCartService: ShoppingCartService // ✅ Inyectar servicio de carrito
+  ) {}
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(this.apiUrl, credentials).pipe(
@@ -66,15 +71,18 @@ export class AuthService {
   }
 
   logout(): void {
+    // 🔹 1. Limpiar el almacenamiento local
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    this.userSubject.next(null);
-    this.router.navigate(['/home']);
-  }
 
-  // ✅ Ahora verifica correctamente los roles
-  hasRole(roleName: string): boolean {
-    const user = this.getUser();
-    return user?.roles?.some(role => role.name === roleName) ?? false;
-  }
+    // 🔹 2. Notificar que el usuario cerró sesión
+    this.userSubject.next(null);
+
+    // 🔹 3. Redirigir y recargar la página para actualizar el estado del carrito y el contador
+    this.router.navigate(['/home']).then(() => {
+        window.location.reload();
+    });
+}
+
+
 }

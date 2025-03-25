@@ -5,7 +5,7 @@
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
           <div class="shrink-0">
-            <img class="h-8 w-8" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company">
+            <img class="h-15 w-20" src="../assets/favicon.svg" alt="Your Company">
           </div>
 
           <!-- Menú principal (visible en desktop) -->
@@ -104,26 +104,28 @@
   </nav>
 </div>
 
- <!-- Modal del carrito (Sidebar) -->
+<!-- Modal del carrito (Sidebar) -->
 <div *ngIf="isCartModalOpen" class="modal">
   <div class="bg-white rounded-lg shadow-lg p-6 w-80 h-full fixed top-0 right-0">
     <h2 class="text-lg font-bold border-b pb-2">Carrito de Compras</h2>
 
-    <div *ngIf="cartItems.length === 0" class="text-gray-500 mt-4">Tu carrito está vacío.</div>
+    <ng-container *ngIf="(cartItems$ | async) as cartItems">
+      <div *ngIf="cartItems.length === 0" class="text-gray-500 mt-4">Tu carrito está vacío.</div>
 
-    <ul *ngIf="cartItems.length > 0" class="mt-2">
-      <li *ngFor="let item of cartItems" class="border-b py-2 flex justify-between items-center">
-        <span class="w-1/3">{{ item.product.name }}</span>
-        <div class="flex items-center">
-          <button class="bg-gray-300 px-2 rounded" (click)="decreaseQuantity(item)">-</button>
-          <span class="mx-2">{{ item.quantity }}</span>
-          <button class="bg-gray-300 px-2 rounded" (click)="increaseQuantity(item)">+</button>
-        </div>
-        <span class="font-bold w-1/3 text-right">${{ item.product.price * item.quantity }}</span>
-      </li>
-    </ul>
+      <ul *ngIf="cartItems.length > 0" class="mt-2">
+        <li *ngFor="let item of cartItems" class="border-b py-2 flex justify-between items-center">
+          <span class="w-1/3">{{ item.product.name }}</span>
+          <div class="flex items-center">
+            <button class="bg-gray-300 px-2 rounded" (click)="decreaseQuantity(item)">-</button>
+            <span class="mx-2">{{ item.quantity }}</span>
+            <button class="bg-gray-300 px-2 rounded" (click)="increaseQuantity(item)">+</button>
+          </div>
+          <span class="font-bold w-1/3 text-right">${{ item.product.price * item.quantity }}</span>
+        </li>
+      </ul>
 
-    <div class="mt-4 font-bold text-right">Total: ${{ getTotal() }}</div>
+      <div class="mt-4 font-bold text-right">Total: ${{ getTotal(cartItems) }}</div>
+    </ng-container>
 
     <div class="mt-4 flex justify-between">
       <button class="bg-gray-500 text-white px-4 py-2 rounded" (click)="closeCartModal()">Cerrar</button>

@@ -193,4 +193,73 @@ public class ShoppingCartService {
                 totalCartPrice
         );
     }
+
+
+    public ShoppingCartDTO removeCartItem(Long userId, Long productId) {
+        // Buscar al usuario
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+    
+        // Buscar el carrito activo del usuario
+        ShoppingCart cart = shoppingCartRepository.findByUserAndStatus(user, ShoppingCartStatus.ACTIVE)
+                .stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("Carrito no encontrado para el usuario " + userId));
+    
+        // Eliminar el producto del carrito
+        cart.getCartItems().removeIf(item -> item.getProduct().getId().equals(productId));
+    
+        // Guardar el carrito actualizado
+        shoppingCartRepository.save(cart);
+    
+        // Convertir a DTO sin usar mappers
+        return convertToDTO(cart);
+    }
+
+    public ShoppingCartDTO updateCartItemQuantity(Long userId, Long productId, int newQuantity) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+    
+        ShoppingCart cart = shoppingCartRepository.findByUserAndStatus(user, ShoppingCartStatus.ACTIVE)
+                .stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("No se encontró un carrito activo para el usuario " + userId));
+    
+        CartItem itemToUpdate = cart.getCartItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado en el carrito"));
+    
+        if (newQuantity <= 0) {
+            cart.getCartItems().remove(itemToUpdate);
+            cartItemRepository.delete(itemToUpdate);
+        } else {
+            itemToUpdate.setQuantity(newQuantity);
+            itemToUpdate.setTotalPrice(itemToUpdate.getQuantity() * itemToUpdate.getUnitPrice());
+    
+            // Asegura que la relación se mantenga
+            cart.getCartItems().remove(itemToUpdate);
+            cart.getCartItems().add(itemToUpdate);
+    
+            cartItemRepository.save(itemToUpdate);
+        }
+    
+        // 🔹 Guarda el carrito actualizado
+        shoppingCartRepository.save(cart);
+    
+        return convertToDTO(cart);
+    }
+
+    public void clearUserCart(Long userId) {
+        // ✅ Busca el carrito activo del usuario
+        ShoppingCart cart = shoppingCartRepository.findByUserIdAndStatus(userId, ShoppingCartStatus.ACTIVE)
+                .orElseThrow(() -> new RuntimeException("No se encontró un carrito activo para el usuario"));
+
+        // ✅ Limpia los productos en el carrito
+        cart.getCartItems().clear();
+
+        // ✅ Guarda el carrito vacío en la base de datos
+        shoppingCartRepository.save(cart);
+    }
+    
+        
+
 }

@@ -169,7 +169,7 @@ export class ProductosComponent implements OnInit {
       totalPrice: this.cantidad * this.productoSeleccionado.price
     };
 
-    this.shoppingCartService.addToCart(userId, cartItem).subscribe({
+    this.shoppingCartService.addToCart(cartItem).subscribe({
       next: () => {
         console.log('✅ Producto agregado al carrito');
         alert('✅ Producto agregado al carrito con éxito');
@@ -182,16 +182,11 @@ export class ProductosComponent implements OnInit {
     });
   }
 
-
-
-
   getShoppingCartId(userId: number): number | null {
     // Aquí deberías hacer una llamada real al backend para obtener el carrito del usuario.
     // Simulación de ID de carrito:
     return userId ? 1 : null; // Reemplaza con una llamada real
   }
-
-
 
 
   getAuthenticatedUserId(): number | null {
