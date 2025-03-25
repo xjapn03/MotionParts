@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
   user: { username?: string; roles?: { name: string }[] } = {};
   isDropdownOpen = false; // Estado del menú desplegable
   isCartModalOpen = false; // Estado del modal del carrito
+  isMobileMenuOpen = false;
   cartItemCount = 0; // Contador de elementos en el carrito
   cartItems: CartItem[] = []; // Ahora es un array dinámico basado en datos reales
 
@@ -123,4 +124,26 @@ export class AppComponent implements OnInit {
   private updateCartCount() {
     this.cartItemCount = this.cartItems.length;
   }
+  
+  increaseQuantity(item: any) {
+    item.quantity++;
+  }
+  
+  decreaseQuantity(item: any) {
+    if (item.quantity > 1) {
+      item.quantity--;
+    } else {
+      this.cartItems = this.cartItems.filter(i => i !== item); // Eliminar si la cantidad es 0
+    }
+  }
+  
+  getTotal() {
+    return this.cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
+  }
+  
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
 }
+
+
