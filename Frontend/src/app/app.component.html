@@ -25,11 +25,31 @@
 <!-- Sección derecha: Login y Carrito con orden diferente en responsive -->
 <div class="flex items-center space-x-4 md:flex-row-reverse">
 
-  <!-- Botón Login -->
-  <div *ngIf="!user.username">
-    <button (click)="goToLogin()" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+  <!-- Menú de perfil -->
+  <div *ngIf="!user.username" class="relative ml-3">
+    <button type="button" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white" (click)="goToLogin()">
       Login
     </button>
+  </div>
+
+  <div *ngIf="user.username" class="relative ml-3">
+    <button type="button"
+            class="flex items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
+            (click)="toggleDropdown()">
+      <svg class="h-8 w-8 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 0112 15a9 9 0 016.879 2.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+      <span class="text-gray-300 ml-2">{{ user.username }}</span>
+    </button>
+
+    <!-- Dropdown Menu -->
+    <div id="user-menu"
+         class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5"
+         [hidden]="!isDropdownOpen">
+      <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
+      <a routerLink="/settings" class="block px-4 py-2 text-sm text-gray-700">Settings</a>
+      <button class="block px-4 py-2 text-sm text-gray-700 w-full text-left" (click)="logout()">Sign out</button>
+    </div>
   </div>
 
   <!-- Icono del carrito -->

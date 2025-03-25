@@ -295,6 +295,7 @@ CREATE TABLE public.products (
 
 
 ALTER TABLE public.products OWNER TO postgres;
+ALTER TABLE public.products ADD COLUMN image_url text;
 
 --
 -- TOC entry 232 (class 1259 OID 16756)

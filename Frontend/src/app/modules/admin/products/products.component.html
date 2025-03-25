@@ -13,6 +13,16 @@
           required
         />
       </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700">Referencia</label>
+        <input
+          type="number"
+          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          [(ngModel)]="product.reference"
+          name="reference"
+          required
+        />
+      </div>
   
       <div>
         <label class="block text-sm font-semibold text-gray-700">Precio</label>
@@ -32,6 +42,26 @@
           class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
           [(ngModel)]="product.stock"
           name="stock"
+          required
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700">Descripcion</label>
+        <input
+          type="text"
+          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          [(ngModel)]="product.description"
+          name="description"
+          required
+        />
+      </div>
+      <div>
+        <label class="block text-sm font-semibold text-gray-700">Image_url</label>
+        <input
+          type="text"
+          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          [(ngModel)]="product.image_url"
+          name="image_url"
           required
         />
       </div>
@@ -62,30 +92,36 @@
         <thead>
           <tr class="bg-gray-200 text-gray-800">
             <th class="p-4">ID</th>
+            <th class="p-4">Referencia</th>
             <th class="p-4">Nombre</th>
             <th class="p-4">Precio</th>
             <th class="p-4">Stock</th>
+            <th class="p-4">Descripcion</th>
+            <th class="p-4">Imagen</th>
             <th class="p-4 text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let product of filteredProducts" class="border-b hover:bg-gray-100 transition">
             <td class="p-4">{{ product.id }}</td>
+            <td class="p-4">{{ product.reference }}</td>
             <td class="p-4">{{ product.name }}</td>
             <td class="p-4">{{ product.price | currency }}</td>
             <td class="p-4">{{ product.stock }}</td>
+            <td class="p-4">{{ product.description }}</td>
+            <td class="p-4">{{ product.image_url }}</td>
             <td class="p-4 text-center flex gap-2 justify-center">
               <button
                 class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md"
                 (click)="onEdit(product)"
               >
-                ✏ Editar
+                 Editar
               </button>
               <button
                 class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 shadow-md"
                 (click)="onDelete(product.id)"
               >
-                🗑 Eliminar
+                 Eliminar
               </button>
             </td>
           </tr>
