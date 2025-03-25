@@ -1,3 +1,4 @@
+package com.motionParts.ecommerce.services;
 import com.motionParts.ecommerce.Models.*;
 import com.motionParts.ecommerce.dto.OrderDTO;
 import com.motionParts.ecommerce.dto.OrderDetailDTO;
@@ -24,7 +25,10 @@ public class OrderService {
 
     // ✅ Obtener todas las órdenes de un usuario
     public List<OrderDTO> getOrdersByUser(Long userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+
+        List<Order> orders = orderRepository.findByUser(user);
         return orders.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
@@ -87,8 +91,8 @@ public class OrderService {
                 .map(detail -> new OrderDetailDTO(
                         detail.getId(),
                         order.getId(),
-                        detail.getProductId(),
-                        "Nombre del producto", // 🔹 Se debe obtener el nombre del producto desde otra fuente
+                        detail.getProduct().getId(), // 🔹 Obtener el ID del producto correctamente
+                        detail.getProduct().getName(), // 🔹 Obtener el nombre del producto
                         detail.getQuantity(),
                         detail.getUnitPrice(),
                         detail.getSubtotal()
