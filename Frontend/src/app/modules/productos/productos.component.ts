@@ -74,7 +74,7 @@ export class ProductosComponent implements OnInit {
       next: (data) => {
         this.productos = data.map(producto => ({
           ...producto,
-          image: producto.image ? `assets/products/${producto.image}` : 'assets/products/productDefault.jpg',
+          image: producto.image_url ? `assets/products/${producto.image_url}` : 'assets/products/productDefault.jpg',
           categories: producto.categories || []
         }));
         this.aplicarFiltros();
@@ -92,7 +92,7 @@ export class ProductosComponent implements OnInit {
     let subcategoriasIds: number[] = categoriaId ? this.categorias.filter(cat => cat.parent?.id === categoriaId).map(cat => cat.id) : [];
 
     this.productosFiltrados = this.productos.filter(producto => {
-      const categoryIds = producto.categories.map(cat => cat.id);
+      const categoryIds = producto.categories ? producto.categories.map(cat => cat.id) : [];
       return (
         (!this.searchTerm.value || producto.name.toLowerCase().includes(this.searchTerm.value.toLowerCase())) &&
         (!categoriaId || categoryIds.some(catId => catId === categoriaId || subcategoriasIds.includes(catId))) &&

@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "app.jwt",
+      "type": "com.motionParts.ecommerce.config.JwtProperties",
+      "sourceType": "com.motionParts.ecommerce.config.JwtProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "app.jwt.expiration",
+      "type": "java.lang.Long",
+      "sourceType": "com.motionParts.ecommerce.config.JwtProperties"
+    },
+    {
+      "name": "app.jwt.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.motionParts.ecommerce.config.JwtProperties"
+    }
+  ],
+  "hints": []
+}
