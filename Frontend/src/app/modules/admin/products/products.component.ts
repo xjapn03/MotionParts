@@ -1,54 +1,105 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // ⬅ Importar FormsModule
-import { CommonModule, getLocaleEraNames } from '@angular/common'; // ⬅ Importar CommonModule
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ProductService } from '../../../core/services/products.service';
+import { Product } from '../../../core/models/product.model';
+import { CategoryService } from '../../../core/services/category.service';
+import { Category } from '../../../core/models/category.model';
 
 @Component({
   selector: 'app-products',
-  imports: [FormsModule, CommonModule],
+  standalone: true, // Importante para proyectos standalone
   templateUrl: './products.component.html',
-  styleUrl: './products.component.css'
+  styleUrls: ['./products.component.css'],
+  imports: [CommonModule, FormsModule] // Asegura que se importen correctamente
 })
-export class ProductsComponent {
-  searchId: number | null = null; 
-  products = [
-    { id: 1, reference: 1204, name: 'Motor Hamer', price: 3500000, stock: 10, description: 'Un motor es una máquina que transforma energía en movimiento. Puede ser eléctrico, de combustión interna o externa, y se utiliza en diversos sistemas y dispositivo', image_url: 'https://media.gettyimages.com/id/95757561/es/foto/rueda-de-coche.jpg?s=612x612&w=gi&k=20&c=HbLBW-yihmtM1AVKqVpB8nzFy_uOzfnswJUukoT3RXc=' },
-    { id: 2, reference: 1744, name: 'Teclado Mecánico', price: 250000, stock: 25, description:'Hola', image_url: 'https://media.gettyimages.com/id/95757561/es/foto/rueda-de-coche.jpg?s=612x612&w=gi&k=20&c=HbLBW-yihmtM1AVKqVpB8nzFy_uOzfnswJUukoT3RXc=' },
-    { id: 3, reference: 1314, name: 'Mouse Inalámbrico', price: 150000, stock: 30, description:'Hola', image_url: 'https://media.gettyimages.com/id/95757561/es/foto/rueda-de-coche.jpg?s=612x612&w=gi&k=20&c=HbLBW-yihmtM1AVKqVpB8nzFy_uOzfnswJUukoT3RXc=' }
-  ];
+export class ProductsComponent implements OnInit {
+  searchId: number | null = null;
+  products: Product[] = [];
+  product: Product = { id: 0, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [] };
+  filteredProducts: Product[] = [];
+  categories: Category[] = [];
+  selectedCategoryId: number | null = null;
+  selectedSubcategoryId: number | null = null;
+  subcategories: Category[] = [];
 
-  product = { id: 0, reference: 0, name: '', price: 0, stock: 0, description: '', image_url: '' };
+  constructor(private productService: ProductService, private categoryService: CategoryService) {}
 
-  get filteredProducts() {
-    if (this.searchId) {
-      return this.products.filter(p => p.id === this.searchId);
-    }
-    return this.products;
+  ngOnInit() {
+    this.loadProducts();
+    this.loadCategories();
   }
 
-  onSubmit() {
-    if (this.product.id !== null) {
-      // Editar producto existente
-      const index = this.products.findIndex(p => p.id === this.product.id);
-      if (index !== -1) {
-        this.products[index] = { ...this.product };
-      }
+  loadProducts() {
+    this.productService.getProducts().subscribe(data => {
+      this.products = data;
+      this.filteredProducts = this.products;
+    });
+  }
+
+  loadCategories() {
+    this.categoryService.getCategories().subscribe(data => {
+      this.categories = data;
+    });
+  }
+
+  onCategoryChange() {
+    if (this.selectedCategoryId !== null) { 
+      this.subcategories = this.categories.filter(cat => cat.parent && cat.parent.id === this.selectedCategoryId);
     } else {
-      // Crear nuevo producto
-      this.product.id = new Date().getTime();  // Usar el timestamp como ID único
-      this.products = [...this.products, { ...this.product }];  // Usamos una nueva referencia para forzar la actualización
-    }  
-    this.resetForm();
+      this.subcategories = [];
+    }
+    this.selectedSubcategoryId = null;
   }
+  
+  onSubmit() {
+    if (this.selectedCategoryId || this.selectedSubcategoryId) {
+      const selectedCategory = this.categories.find(cat => cat.id === this.selectedCategoryId) ?? null;
+      const selectedSubcategory = this.categories.find(cat => cat.id === this.selectedSubcategoryId) ?? null;
 
-  onEdit(product: any) {
-    this.product = { ...product };
-  }
+      this.product.categories = [
+        ...(selectedCategory ? [{ id: selectedCategory.id, name: selectedCategory.name, description: '', parent: selectedCategory.parent }] : []),
+        ...(selectedSubcategory ? [{ id: selectedSubcategory.id, name: selectedSubcategory.name, description: '', parent: selectedSubcategory.parent }] : [])
+      ];
+    }
 
-  onDelete(id: number) {
-    this.products = this.products.filter(p => p.id !== id);
+    if (this.product.id && this.product.id !== 0) {
+      this.productService.updateProduct(this.product).subscribe(() => {
+        this.resetForm();
+        this.loadProducts();
+      });
+    } else {
+      this.productService.createProduct(this.product).subscribe(() => {
+        this.resetForm();
+        this.loadProducts();
+      });
+    }
   }
 
   resetForm() {
-    this.product = { id: 0, reference: 0, name: '', price: 0, stock: 0, description: '', image_url: '' };
+    this.product = { id: 0, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [] };
+    this.selectedCategoryId = null;
+    this.selectedSubcategoryId = null;
+  }
+
+  onEdit(product: Product) {
+    this.product = { ...product };
+  
+    if (product.categories && product.categories.length > 0) {
+      this.selectedCategoryId = product.categories[0]?.id ?? null;
+      this.onCategoryChange(); 
+      this.selectedSubcategoryId = product.categories.length > 1 ? product.categories[1]?.id ?? null : null;
+    } else {
+      this.selectedCategoryId = null;
+      this.selectedSubcategoryId = null;
+    }
+  }
+  
+  onDelete(productId: number) {
+    if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+      this.productService.deleteProduct(productId).subscribe(() => {
+        this.loadProducts();
+      });
+    }
   }
 }
