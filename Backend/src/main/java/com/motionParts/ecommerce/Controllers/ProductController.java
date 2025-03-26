@@ -5,6 +5,7 @@ import com.motionParts.ecommerce.services.ProductService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -36,12 +37,34 @@ public class ProductController {
             @PathVariable Long id,
             @RequestBody Map<String, String> request) {
 
-        String imageUrl = request.get("imageUrl"); // Obtener la URL desde el JSON enviado
-        if (imageUrl == null || imageUrl.isEmpty()) {
+        String image_url = request.get("image_url"); // Obtener la URL desde el JSON enviado
+        if (image_url == null || image_url.isEmpty()) {
             return ResponseEntity.badRequest().build(); // Validar que la URL no sea nula
         }
 
-        ProductDTO updatedProduct = productService.updateProductImage(id, imageUrl);
+        ProductDTO updatedProduct = productService.updateProductImage(id, image_url);
         return ResponseEntity.ok(updatedProduct);
     }
+
+    // Actualizar un producto completo
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(
+            @PathVariable Long id,
+            @RequestBody ProductDTO productDTO) {
+
+        ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
+        if (updatedProduct == null) {
+            return ResponseEntity.notFound().build();  // Si el producto no existe, devolver 404
+        }
+
+        return ResponseEntity.ok(updatedProduct);  // Devolver el producto actualizado
+    }
+
+    // Crear un producto
+    @PostMapping
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
+        ProductDTO createdProduct = productService.createProduct(productDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
+    }
+
 }

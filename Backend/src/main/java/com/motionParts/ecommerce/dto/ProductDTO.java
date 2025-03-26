@@ -9,19 +9,19 @@ public class ProductDTO {
     private String description;
     private int stock;
     private double price;
-    private String imageUrl; // ✅ Nuevo campo para la imagen
+    private String image_url; // Nuevo campo para la imagen
     private List<CategoryDTO> categories; 
 
     public ProductDTO() {}
 
-    public ProductDTO(Long id, String reference, String name, String description, int stock, double price, String imageUrl, List<CategoryDTO> categories) {
+    public ProductDTO(Long id, String reference, String name, String description, int stock, double price, String image_url, List<CategoryDTO> categories) {
         this.id = id;
         this.reference = reference;
         this.name = name;
         this.description = description;
         this.stock = stock;
         this.price = price;
-        this.imageUrl = imageUrl; // Asignar imagen
+        this.image_url = image_url; // Asignar imagen
         this.categories = categories;
     }
 
@@ -44,8 +44,8 @@ public class ProductDTO {
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; } // Getter y Setter para imagen
+    public String getImage_url() { return image_url; }
+    public void setImage_url(String image_url) { this.image_url = image_url; } // Getter y Setter para imagen
 
     public List<CategoryDTO> getCategories() { return categories; }
     public void setCategories(List<CategoryDTO> categories) { this.categories = categories; }

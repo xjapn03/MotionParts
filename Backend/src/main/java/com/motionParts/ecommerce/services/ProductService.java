@@ -35,11 +35,11 @@ public class ProductService {
     }
 
     // Actualizar la imagen de un producto
-    public ProductDTO updateProductImage(Long productId, String imageUrl) {
+    public ProductDTO updateProductImage(Long productId, String image_url) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + productId));
 
-        product.setImageUrl(imageUrl);
+        product.setImage_url(image_url);
         productRepository.save(product);
 
         return convertToDTO(product);
@@ -57,6 +57,62 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    // Actualizar un producto completo
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+    // Buscar el producto por su ID
+    Product product = productRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+
+    // Actualizar los campos del producto con los valores del DTO
+    product.setName(productDTO.getName());
+    product.setDescription(productDTO.getDescription());
+    product.setPrice(productDTO.getPrice());
+    product.setStock(productDTO.getStock());
+    product.setReference(productDTO.getReference());
+    product.setImage_url(productDTO.getImage_url());
+    // Aquí podrías añadir otros campos que necesites actualizar
+
+    // Guardar el producto actualizado
+    productRepository.save(product);
+
+    // Convertir el producto actualizado a DTO
+    return convertToDTO(product);
+    }
+
+
+    // Crear un nuevo producto
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        try {
+            // Validar los datos
+            if (productDTO.getName() == null || productDTO.getName().trim().isEmpty()) {
+                throw new IllegalArgumentException("El nombre del producto no puede estar vacío.");
+            }
+            if (productDTO.getPrice() <= 0) {
+                throw new IllegalArgumentException("El precio del producto debe ser mayor a cero.");
+            }
+
+            // Crear un nuevo producto con los datos del DTO
+            Product product = new Product();
+            product.setName(productDTO.getName());
+            product.setDescription(productDTO.getDescription());
+            product.setPrice(productDTO.getPrice());
+            product.setStock(productDTO.getStock());
+            product.setReference(productDTO.getReference());
+            product.setImage_url(productDTO.getImage_url());
+
+            // Guardar el nuevo producto en la base de datos
+            productRepository.save(product);
+
+            // Convertir el producto recién creado a DTO
+            return convertToDTO(product);
+        } catch (Exception e) {
+            // Loguear el error para diagnóstico
+            e.printStackTrace();
+            throw new RuntimeException("Error al crear el producto: " + e.getMessage());
+        }
+    }
+
+
     // Convertir Product a ProductDTO
     private ProductDTO convertToDTO(Product product) {
         List<CategoryDTO> categories = getCategoriesByProductId(product.getId());
@@ -68,7 +124,7 @@ public class ProductService {
                 product.getDescription(),
                 product.getStock(),
                 product.getPrice(),
-                product.getImageUrl(),  // Añadir la imagen en el DTO
+                product.getImage_url(),  // Añadir la imagen en el DTO
                 categories
         );
     }

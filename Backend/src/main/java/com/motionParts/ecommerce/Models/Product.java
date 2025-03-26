@@ -14,12 +14,11 @@ public class Product {
 
     private String name;
     private String description;
-    private int price;
+    private double price;
     private int stock;
     private String reference;
-
     // Nueva columna para la imagen
-    private String imageUrl;
+    private String image_url;
 
     @Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime created_at;
@@ -34,13 +33,13 @@ public class Product {
     public Product() {}
 
     // Constructor con imagen
-    public Product(String name, String description, int price, int stock, String reference, String imageUrl) {
+    public Product(String name, String description, double price, int stock, String reference, String image_url) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.reference = reference;
-        this.imageUrl = imageUrl;
+        this.image_url = image_url;
         this.created_at = LocalDateTime.now();
         this.updated_at = LocalDateTime.now();
     }
@@ -55,8 +54,8 @@ public class Product {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public int getPrice() { return price; }
-    public void setPrice(int price) { this.price = price; }
+    public double getPrice() { return price; }
+    public void setPrice(double price) { this.price = price; }
 
     public int getStock() { return stock; }
     public void setStock(int stock) { this.stock = stock; }
@@ -64,8 +63,8 @@ public class Product {
     public String getReference() { return reference; }
     public void setReference(String reference) { this.reference = reference; }
 
-    public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getImage_url() { return image_url; }
+    public void setImage_url(String image_url) { this.image_url = image_url; }
 
     public LocalDateTime getCreated_at() { return created_at; }
     public void setCreated_at(LocalDateTime created_at) { this.created_at = created_at; }
