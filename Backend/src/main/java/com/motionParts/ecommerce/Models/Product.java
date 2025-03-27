@@ -11,22 +11,20 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String description;
     private double price;
     private int stock;
     private String reference;
-    // Nueva columna para la imagen
     private String image_url;
 
-    @Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime created_at;
+    @Column(updatable = false)
+    private LocalDateTime created_at = LocalDateTime.now();
 
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime updated_at;
+    @Column(nullable = false)
+    private LocalDateTime updated_at = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ProductCategory> productCategories = new ArrayList<>();
 
     // Constructor vacío para JPA
