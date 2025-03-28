@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:17
+    container_name: motionparts_db
+    restart: always
+    environment:
+      POSTGRES_DB: motionparts
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./motionParts.sql:/docker-entrypoint-initdb.d/motionParts.sql
+
+  backend:
+    build: ./Backend # Corrección de ruta, si el Dockerfile está en Backend/
+    container_name: motionparts_backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/motionparts
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
+

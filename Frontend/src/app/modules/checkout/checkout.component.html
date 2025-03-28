@@ -1,0 +1,427 @@
+<div class="max-w-4xl mx-auto mt-8 p-6 bg-white shadow-md rounded-lg">
+  <!-- 🔹 Barra de progreso -->
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex-1 text-center">
+      <div [class]="currentStep >= 1 ? 'text-green-500' : 'text-gray-400'">
+        1
+      </div>
+      <p class="text-sm">Facturación</p>
+    </div>
+    <div
+      class="flex-1 border-t-2"
+      [class.border-green-500]="currentStep >= 2"
+    ></div>
+    <div class="flex-1 text-center">
+      <div [class]="currentStep >= 2 ? 'text-green-500' : 'text-gray-400'">
+        2
+      </div>
+      <p class="text-sm">Envío</p>
+    </div>
+    <div
+      class="flex-1 border-t-2"
+      [class.border-green-500]="currentStep >= 3"
+    ></div>
+    <div class="flex-1 text-center">
+      <div [class]="currentStep >= 3 ? 'text-green-500' : 'text-gray-400'">
+        3
+      </div>
+      <p class="text-sm">Pedido y Pago</p>
+    </div>
+  </div>
+
+  <form (ngSubmit)="onSubmit()">
+
+
+    <!-- 🔹 PASO 1: Facturación -->
+    <div *ngIf="currentStep === 1">
+      <h2 class="text-2xl font-semibold mb-4">Detalles de Facturación</h2>
+
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Nombre -->
+        <div>
+          <label class="block text-gray-700 font-medium">Nombre *</label>
+          <input
+            type="text"
+            class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            [(ngModel)]="billingData.nombre"
+            name="nombre"
+            required
+          />
+        </div>
+
+        <!-- Apellidos -->
+        <div>
+          <label class="block text-gray-700 font-medium">Apellidos *</label>
+          <input
+            type="text"
+            class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            [(ngModel)]="billingData.apellidos"
+            name="apellidos"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Tipo de identificación -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium"
+          >Tipo de identificación *</label
+        >
+        <select
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          [(ngModel)]="billingData.tipoIdentificacion"
+          name="tipoIdentificacion"
+          required
+        >
+          <option value="" disabled selected>Seleccione...</option>
+          <option value="CC">Cédula de Ciudadanía (CC)</option>
+          <option value="NIT">Número de Identificación Tributaria (NIT)</option>
+          <option value="PASAPORTE">Pasaporte</option>
+        </select>
+      </div>
+
+      <!-- Número de identificación -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium"
+          >Número de identificación *</label
+        >
+        <input
+          type="text"
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          [(ngModel)]="billingData.numeroIdentificacion"
+          name="numeroIdentificacion"
+          required
+        />
+      </div>
+
+      <!-- Dirección -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium"
+          >Dirección de la calle *</label
+        >
+        <input
+          type="text"
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          [(ngModel)]="billingData.direccion"
+          name="direccion"
+          required
+        />
+      </div>
+
+      <!-- Apartamento (Opcional) -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium"
+          >Apartamento, habitación, etc. (Opcional)</label
+        >
+        <input
+          type="text"
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          [(ngModel)]="billingData.direccionDetalle"
+          name="direccion"
+        />
+      </div>
+
+      <!-- País -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium">País *</label>
+        <select
+          class="w-full border rounded p-2"
+          [(ngModel)]="billingData.pais"
+          name="shippingPais"
+          (change)="onCountryChange('billing')"
+          required
+        >
+          <option disabled selected>Elige un país...</option>
+          <option *ngFor="let pais of paises" [value]="pais">{{ pais }}</option>
+        </select>
+      </div>
+
+      <!-- Región / Provincia -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium">Región / Provincia *</label>
+        <select
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          [(ngModel)]="billingData.departamento"
+          (change)="onRegionChange('billing')"
+          name="departamento"
+          required
+        >
+          <option value="" disabled selected>Seleccione una región...</option>
+          <option *ngFor="let region of regiones" [value]="region">{{ region }}</option>
+        </select>
+      </div>
+
+      <!-- Ciudad -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium">Ciudad *</label>
+        <select
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          [(ngModel)]="billingData.ciudad"
+          name="ciudad"
+          required
+        >
+          <option value="" disabled selected>Seleccione una ciudad...</option>
+          <option *ngFor="let ciudad of ciudades" [value]="ciudad">{{ ciudad }}</option>
+        </select>
+      </div>
+
+      <!-- Código postal (Opcional) -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium"
+          >Código postal (Opcional)</label
+        >
+        <input type="text" class="w-full border rounded p-2" [(ngModel)]="billingData.codigoPostal" name="shippingCodigoPostal" />
+      </div>
+
+      <!-- Teléfono -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium">Teléfono *</label>
+        <input
+          type="tel"
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          [(ngModel)]="billingData.telefono"
+          name="telefono"
+          pattern="[0-9]{7,15}"
+          required
+        />
+      </div>
+
+      <!-- Correo electrónico -->
+      <div class="mt-4">
+        <label class="block text-gray-700 font-medium"
+          >Dirección de correo electrónico *</label
+        >
+        <input
+          type="email"
+          class="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+          [(ngModel)]="billingData.email"
+          name="email"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- 🔹 PASO 2: Envío -->
+    <div *ngIf="currentStep === 2">
+      <h2 class="text-lg font-semibold mb-4">Envío</h2>
+
+      <!-- Checkbox para dirección diferente -->
+      <label class="block mb-2">
+        <input type="checkbox" class="mr-2" [(ngModel)]="enviarADireccionDiferente" name="casilla" (change)="toggleShippingAddress()" />
+        ¿Enviar a una dirección diferente?
+      </label>
+
+      <!-- Formulario de dirección de envío (se muestra si el checkbox está marcado) -->
+      <div *ngIf="enviarADireccionDiferente" class="mt-4 border p-4 rounded">
+        <h3 class="text-md font-semibold mb-2">Dirección de Envío</h3>
+
+        <!-- Nombre -->
+        <div class="mb-2">
+          <label class="block text-gray-700 font-medium">Nombre *</label>
+          <input
+            type="text"
+            class="w-full border rounded p-2"
+            [(ngModel)]="shippingData.nombre"
+            name="shippingNombre"
+            [required]="enviarADireccionDiferente"
+          />
+        </div>
+
+        <!-- Apellidos -->
+        <div class="mb-2">
+          <label class="block text-gray-700 font-medium">Apellidos *</label>
+          <input type="text" class="w-full border rounded p-2" [(ngModel)]="shippingData.apellidos" name="shippingApellidos" [required]="enviarADireccionDiferente" />
+        </div>
+
+        <!-- Dirección -->
+        <div class="mb-2">
+          <label class="block text-gray-700 font-medium">Dirección de la calle *</label>
+          <input type="text" class="w-full border rounded p-2" [(ngModel)]="shippingData.direccion" name="shippingDireccion" [required]="enviarADireccionDiferente" />
+        </div>
+
+        <!-- Apartamento -->
+        <div class="mb-2">
+          <label class="block text-gray-700 font-medium">Apartamento, torre, etc. (Opcional)</label>
+          <input type="text" class="w-full border rounded p-2" [(ngModel)]="shippingData.direccionDetalle" name="shippingDireccionDetalle" />
+        </div>
+
+        <!-- País -->
+        <div class="mb-2">
+          <label class="block text-gray-700 font-medium">País / Región *</label>
+          <select
+            class="w-full border rounded p-2"
+            [(ngModel)]="shippingData.pais"
+            name="shippingPais"
+            (change)="onCountryChange('shipping')"
+            [required]="enviarADireccionDiferente"
+          >
+            <option disabled selected>Elige un país...</option>
+            <option *ngFor="let pais of paises" [value]="pais">{{ pais }}</option>
+          </select>
+        </div>
+
+        <!-- Región / Provincia -->
+        <div class="mb-2">
+          <label class="block text-gray-700 font-medium">Región / Provincia *</label>
+          <select
+            class="w-full border rounded p-2"
+            [(ngModel)]="shippingData.departamento"
+            name="shippingDepartamento"
+            (change)="onRegionChange('shipping')"
+            [required]="enviarADireccionDiferente"
+          >
+            <option disabled selected>Elige una opción...</option>
+            <option *ngFor="let region of regionesEnvio" [value]="region">{{ region }}</option>
+          </select>
+        </div>
+
+        <!-- Ciudad -->
+        <div class="mb-2">
+          <label class="block text-gray-700 font-medium">Ciudad *</label>
+          <select
+            class="w-full border rounded p-2"
+            [(ngModel)]="shippingData.ciudad"
+            name="shippingCiudad"
+            [required]="enviarADireccionDiferente"
+          >
+            <option disabled selected>Elige una opción...</option>
+            <option *ngFor="let ciudad of ciudadesEnvio" [value]="ciudad">{{ ciudad }}</option>
+          </select>
+        </div>
+
+        <!-- Código postal -->
+        <div class="mb-2">
+          <label class="block text-gray-700 font-medium">Código postal (Opcional)</label>
+          <input type="text" class="w-full border rounded p-2" [(ngModel)]="shippingData.codigoPostal" name="shippingCodigoPostal" />
+        </div>
+      </div>
+
+      <!-- Notas del pedido -->
+      <textarea
+        class="w-full p-2 border rounded mt-4"
+        placeholder="Notas del pedido (opcional)"
+        [(ngModel)]="shippingData.notas"
+        name="shippingNotas"
+      ></textarea>
+    </div>
+
+    <!-- 🔹 PASO 3: Pedido y Pago -->
+    <div *ngIf="currentStep === 3">
+      <h2 class="text-lg font-semibold mb-4">Pedido y Pago</h2>
+
+      <!-- 🔸 Cupón de descuento -->
+      <div class="border-2 border-yellow-400 p-4 rounded-lg mb-4">
+        <p>Si tienes un código de cupón, por favor, aplícalo abajo.</p>
+        <div class="flex mt-2">
+          <input
+            type="text"
+            class="w-full p-2 border rounded-l-md"
+            placeholder="Código de cupón"
+            [(ngModel)]="orderData.cupon"
+            name="cupon"
+          />
+          <button class="px-4 bg-yellow-500 text-white rounded-r-md">
+            APLICAR CUPÓN
+          </button>
+        </div>
+      </div>
+
+      <!-- 🔸 Resumen del pedido -->
+      <div class="border-t pt-4 mb-4">
+        <h3 class="font-semibold">Tu pedido</h3>
+
+        <div *ngFor="let item of cartItems" class="flex justify-between mt-2">
+          <p>{{ item.product.name }} × {{ item.quantity }}</p>
+          <p class="font-bold">
+            ${{ item.product.price * item.quantity | number : "1.0-2" }}
+          </p>
+        </div>
+
+        <div class="flex justify-between mt-2 font-semibold">
+          <p>Subtotal</p>
+          <p>${{ total | number : "1.0-2" }}</p>
+        </div>
+      </div>
+
+      <!-- 🔸 Opciones de Envío -->
+      <div class="border-t pt-4 mb-4">
+        <h3 class="font-semibold">Envío</h3>
+        <label class="block mt-2">
+          <input type="radio" name="envio" [(ngModel)]="orderData.metodoEnvio" value="envio_gratis" class="mr-2" />
+          Envío gratuito
+        </label>
+        <label class="block mt-2">
+          <input type="radio" name="envio" [(ngModel)]="orderData.metodoEnvio" value="recoger_tienda" class="mr-2" />
+          Recoger en tienda (Bogotá, Carrera 27a #63g-46)
+        </label>
+        <label class="block mt-2">
+          <input type="radio" name="envio" [(ngModel)]="orderData.metodoEnvio" value="coordinadora" class="mr-2" />
+          Coordinadora: $15,144
+        </label>
+      </div>
+
+      <!-- 🔸 Opciones de Pago -->
+      <div class="border-t pt-4 mb-4">
+        <h3 class="font-semibold">Pago</h3>
+        <label class="block mt-2">
+          <input type="radio" name="pago" [(ngModel)]="orderData.metodoPago" value="efectivo_tienda" class="mr-2" />
+          Recoger en tienda (Pago en efectivo)
+        </label>
+        <label class="block mt-2">
+          <input type="radio" name="pago" [(ngModel)]="orderData.metodoPago" value="pago_online" class="mr-2" />
+          Pago seguro online (Tarjetas de crédito, débito, PSE)
+        </label>
+        <label class="block mt-2">
+          <input type="radio" name="pago" [(ngModel)]="orderData.metodoPago" value="transferencia" class="mr-2" />
+          Transferencia bancaria
+        </label>
+        <label class="block mt-2">
+          <input type="radio" name="pago" [(ngModel)]="orderData.metodoPago" value="contra_entrega" class="mr-2" />
+          Pago contra entrega
+        </label>
+      </div>
+
+      <!-- 🔸 Confirmación -->
+      <label class="block mt-4">
+        <input type="checkbox" [(ngModel)]="orderData.aceptoTerminos" name="aceptoTerminos" class="mr-2" required />
+        Confirmo que he leído la
+        <a href="#" class="text-blue-500 underline">Política de privacidad</a> y acepto los términos.
+      </label>
+
+      <!-- 🔸 Botón de pago -->
+      <button
+        (click)="onSubmit()"
+        class="w-full mt-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+      >
+        REALIZAR EL PEDIDO
+      </button>
+    </div>
+  </form>
+
+  <!-- 🔹 Botones de navegación -->
+  <div class="flex justify-between mt-6">
+    <button
+      *ngIf="currentStep === 1"
+      (click)="goBackToCart()"
+      class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+    >
+      Volver al carrito
+    </button>
+
+    <button
+      *ngIf="currentStep > 1"
+      (click)="prevStep()"
+      class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+    >
+      Anterior
+    </button>
+
+    <button
+      *ngIf="currentStep < 3"
+      (click)="nextStep()"
+      class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>

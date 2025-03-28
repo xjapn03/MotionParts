@@ -1,0 +1,28 @@
+<div *ngIf="order" class="order-details">
+  <h2>Detalles de la Orden #{{ order.id }}</h2>
+  <p><strong>Fecha:</strong> {{ order.createdAt | date:'short' }}</p>
+  <p><strong>Total:</strong> \${{ order.total }}</p>
+  <p><strong>Estado:</strong> {{ order.status }}</p>
+
+  <h3>Productos</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio Unitario</th>
+        <th>Subtotal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detail of order.orderDetails">
+        <td>{{ detail.productName }}</td>
+        <td>{{ detail.quantity }}</td>
+        <td>\${{ detail.unitPrice }}</td>
+        <td>\${{ detail.subtotal }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button routerLink="/my-orders">Volver</button>
+</div>

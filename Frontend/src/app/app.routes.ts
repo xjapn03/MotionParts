@@ -13,7 +13,10 @@ import { CategoriesComponent } from './modules/admin/categories/categories.compo
 import { OrdersComponent } from './modules/admin/orders/orders.component';
 import { InvoicesComponent } from './modules/admin/invoices/invoices.component';
 import { SalesComponent } from './modules/admin/sales/sales.component';
+import { CheckoutComponent } from './modules/checkout/checkout.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { MyOrdersComponent } from './modules/orders/my-orders/my-orders.component';
+import { OrderDetailsComponent } from './modules/orders/order-details/order-details.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -39,6 +42,9 @@ export const routes: Routes = [
   { path: 'products', component: ProductosComponent },
   { path: 'acerca', component: AcercaComponent },
   { path: 'cart', component: ShoppingCartComponent },
+  { path: 'checkout', component: CheckoutComponent }, // ✅ Agregada la ruta de checkout
+  { path: 'my-orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
+  { path: 'my-orders/:id', component: OrderDetailsComponent, canActivate: [AuthGuard] },
   { path: 'contact', component: ContactComponent },
   { path: 'home', component: HomeComponent },
   { path: '**', redirectTo: 'home' },
