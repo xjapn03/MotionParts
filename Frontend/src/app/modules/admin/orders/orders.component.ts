@@ -1,15 +1,13 @@
-import { Component, OnInit, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../../core/services/order.service';
 import { Order } from '../../../core/models/order.model';
 import { Router } from '@angular/router'; // ✅ Importamos Router
 import { CommonModule } from '@angular/common';
-import { Order } from './order.model';  // Asegúrate de importar el modelo
 
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModuleCommonModule],
+  imports: [CommonModule],
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css'],
 })
