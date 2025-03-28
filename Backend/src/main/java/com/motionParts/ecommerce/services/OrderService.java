@@ -40,30 +40,31 @@ public class OrderService {
     }
 
     // ✅ Crear una orden a partir del carrito
-    public OrderDTO createOrder(Long userId, String paymentMethod, String pickupLocation) {
+    public OrderDTO createOrder(Long userId, OrderDTO orderDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
-
+    
         // Buscar carrito activo
         ShoppingCart cart = shoppingCartRepository.findByUserAndStatus(user, ShoppingCartStatus.ACTIVE)
                 .stream().findFirst()
                 .orElseThrow(() -> new RuntimeException("No se encontró un carrito activo para el usuario"));
-
+    
         // Calcular total del pedido
         double total = cart.getCartItems().stream()
                 .mapToDouble(item -> item.getQuantity() * item.getUnitPrice())
                 .sum();
-
+    
         // Crear y guardar la orden
-        Order order = new Order(user, cart, total, paymentMethod, pickupLocation);
+        Order order = new Order(user, cart, total, orderDTO.getPaymentMethod(), orderDTO.getPickupLocation());
         order = orderRepository.save(order);
-
+    
         // Marcar carrito como completado
         cart.setStatus(ShoppingCartStatus.COMPLETED);
         shoppingCartRepository.save(cart);
-
+    
         return convertToDTO(order);
     }
+    
 
     // ✅ Cambiar estado de una orden
     public OrderDTO updateOrderStatus(Long orderId, OrderStatus newStatus) {

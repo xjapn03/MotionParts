@@ -20,12 +20,11 @@ public class OrderController {
     @PostMapping("/users/{userId}")
     public ResponseEntity<OrderDTO> createOrder(
             @PathVariable Long userId,
-            @RequestParam String paymentMethod,
-            @RequestParam String pickupLocation) {
-        
-        OrderDTO orderDTO = orderService.createOrder(userId, paymentMethod, pickupLocation);
-        return ResponseEntity.ok(orderDTO);
+            @RequestBody OrderDTO orderDTO) {  // ✅ Recibir todo en el cuerpo
+        OrderDTO createdOrder = orderService.createOrder(userId, orderDTO);
+        return ResponseEntity.ok(createdOrder);
     }
+
 
     // ✅ Obtener todas las órdenes de un usuario
     @GetMapping("/users/{userId}")

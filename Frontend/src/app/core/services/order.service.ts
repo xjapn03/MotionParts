@@ -12,10 +12,11 @@ export class OrderService {
   constructor(private http: HttpClient) {}
 
   // ✅ Crear una orden
-  createOrder(userId: number, paymentMethod: string, pickupLocation?: string): Observable<Order> {
-    const body = { paymentMethod, pickupLocation: pickupLocation ?? '' }; // Enviar cadena vacía si es null
-    return this.http.post<Order>(`${this.apiUrl}/users/${userId}`, body);
+  // order.service.ts
+  createOrder(order: Order): Observable<Order> {
+    return this.http.post<Order>(`${this.apiUrl}/users/${order.userId}`, order);
   }
+
 
   // ✅ Obtener todas las órdenes de un usuario
   getUserOrders(userId: number): Observable<Order[]> {

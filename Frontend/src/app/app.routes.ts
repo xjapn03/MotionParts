@@ -15,6 +15,8 @@ import { InvoicesComponent } from './modules/admin/invoices/invoices.component';
 import { SalesReportComponent } from './modules/admin/sales-report/sales-report.component';
 import { CheckoutComponent } from './modules/checkout/checkout.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { MyOrdersComponent } from './modules/orders/my-orders/my-orders.component';
+import { OrderDetailsComponent } from './modules/orders/order-details/order-details.component';
 
 
 export const routes: Routes = [
@@ -37,6 +39,8 @@ export const routes: Routes = [
   { path: 'acerca', component: AcercaComponent },
   { path: 'cart', component: ShoppingCartComponent },
   { path: 'checkout', component: CheckoutComponent }, // ✅ Agregada la ruta de checkout
+  { path: 'my-orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
+  { path: 'my-orders/:id', component: OrderDetailsComponent, canActivate: [AuthGuard] },
   { path: 'contact', component: ContactComponent },
   { path: 'home', component: HomeComponent },
   { path: '**', redirectTo: 'home' },

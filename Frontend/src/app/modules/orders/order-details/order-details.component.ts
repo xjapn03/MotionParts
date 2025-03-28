@@ -1,0 +1,30 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { OrderService } from '../../../core/services/order.service';
+import { Order } from '../../../core/models/order.model';
+
+@Component({
+  selector: 'app-order-details',
+  standalone: true, // Si usas standalone components
+  imports: [CommonModule], // ✅ Agregar CommonModule para usar *ngIf, *ngFor y pipes
+  templateUrl: './order-details.component.html',
+  styleUrl: './order-details.component.css'
+})
+export class OrderDetailsComponent implements OnInit {
+  order: Order | null = null;
+
+  constructor(private route: ActivatedRoute, private orderService: OrderService) {}
+
+  ngOnInit(): void {
+    const orderId = Number(this.route.snapshot.paramMap.get('id'));
+    this.loadOrderDetails(orderId);
+  }
+
+  loadOrderDetails(orderId: number): void {
+    this.orderService.getOrderById(orderId).subscribe({
+      next: (data) => (this.order = data),
+      error: (err) => console.error('Error al cargar detalles:', err),
+    });
+  }
+}
