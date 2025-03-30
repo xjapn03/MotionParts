@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../../../core/services/order.service';
 import { Order } from '../../../core/models/order.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order-details',
@@ -14,7 +15,15 @@ import { Order } from '../../../core/models/order.model';
 export class OrderDetailsComponent implements OnInit {
   order: Order | null = null;
 
-  constructor(private route: ActivatedRoute, private orderService: OrderService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router, // ✅ Se inyecta correctamente el Router
+    private orderService: OrderService
+  ) {}
+
+  goBack() {
+    this.router.navigate(['/my-orders']);
+  }
 
   ngOnInit(): void {
     const orderId = Number(this.route.snapshot.paramMap.get('id'));

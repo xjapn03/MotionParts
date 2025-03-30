@@ -1,12 +1,15 @@
 package com.motionParts.ecommerce.services;
 
 import com.motionParts.ecommerce.Models.CartItem;
+import com.motionParts.ecommerce.Models.Product;
 import com.motionParts.ecommerce.Models.ShoppingCart;
 import com.motionParts.ecommerce.Models.ShoppingCartStatus;
 import com.motionParts.ecommerce.Models.User;
 import com.motionParts.ecommerce.dto.CartItemDTO;
+import com.motionParts.ecommerce.dto.ProductDTO;
 import com.motionParts.ecommerce.dto.ShoppingCartDTO;
 import com.motionParts.ecommerce.repositories.CartItemRepository;
+import com.motionParts.ecommerce.repositories.ProductRepository;
 import com.motionParts.ecommerce.repositories.ShoppingCartRepository;
 import com.motionParts.ecommerce.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class ShoppingCartService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     // ✅ Obtener todos los carritos en formato DTO
     public List<ShoppingCartDTO> getAllShoppingCartsDTO() {
@@ -71,13 +77,17 @@ public class ShoppingCartService {
             existingItem.setTotalPrice(existingItem.getQuantity() * existingItem.getUnitPrice());
         } else {
             // Si no existe, crear un nuevo CartItem y agregarlo al carrito
-            CartItem newItem = new CartItem(
-                    cart,
-                    cartItemDto.getProduct(),
-                    cartItemDto.getQuantity(),
-                    cartItemDto.getUnitPrice(),
-                    cartItemDto.getQuantity() * cartItemDto.getUnitPrice()
-            );
+            Product product = productRepository.findById(cartItemDto.getProduct().getId())
+        .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + cartItemDto.getProduct().getId()));
+
+        CartItem newItem = new CartItem(
+            cart,
+            product, // ✅ Ahora pasamos `Product`, no `ProductDTO`
+            cartItemDto.getQuantity(),
+            cartItemDto.getUnitPrice(),
+            cartItemDto.getQuantity() * cartItemDto.getUnitPrice()
+        );
+
             cart.getCartItems().add(newItem);
             cartItemRepository.save(newItem);
         }
@@ -172,27 +182,27 @@ public class ShoppingCartService {
     }
 
     // ✅ Convertir ShoppingCart en ShoppingCartDTO
-    private ShoppingCartDTO convertToDTO(ShoppingCart cart) {
-        List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream()
-                .map(item -> new CartItemDTO(
-                    item.getId(),
-                    cart.getId(),
-                    item.getProduct(), // ✅ Pasamos el objeto `Product`
-                    item.getQuantity(),
-                    item.getUnitPrice(),
-                    item.getTotalPrice()
-                )).collect(Collectors.toList());
-
-        double totalCartPrice = cartItemDTOs.stream().mapToDouble(CartItemDTO::getTotalPrice).sum();
-
-        return new ShoppingCartDTO(
+   private ShoppingCartDTO convertToDTO(ShoppingCart cart) {
+    List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream()
+            .map(item -> new CartItemDTO(
+                item.getId(),
                 cart.getId(),
-                cart.getUser().getUsername(),
-                cartItemDTOs,
-                cart.getStatus().name(),
-                totalCartPrice
-        );
-    }
+                new ProductDTO(item.getProduct()), // ✅ Convertimos `Product` a `ProductDTO`
+                item.getQuantity(),
+                item.getUnitPrice(),
+                item.getTotalPrice()
+            )).collect(Collectors.toList());
+
+    double totalCartPrice = cartItemDTOs.stream().mapToDouble(CartItemDTO::getTotalPrice).sum();
+
+    return new ShoppingCartDTO(
+            cart.getId(),
+            cart.getUser().getUsername(),
+            cartItemDTOs,
+            cart.getStatus().name(),
+            totalCartPrice
+    );
+}
 
 
     public ShoppingCartDTO removeCartItem(Long userId, Long productId) {

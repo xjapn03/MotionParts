@@ -3,6 +3,9 @@ package com.motionParts.ecommerce.Models;
 import java.time.LocalDateTime;
 import jakarta.persistence.*;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.util.ArrayList;
 
 @Entity
@@ -23,6 +26,10 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductCategory> productCategories = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonBackReference // Evita la serialización infinita
+    private List<OrderDetail> orderDetails = new ArrayList<>();
+
     // Constructor vacío necesario para JPA
     public Product() {}
 
@@ -35,6 +42,10 @@ public class Product {
     }
 
     // Getters y Setters
+    public List<OrderDetail> getOrderDetails() { return orderDetails; }
+    public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
+
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

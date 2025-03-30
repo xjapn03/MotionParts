@@ -1,5 +1,7 @@
 package com.motionParts.ecommerce.dto;
 
+import com.motionParts.ecommerce.Models.OrderDetail;
+
 public class OrderDetailDTO {
     private Long id;
     private Long orderId;
@@ -18,6 +20,13 @@ public class OrderDetailDTO {
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.subtotal = subtotal;
+    }
+
+    public OrderDetailDTO(OrderDetail orderDetail) {
+    this.id = orderDetail.getId();
+    this.productId = orderDetail.getProduct().getId();
+    this.quantity = orderDetail.getQuantity();
+    this.unitPrice = orderDetail.getUnitPrice();
     }
 
     public Long getId() { return id; }

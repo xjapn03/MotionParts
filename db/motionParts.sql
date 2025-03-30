@@ -24,15 +24,10 @@ SET row_security = off;
 CREATE FUNCTION public.update_timestamp() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
-
 BEGIN
-
     NEW.updated_at = CURRENT_TIMESTAMP;  -- Actualiza la fecha/hora
-
     RETURN NEW;
-
 END;
-
 $$;
 
 
@@ -168,7 +163,31 @@ CREATE TABLE public.orders (
     status character varying(255) DEFAULT 'PENDING'::character varying NOT NULL,
     payment_method character varying(255),
     pickup_location character varying(255),
-    created_at timestamp without time zone DEFAULT now() NOT NULL
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    billing_first_name character varying(255),
+    billing_last_name character varying(255),
+    billing_id_type character varying(255),
+    billing_id_number character varying(255),
+    billing_address character varying(255),
+    billing_address_detail character varying(255),
+    billing_country character varying(255),
+    billing_region character varying(255),
+    billing_city character varying(255),
+    billing_postal_code character varying(255),
+    billing_phone character varying(255),
+    billing_email character varying(255),
+    shipping_first_name character varying(255),
+    shipping_last_name character varying(255),
+    shipping_address character varying(255),
+    shipping_address_detail character varying(255),
+    shipping_country character varying(255),
+    shipping_region character varying(255),
+    shipping_city character varying(255),
+    shipping_postal_code character varying(255),
+    shipping_notes character varying(255),
+    coupon_code character varying(255),
+    shipping_method character varying(255),
+    accepted_terms boolean DEFAULT false
 );
 
 
@@ -445,117 +464,175 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: cart_items; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.cart_items (id, cart_id, product_id, quantity, unit_price, created_at, updated_at, total_price) VALUES (42, 1, 1, 2, 500000, '2025-03-25 11:08:59.921744', '2025-03-25 11:08:59.921744', 1000000);
+COPY public.cart_items (id, cart_id, product_id, quantity, unit_price, created_at, updated_at, total_price) FROM stdin;
+42	1	1	2	500000	2025-03-25 11:08:59.921744	2025-03-25 11:08:59.921744	1000000
+43	2	6	1	220000	2025-03-28 04:14:43.083007	2025-03-28 04:14:43.083007	220000
+44	2	4	4	150000	2025-03-28 04:14:56.854715	2025-03-28 04:14:56.854715	600000
+45	3	5	4	175000	2025-03-28 04:18:44.899127	2025-03-28 04:18:44.899127	700000
+46	4	2	1	750000	2025-03-29 15:22:10.431662	2025-03-29 15:22:10.431662	750000
+47	4	4	4	150000	2025-03-29 15:22:43.209962	2025-03-29 15:22:43.209962	600000
+48	5	2	1	750000	2025-03-29 16:30:09.453744	2025-03-29 16:30:09.453744	750000
+49	5	1	1	500000	2025-03-29 16:30:14.989152	2025-03-29 16:30:14.989152	500000
+50	6	1	1	500000	2025-03-29 16:49:03.184294	2025-03-29 16:49:03.184294	500000
+51	6	2	1	750000	2025-03-29 16:49:06.454981	2025-03-29 16:49:06.454981	750000
+52	6	7	2	280000	2025-03-29 16:49:11.378988	2025-03-29 16:49:11.378988	560000
+53	7	3	1	820000	2025-03-29 17:04:07.00953	2025-03-29 17:04:07.00953	820000
+54	7	4	2	150000	2025-03-29 17:04:10.789976	2025-03-29 17:04:10.789976	300000
+55	8	3	2	820000	2025-03-29 19:02:36.091618	2025-03-29 19:02:36.091618	1640000
+56	8	9	1	720000	2025-03-29 19:02:40.887506	2025-03-29 19:02:40.887506	720000
+57	9	1	1	500000	2025-03-29 19:11:41.556264	2025-03-29 19:11:41.556264	500000
+58	9	5	2	175000	2025-03-29 19:11:46.847742	2025-03-29 19:11:46.847742	350000
+59	9	7	1	280000	2025-03-29 19:11:50.525999	2025-03-29 19:11:50.525999	280000
+60	9	10	1	90000	2025-03-29 19:11:54.762651	2025-03-29 19:11:54.762651	90000
+61	10	5	4	175000	2025-03-29 20:01:39.019179	2025-03-29 20:01:39.019179	700000
+\.
 
 
 --
 -- Data for Name: category; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.category (id, name, description, parent_id) VALUES (1, 'Baterias', 'Baterias para automovil de diferentes tipos y marcas.', NULL);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (2, 'Alternadores', 'Generadores eléctricos para automóviles que recargan la batería y alimentan los sistemas eléctricos.', NULL);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (3, 'Bobinas de ignición', 'Componentes esenciales del sistema de encendido que transforman la corriente en alta tensión para las bujías.', NULL);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (4, 'Luces', 'Diferentes tipos de iluminación para vehículos, incluyendo faros, luces traseras y auxiliares.', NULL);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (5, 'Motores de arranque', 'Motores eléctricos diseñados para poner en marcha el motor de combustión interna del vehículo.', NULL);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (6, 'Reguladores', 'Dispositivos que controlan la tensión eléctrica del alternador para evitar sobrecargas en el sistema.', NULL);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (10, 'Bobinas completas línea', 'Bobinas en línea completas', 3);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (8, 'Bateria Caja grande', 'Batería de caja 1000-1100', 1);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (9, 'Alternador Tipo Valeo', 'Alternadores tipo Valeo original', 2);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (11, 'Luces LED altas', 'Luces LED', 4);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (12, 'Arranque Tipo Bosch', 'Motores de arranque tipo Bosch', 5);
-INSERT INTO public.category (id, name, description, parent_id) VALUES (13, 'Regulador Bosch', 'Reguladores marca Bosch', 6);
+COPY public.category (id, name, description, parent_id) FROM stdin;
+1	Baterias	Baterias para automovil de diferentes tipos y marcas.	\N
+2	Alternadores	Generadores eléctricos para automóviles que recargan la batería y alimentan los sistemas eléctricos.	\N
+3	Bobinas de ignición	Componentes esenciales del sistema de encendido que transforman la corriente en alta tensión para las bujías.	\N
+4	Luces	Diferentes tipos de iluminación para vehículos, incluyendo faros, luces traseras y auxiliares.	\N
+5	Motores de arranque	Motores eléctricos diseñados para poner en marcha el motor de combustión interna del vehículo.	\N
+6	Reguladores	Dispositivos que controlan la tensión eléctrica del alternador para evitar sobrecargas en el sistema.	\N
+10	Bobinas completas línea	Bobinas en línea completas	3
+8	Bateria Caja grande	Batería de caja 1000-1100	1
+9	Alternador Tipo Valeo	Alternadores tipo Valeo original	2
+11	Luces LED altas	Luces LED	4
+12	Arranque Tipo Bosch	Motores de arranque tipo Bosch	5
+13	Regulador Bosch	Reguladores marca Bosch	6
+\.
 
 
 --
 -- Data for Name: order_details; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+COPY public.order_details (id, order_id, product_id, quantity, unit_price, subtotal) FROM stdin;
+12	8	3	2	820000	1640000
+13	8	9	1	720000	720000
+14	9	1	1	500000	500000
+15	9	5	2	175000	350000
+16	9	7	1	280000	280000
+17	9	10	1	90000	90000
+18	10	5	4	175000	700000
+\.
 
 
 --
 -- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+COPY public.orders (id, user_id, cart_id, total, status, payment_method, pickup_location, created_at, billing_first_name, billing_last_name, billing_id_type, billing_id_number, billing_address, billing_address_detail, billing_country, billing_region, billing_city, billing_postal_code, billing_phone, billing_email, shipping_first_name, shipping_last_name, shipping_address, shipping_address_detail, shipping_country, shipping_region, shipping_city, shipping_postal_code, shipping_notes, coupon_code, shipping_method, accepted_terms) FROM stdin;
+8	1	8	2360000	PENDING	efectivo_tienda	default_location	2025-03-29 19:05:05.336729	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	juan@gmail.com	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	recoger_tienda	t
+9	1	9	1220000	PENDING	efectivo_tienda	default_location	2025-03-29 19:13:26.028963	Juan	Perez	CC	1000987655	calle 45 #45-22	202	Colombia	Cundinamarca	Bogotá	111011	3229843354	juan@gmail.com	Juana	Perez	carrera 134 #45-99	torre 5 606	Colombia	Antioquia	Medellín	111011	Ojala sirva manitooo	\N	recoger_tienda	t
+10	1	10	700000	PENDING	efectivo_tienda	Bogotá, Carrera 27a #63g-46	2025-03-29 20:02:40.009877	Juan	Prueba	CC	1000238366	Calle 23 45-65	Torre 3 909	Colombia	Cundinamarca	Bogotá	111011	3229093484	ejemplo@gmail.com										\N	recoger_tienda	t
+\.
 
 
 --
 -- Data for Name: product_category; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (1, 1, 1);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (1, 8, 2);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (2, 2, 3);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (3, 2, 4);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (3, 9, 5);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (4, 3, 6);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (4, 10, 7);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (5, 3, 8);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (6, 4, 9);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (6, 11, 10);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (7, 4, 11);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (8, 5, 12);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (9, 5, 13);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (9, 12, 14);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (10, 6, 15);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (10, 13, 16);
-INSERT INTO public.product_category (product_id, category_id, id) VALUES (11, 6, 17);
+COPY public.product_category (product_id, category_id, id) FROM stdin;
+1	1	1
+1	8	2
+2	2	3
+3	2	4
+3	9	5
+4	3	6
+4	10	7
+5	3	8
+6	4	9
+6	11	10
+7	4	11
+8	5	12
+9	5	13
+9	12	14
+10	6	15
+10	13	16
+11	6	17
+\.
 
 
 --
 -- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (1, '79836', 'Bateria Bosch', 'Caja 35/65 (BCI), D23 (JIS)', 500000, 5, '2025-03-10 21:48:23.217568', '2025-03-10 21:48:23.217568', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (2, '10001', 'Alternador Bosch 12V 90A', 'Alternador de alto rendimiento compatible con múltiples modelos de automóviles.', 750000, 10, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (3, '10002', 'Alternador Valeo 14V 120A', 'Alternador de alta eficiencia, ideal para vehículos con mayor demanda eléctrica.', 820000, 8, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (4, '20001', 'Bobina Bosch 0986JG', 'Bobina de encendido para motores de 4 cilindros, mejora el rendimiento del motor.', 150000, 15, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (5, '20002', 'Bobina Denso 6731306', 'Bobina de ignición de alta resistencia para sistemas electrónicos modernos.', 175000, 12, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (6, '30001', 'Faros LED H7 Philips', 'Luces delanteras LED de alto brillo y bajo consumo energético.', 220000, 20, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (7, '30002', 'Kit de luces Xenón 6000K', 'Iluminación blanca intensa para una mejor visibilidad nocturna.', 280000, 10, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (8, '40001', 'Motor de arranque Denso 2.2KW', 'Motor de arranque potente para vehículos de gasolina y diésel.', 680000, 5, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (9, '40002', 'Motor de arranque Bosch 1.8KW', 'Arrancador compacto y eficiente, compatible con varias marcas.', 720000, 6, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (10, '50001', 'Regulador de voltaje Bosch 14V', 'Regulador electrónico para alternadores de 14V.', 90000, 30, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
-INSERT INTO public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) VALUES (11, '50002', 'Regulador de voltaje Valeo 12V', 'Regulador confiable para alternadores de 12V, protege el sistema eléctrico.', 85000, 25, '2025-03-14 01:29:10.004605', '2025-03-14 01:29:10.004605', NULL);
+COPY public.products (id, reference, name, description, price, stock, created_at, updated_at, image_url) FROM stdin;
+1	79836	Bateria Bosch	Caja 35/65 (BCI), D23 (JIS)	500000	5	2025-03-10 21:48:23.217568	2025-03-10 21:48:23.217568	\N
+2	10001	Alternador Bosch 12V 90A	Alternador de alto rendimiento compatible con múltiples modelos de automóviles.	750000	10	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+3	10002	Alternador Valeo 14V 120A	Alternador de alta eficiencia, ideal para vehículos con mayor demanda eléctrica.	820000	8	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+4	20001	Bobina Bosch 0986JG	Bobina de encendido para motores de 4 cilindros, mejora el rendimiento del motor.	150000	15	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+5	20002	Bobina Denso 6731306	Bobina de ignición de alta resistencia para sistemas electrónicos modernos.	175000	12	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+6	30001	Faros LED H7 Philips	Luces delanteras LED de alto brillo y bajo consumo energético.	220000	20	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+7	30002	Kit de luces Xenón 6000K	Iluminación blanca intensa para una mejor visibilidad nocturna.	280000	10	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+8	40001	Motor de arranque Denso 2.2KW	Motor de arranque potente para vehículos de gasolina y diésel.	680000	5	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+9	40002	Motor de arranque Bosch 1.8KW	Arrancador compacto y eficiente, compatible con varias marcas.	720000	6	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+10	50001	Regulador de voltaje Bosch 14V	Regulador electrónico para alternadores de 14V.	90000	30	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+11	50002	Regulador de voltaje Valeo 12V	Regulador confiable para alternadores de 12V, protege el sistema eléctrico.	85000	25	2025-03-14 01:29:10.004605	2025-03-14 01:29:10.004605	\N
+\.
 
 
 --
 -- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.roles (id, name) VALUES (1, 'ADMIN');
-INSERT INTO public.roles (id, name) VALUES (2, 'USER');
-INSERT INTO public.roles (id, name) VALUES (3, 'EMPLEADO');
+COPY public.roles (id, name) FROM stdin;
+1	ADMIN
+2	USER
+3	EMPLEADO
+\.
 
 
 --
 -- Data for Name: shopping_carts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.shopping_carts (id, user_id, status, created_at, updated_at) VALUES (1, 1, 'ACTIVE', '2025-03-17 19:02:48.409567', '2025-03-17 19:02:48.409567');
+COPY public.shopping_carts (id, user_id, status, created_at, updated_at) FROM stdin;
+1	1	COMPLETED	2025-03-17 19:02:48.409567	2025-03-17 19:02:48.409567
+2	1	COMPLETED	2025-03-28 04:14:43.07584	2025-03-28 04:14:43.07584
+3	1	COMPLETED	2025-03-28 04:18:44.896335	2025-03-28 04:18:44.896335
+4	1	COMPLETED	2025-03-29 15:22:10.383349	2025-03-29 15:22:10.383349
+5	1	COMPLETED	2025-03-29 16:30:09.421446	2025-03-29 16:30:09.421446
+6	1	COMPLETED	2025-03-29 16:49:03.154536	2025-03-29 16:49:03.154536
+7	1	COMPLETED	2025-03-29 17:04:06.977794	2025-03-29 17:04:06.977794
+8	1	COMPLETED	2025-03-29 19:02:36.085094	2025-03-29 19:02:36.085094
+9	1	COMPLETED	2025-03-29 19:11:41.528676	2025-03-29 19:11:41.528676
+10	1	COMPLETED	2025-03-29 20:01:39.013673	2025-03-29 20:01:39.013673
+\.
 
 
 --
 -- Data for Name: user_roles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.user_roles (user_id, role_id) VALUES (1, 1);
-INSERT INTO public.user_roles (user_id, role_id) VALUES (2, 2);
+COPY public.user_roles (user_id, role_id) FROM stdin;
+1	1
+2	2
+\.
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.users (id, username, email, password, created_at, updated_at) VALUES (1, 'juanperez', 'juan.perez@example.com', '$2a$12$.19iyV1u7ix26Rk1BIV/nuF37qAFHQ5YTYwegrCvehM1gGVxFGfBq', '2025-03-10 19:05:29.907813', '2025-03-10 19:05:29.907813');
-INSERT INTO public.users (id, username, email, password, created_at, updated_at) VALUES (2, 'mariagonzalez', 'maria.gonzalez@example.com', '$2a$12$.19iyV1u7ix26Rk1BIV/nuF37qAFHQ5YTYwegrCvehM1gGVxFGfBq', '2025-03-10 19:05:29.907813', '2025-03-10 19:05:29.907813');
-INSERT INTO public.users (id, username, email, password, created_at, updated_at) VALUES (3, 'carlosramirez', 'carlos.ramirez@example.com', 'sapo123', '2025-03-10 19:05:29.907813', '2025-03-10 19:05:29.907813');
+COPY public.users (id, username, email, password, created_at, updated_at) FROM stdin;
+1	juanperez	juan.perez@example.com	$2a$12$.19iyV1u7ix26Rk1BIV/nuF37qAFHQ5YTYwegrCvehM1gGVxFGfBq	2025-03-10 19:05:29.907813	2025-03-10 19:05:29.907813
+2	mariagonzalez	maria.gonzalez@example.com	$2a$12$.19iyV1u7ix26Rk1BIV/nuF37qAFHQ5YTYwegrCvehM1gGVxFGfBq	2025-03-10 19:05:29.907813	2025-03-10 19:05:29.907813
+3	carlosramirez	carlos.ramirez@example.com	sapo123	2025-03-10 19:05:29.907813	2025-03-10 19:05:29.907813
+\.
 
 
 --
 -- Name: cart_items_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.cart_items_id_seq', 42, true);
+SELECT pg_catalog.setval('public.cart_items_id_seq', 61, true);
 
 
 --
@@ -569,14 +646,14 @@ SELECT pg_catalog.setval('public.category_id_seq', 13, true);
 -- Name: order_details_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.order_details_id_seq', 1, false);
+SELECT pg_catalog.setval('public.order_details_id_seq', 18, true);
 
 
 --
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.orders_id_seq', 1, false);
+SELECT pg_catalog.setval('public.orders_id_seq', 10, true);
 
 
 --
@@ -604,7 +681,7 @@ SELECT pg_catalog.setval('public.roles_id_seq', 1, false);
 -- Name: shopping_carts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.shopping_carts_id_seq', 1, true);
+SELECT pg_catalog.setval('public.shopping_carts_id_seq', 10, true);
 
 
 --

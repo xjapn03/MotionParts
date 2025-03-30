@@ -1,6 +1,8 @@
 package com.motionParts.ecommerce.dto;
 
+import com.motionParts.ecommerce.Models.Product;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ProductDTO {
     private Long id;
@@ -9,10 +11,11 @@ public class ProductDTO {
     private String description;
     private int stock;
     private double price;
-    private List<CategoryDTO> categories; // ✅ Ahora usa CategoryDTO en lugar de Long
+    private List<CategoryDTO> categories;
 
     public ProductDTO() {}
 
+    // Constructor estándar
     public ProductDTO(Long id, String reference, String name, String description, int stock, double price, List<CategoryDTO> categories) {
         this.id = id;
         this.reference = reference;
@@ -23,6 +26,27 @@ public class ProductDTO {
         this.categories = categories;
     }
 
+    // Constructor para convertir `Product` a `ProductDTO`
+    public ProductDTO(Product product) {
+        this.id = product.getId();
+        this.reference = product.getReference();
+        this.name = product.getName();
+        this.description = product.getDescription();
+        this.stock = product.getStock();
+        this.price = product.getPrice();
+        
+        // ✅ Corregido: Obtener el nombre desde `productCategory.getCategory().getName()`
+        this.categories = product.getProductCategories().stream()
+        .map(productCategory -> new CategoryDTO(
+            productCategory.getCategory().getId(), 
+            productCategory.getCategory().getName(),
+            productCategory.getCategory().getDescription() // ✅ Asegura que esta propiedad existe en `Category`
+        ))
+        .collect(Collectors.toList());
+    }
+    
+
+    // Getters y setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
