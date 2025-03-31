@@ -1,3 +1,4 @@
+import { AuthService } from '../../core/services/auth.service'; // ✅ Importar AuthService
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -20,7 +21,8 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private router: Router,
     private shoppingCartService: ShoppingCartService,
-    private orderService: OrderService // ✅ Agregado para poder enviar la orden
+    private orderService: OrderService, // ✅ Agregado para poder enviar la orden
+    private authService: AuthService // ✅ Inyectar AuthService
   ) {}
 
   currentStep: number = 1; // 🔹 Inicia en el paso 1
@@ -201,9 +203,17 @@ export class CheckoutComponent implements OnInit {
             unitPrice: item.product.price, subtotal: item.quantity * item.product.price
         }));
 
+        const user = this.authService.getUser(); // 🔹 Obtiene el usuario autenticado
+        if (!user) {
+          console.error("❌ No hay usuario autenticado");
+          alert("Error: Usuario no autenticado.");
+          this.isSubmitting = false;
+          return;
+        }
+
         const orderData: Order = {
           id: 0,
-          userId: 1,
+          userId: user.id,
           orderDetails,
           total: this.total,
           paymentMethod: this.orderData.metodoPago,
