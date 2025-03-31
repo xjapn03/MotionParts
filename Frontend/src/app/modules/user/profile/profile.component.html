@@ -1,0 +1,98 @@
+<div class="max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-lg">
+  <!-- Perfil de usuario -->
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Perfil de Usuario</h2>
+
+<!-- Formulario para editar perfil -->
+<form *ngIf="isEditing" (ngSubmit)="saveChanges()" class="space-y-6">
+  <!-- Campo de foto de perfil -->
+  <div>
+    <label for="profileImage" class="block text-sm font-medium text-gray-700">Foto de Perfil</label>
+    <div class="relative">
+      <!-- Mostrar imagen actual o imagen cargada -->
+      <img [src]="newProfileImage || user.profileImage" alt="Imagen de perfil" class="w-32 h-32 rounded-full object-cover mb-2">
+      <input type="file" id="profileImage" (change)="onFileSelected($event)" class="absolute bottom-0 right-0 bg-indigo-500 text-white p-2 rounded-full cursor-pointer opacity-70 hover:opacity-100" />
+    </div>
+  </div>
+
+     <!-- Campo de nombre -->
+  <div>
+    <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+    <input id="name" name="name" [(ngModel)]="user.name" type="text" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+  </div>
+
+    <!-- Campo de correo electrónico -->
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+      <input id="email" name="email" [(ngModel)]="user.email" type="email" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+    </div>
+
+    <!-- Campo de teléfono -->
+    <div>
+      <label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
+      <input id="phone" name="phone" [(ngModel)]="user.phone" type="tel" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+    </div>
+
+    <!-- Campo de biografía -->
+    <div>
+      <label for="bio" class="block text-sm font-medium text-gray-700">Biografía</label>
+      <textarea id="bio" name="bio" [(ngModel)]="user.bio" rows="4" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+    </div>
+
+    <!-- Botón para guardar cambios -->
+    <div>
+      <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+        Guardar cambios
+      </button>
+    </div>
+  </form>
+
+  <!-- Vista de perfil cuando no se está editando -->
+  <div *ngIf="!isEditing">
+    <div class="flex items-center space-x-6">
+      <img [src]="user.profileImage" alt="Imagen de perfil" class="w-32 h-32 rounded-full object-cover">
+      <div>
+        <h3 class="text-xl font-semibold text-gray-800">{{ user.name }}</h3>
+        <p class="text-gray-500">{{ user.email }}</p>
+        <p class="text-gray-500">{{ user.phone }}</p>
+        <p class="text-gray-500">{{ user.bio }}</p>
+      </div>
+    </div>
+    <button (click)="toggleEdit()" class="mt-4 w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+      Editar Perfil
+    </button>
+  </div>
+
+  <!-- Sección para cambiar contraseña -->
+  <div class="mt-12 max-w-3xl mx-auto p-8 bg-white rounded-lg shadow-lg">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Cambiar Contraseña</h2>
+
+    <form (ngSubmit)="onChangePassword()" class="space-y-6">
+      <!-- Campo de contraseña actual -->
+      <div>
+        <label for="currentPassword" class="block text-sm font-medium text-gray-700">Contraseña actual</label>
+        <input id="currentPassword" name="currentPassword" type="password" [(ngModel)]="passwords.currentPassword" placeholder="Contraseña actual" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" required />
+        <p *ngIf="incorrectPassword" class="text-red-500 text-sm mt-2">Contraseña incorrecta.</p>
+      </div>
+
+      <!-- Campo de nueva contraseña -->
+      <div>
+        <label for="newPassword" class="block text-sm font-medium text-gray-700">Nueva contraseña</label>
+        <input id="newPassword" name="newPassword" type="password" [(ngModel)]="passwords.newPassword" placeholder="Nueva contraseña" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" required />
+      </div>
+
+      <!-- Campo de confirmación de nueva contraseña -->
+      <div>
+        <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar nueva contraseña</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" [(ngModel)]="passwords.confirmPassword" placeholder="Confirmar nueva contraseña" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" required />
+        <p *ngIf="passwords.newPassword !== passwords.confirmPassword && passwords.confirmPassword !== ''" class="text-red-500 text-sm mt-2">Las contraseñas no coinciden.</p>
+      </div>
+
+      <!-- Botón para cambiar la contraseña -->
+      <div>
+        <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+          Cambiar Contraseña
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

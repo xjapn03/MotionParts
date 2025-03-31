@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
     this.shoppingCartService.initializeGuestCart();
     this.cartItems$ = this.shoppingCartService.cartItems$; // Suscribirse al carrito en tiempo real
 
+    
     // ✅ Actualizar la información del usuario autenticado
     this.authService.user$.subscribe((authResponse: AuthResponse | null) => {
       if (authResponse) {

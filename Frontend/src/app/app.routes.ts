@@ -17,7 +17,7 @@ import { CheckoutComponent } from './modules/checkout/checkout.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { MyOrdersComponent } from './modules/orders/my-orders/my-orders.component';
 import { OrderDetailsComponent } from './modules/orders/order-details/order-details.component';
-
+import { ProfileComponent } from './modules/user/profile/profile.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
@@ -43,6 +43,7 @@ export const routes: Routes = [
   { path: 'acerca', component: AcercaComponent },
   { path: 'cart', component: ShoppingCartComponent },
   { path: 'checkout', component: CheckoutComponent }, // ✅ Agregada la ruta de checkout
+  { path: 'profile', component: ProfileComponent },
   { path: 'my-orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
   { path: 'my-orders/:id', component: OrderDetailsComponent, canActivate: [AuthGuard] },
   { path: 'contact', component: ContactComponent },

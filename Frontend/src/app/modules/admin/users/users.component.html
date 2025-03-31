@@ -24,7 +24,16 @@
         required
       />
     </div>
-
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Contraseña</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.password"
+        name="password"
+        required
+      />
+    </div>
     <div>
       <label class="block text-sm font-semibold text-gray-700">Rol</label>
       <select
