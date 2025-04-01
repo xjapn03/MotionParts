@@ -14,8 +14,7 @@ MotionParts cuenta con un backend robusto desarrollado en **Java**, utilizando e
 - **ORM:** JPA / Hibernate
 - **Patrón:** MVC
 - **Integraciones:** API para sistemas de facturación
-
-![JavaSpring](https://w7.pngwing.com/pngs/279/249/png-transparent-java-logo-programming-language-java-plum-miscellaneous-text-orange-thumbnail.png) ![Spring](https://w7.pngwing.com/pngs/713/936/png-transparent-spring-framework-representational-state-transfer-java-api-for-restful-web-services-microservices-others-text-trademark-logo-thumbnail.png)
+![Logo de Java](https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg) ![Spring Boot Logo](https://upload.wikimedia.org/wikipedia/commons/4/44/Spring_Boot.png)
 
 ### 📌 Frontend
 La interfaz de usuario está construida con **Angular 19**, asegurando una experiencia rápida y dinámica. Se ha integrado **TailwindCSS** para proporcionar estilos modernos y responsivos.
