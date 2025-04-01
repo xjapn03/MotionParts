@@ -14,7 +14,7 @@ MotionParts cuenta con un backend robusto desarrollado en **Java**, utilizando e
 - **ORM:** JPA / Hibernate
 - **Patrón:** MVC
 - **Integraciones:** API para sistemas de facturación
-![Logo de Java](https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg) ![Spring Boot Logo](https://upload.wikimedia.org/wikipedia/commons/4/44/Spring_Boot.png)
+
 
 ### 📌 Frontend
 La interfaz de usuario está construida con **Angular 19**, asegurando una experiencia rápida y dinámica. Se ha integrado **TailwindCSS** para proporcionar estilos modernos y responsivos.
@@ -57,8 +57,10 @@ MotionParts/
 ### Levantar entorno Docker para PostgreSQL y Backend SpringBoot/Java
 Despues de hacer clone al proyecto y estar en su Raiz, ejecutar en terminal:
 
-**docker-compose up -d** #Para iniciar
-**docker-compose down** #Para detener 
+```sh
+docker-compose up -d #Para iniciar
+docker-compose down #Para detener 
+```
 
 Esto levantara el entorno necesario para correr el proyecto sin necesidad de instalar o modificat variables de entorno de tu computadora.
 
