@@ -44,8 +44,9 @@ export class ProductsComponent implements OnInit {
   }
 
   onCategoryChange() {
-    if (this.selectedCategoryId !== null) { 
-      this.subcategories = this.categories.filter(cat => cat.parent && cat.parent.id === this.selectedCategoryId);
+    if (this.selectedCategoryId !== null) {
+      // Simplemente asigna todas las categorías como subcategorías
+      this.subcategories = this.categories.filter(cat => cat.id !== this.selectedCategoryId);
     } else {
       this.subcategories = [];
     }
@@ -53,28 +54,51 @@ export class ProductsComponent implements OnInit {
   }
   
   onSubmit() {
-    if (this.selectedCategoryId || this.selectedSubcategoryId) {
-      const selectedCategory = this.categories.find(cat => cat.id === this.selectedCategoryId) ?? null;
-      const selectedSubcategory = this.categories.find(cat => cat.id === this.selectedSubcategoryId) ?? null;
-
+    // Verificación de que los IDs de categorías seleccionadas existen
+    console.log('selectedCategoryId:', this.selectedCategoryId);
+    console.log('selectedSubcategoryId:', this.selectedSubcategoryId);
+  
+    const selectedCategory = this.categories.find(cat => Number(cat.id) === Number(this.selectedCategoryId));
+    const selectedSubcategory = this.categories.find(cat => Number(cat.id) === Number(this.selectedSubcategoryId));
+  
+    console.log('selectedCategory:', selectedCategory);
+    console.log('selectedSubcategory:', selectedSubcategory);
+  
+    if (selectedCategory || selectedSubcategory) {
       this.product.categories = [
-        ...(selectedCategory ? [{ id: selectedCategory.id, name: selectedCategory.name, description: '', parent: selectedCategory.parent }] : []),
-        ...(selectedSubcategory ? [{ id: selectedSubcategory.id, name: selectedSubcategory.name, description: '', parent: selectedSubcategory.parent }] : [])
+        ...(selectedCategory ? [{
+          id: selectedCategory.id,
+          name: selectedCategory.name,
+          description: selectedCategory.description
+        }] : []),
+        ...(selectedSubcategory ? [{
+          id: selectedSubcategory.id,
+          name: selectedSubcategory.name,
+          description: selectedSubcategory.description
+        }] : []),
       ];
     }
-
+    
+    console.log('Producto a enviar:', this.product);  // Verifica el objeto 'product' completo antes de enviarlo.
+  
     if (this.product.id && this.product.id !== 0) {
       this.productService.updateProduct(this.product).subscribe(() => {
+        console.log("✅ Producto actualizado correctamente");
         this.resetForm();
         this.loadProducts();
+      }, error => {
+        console.error("❌ Error al actualizar el producto:", error);
       });
     } else {
       this.productService.createProduct(this.product).subscribe(() => {
+        console.log("✅ Producto creado correctamente");
         this.resetForm();
         this.loadProducts();
+      }, error => {
+        console.error("❌ Error al crear el producto:", error);
       });
     }
-  }
+  }        
 
   resetForm() {
     this.product = { id: 0, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [] };
@@ -86,14 +110,18 @@ export class ProductsComponent implements OnInit {
     this.product = { ...product };
   
     if (product.categories && product.categories.length > 0) {
-      this.selectedCategoryId = product.categories[0]?.id ?? null;
-      this.onCategoryChange(); 
-      this.selectedSubcategoryId = product.categories.length > 1 ? product.categories[1]?.id ?? null : null;
+      // Asumimos que una categoría principal no tiene 'parent' y la subcategoría tiene 'parent'
+      const mainCategory = product.categories.find(cat => !cat.parent) ?? null;
+      const subCategory = product.categories.find(cat => cat.parent) ?? null;
+  
+      this.selectedCategoryId = mainCategory?.id ?? null;
+      this.onCategoryChange(); // Esto actualiza las subcategorías disponibles
+      this.selectedSubcategoryId = subCategory?.id ?? null;
     } else {
       this.selectedCategoryId = null;
       this.selectedSubcategoryId = null;
     }
-  }
+  }   
   
   onDelete(productId: number) {
     if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {

@@ -27,18 +27,30 @@ export class ProductService {
   }
 
   // Crear un nuevo producto
-  createProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.apiUrl, product).pipe(
-      catchError(this.handleError) // Manejo de errores
-    );
-  }
+createProduct(product: Product): Observable<Product> {
+  // Asegúrate de que solo se envíen los IDs de las categorías
+  const productToSend = { 
+    ...product,
+    categories: product.categories?.map(category => ({ id: category.id })) ?? []  // Solo envía los IDs
+  };
 
-  // Actualizar un producto existente
-  updateProduct(product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${product.id}`, product).pipe(
-      catchError(this.handleError) // Manejo de errores
-    );
-  }
+  return this.http.post<Product>(this.apiUrl, productToSend).pipe(
+    catchError(this.handleError)
+  );
+}
+
+// Actualizar un producto existente
+updateProduct(product: Product): Observable<Product> {
+  // Asegúrate de que solo se envíen los IDs de las categorías
+  const productToSend = { 
+    ...product,
+    categories: product.categories?.map(category => ({ id: category.id })) ?? []  // Solo envía los IDs
+  };
+
+  return this.http.put<Product>(`${this.apiUrl}/${product.id}`, productToSend).pipe(
+    catchError(this.handleError)
+  );
+}
 
   // Eliminar un producto
   deleteProduct(id: number): Observable<void> {

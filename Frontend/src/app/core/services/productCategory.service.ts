@@ -16,8 +16,8 @@ export class ProductService {
     return this.http.get<Product[]>(this.apiUrl).pipe(
       map(products => products.map(product => ({
         ...product,
-        categoryIds: product.categories.map(category => category.id) // Extrae solo los IDs
+        categories: product.categories ?? [] // Asegurar que siempre haya un array
       })))
     );
-  }
+  }    
 }
