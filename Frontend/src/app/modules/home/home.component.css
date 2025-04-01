@@ -1,66 +1,66 @@
 /* Añadir un efecto de hover a las imágenes de los productos */
 .product-card {
-    transition: transform 0.3s ease, opacity 0.3s ease; /* Transición suave */
-  }
-  
-  .product-card:hover {
-    transform: scale(1.05); /* Aumenta ligeramente el tamaño */
-    opacity: 0.9; /* Baja ligeramente la opacidad */
-    cursor: pointer; /* Cambia el cursor para indicar interactividad */
-  }
-  
-  /* Estilos de la sección Acerca de Nosotros */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Transición suave */
+}
+
+.product-card:hover {
+  transform: scale(1.05); /* Aumenta ligeramente el tamaño */
+  opacity: 0.9; /* Baja ligeramente la opacidad */
+  cursor: pointer; /* Cambia el cursor para indicar interactividad */
+}
+
+/* Estilos de la sección Acerca de Nosotros */
 .about-section {
-    text-align: center;
-    padding: 50px 20px;
-    background: #f5f5f5;
-    border-radius: 10px;
-  }
-  
-  .section-title {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #333;
-    font-weight: bold;
-  }
-  
-  /* Contenedor de las tarjetas */
-  .offers-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  /* Tarjetas individuales */
-  .offer-card {
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    width: 320px;
-    text-align: left;
-  }
-  
-  .offer-card:hover {
-    transform: scale(1.05);
-  }
-  
-  /* Imágenes de cada tarjeta */
-  .offer-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-  }
-  
-  /* Texto dentro de cada tarjeta */
-  .offer-text {
-    padding: 15px;
-  }
-  
+  text-align: center;
+  padding: 50px 20px;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Contenedor de las tarjetas */
+.offers-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Tarjetas individuales */
+.offer-card {
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  width: 320px;
+  text-align: left;
+}
+
+.offer-card:hover {
+  transform: scale(1.05);
+}
+
+/* Imágenes de cada tarjeta */
+.offer-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* Texto dentro de cada tarjeta */
+.offer-text {
+  padding: 15px;
+}
+
 /* Ajustes generales para el carrusel */
 .swiper {
   width: 100%;
@@ -80,5 +80,23 @@
 .product-card:hover {
   transform: scale(1.05);
 }
+/* Ajustes generales para el carrusel */
+.swiper {
+width: 100%;
+height: auto;
+}
 
-  
+.swiper-slide {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.product-card {
+transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+transform: scale(1.05);
+}
+

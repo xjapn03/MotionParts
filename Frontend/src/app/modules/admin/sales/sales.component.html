@@ -1,0 +1,70 @@
+<div class="max-w-6xl mx-auto p-8 bg-white shadow-lg rounded-lg">
+  <h2 class="text-3xl font-bold mb-6 text-center text-purple-700">Reporte de Ventas</h2>
+
+  <!-- Filtros -->
+  <div class="flex justify-center space-x-4 mb-6">
+    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700" (click)="selectedFilter='day'; applyFilter()">Día</button>
+    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700" (click)="selectedFilter='week'; applyFilter()">Semana</button>
+    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700" (click)="selectedFilter='month'; applyFilter()">Mes</button>
+  </div>
+
+  <!-- Gráfica de Ventas -->
+  <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+    <canvas #salesChart></canvas>
+  </div>
+
+  <!-- Lista de ventas -->
+  <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+    <h3 class="text-xl font-semibold text-purple-700 mb-4">Detalle de Ventas</h3>
+    <table class="w-full border-collapse border border-gray-300">
+      <thead>
+        <tr class="bg-purple-200">
+          <th class="border border-gray-300 px-4 py-2">Producto</th>
+          <th class="border border-gray-300 px-4 py-2">Cantidad</th>
+          <th class="border border-gray-300 px-4 py-2">Precio</th>
+          <th class="border border-gray-300 px-4 py-2">Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sale of filteredSales" class="border-b hover:bg-purple-100">
+          <td class="border border-gray-300 px-4 py-2">{{ sale.name }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ sale.quantity }}</td>
+          <td class="border border-gray-300 px-4 py-2">${{ sale.price | number }}</td>
+          <td class="border border-gray-300 px-4 py-2">{{ sale.date | date:'short' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Productos más vendidos -->
+  <div class="bg-purple-100 p-6 rounded-lg shadow-md mt-6">
+    <h3 class="text-xl font-semibold text-purple-800 mb-4">Productos Más Vendidos</h3>
+    <ul>
+      <li *ngFor="let product of topSellingProducts" class="mb-2 text-purple-900">
+        {{ product.name }} - {{ product.quantity }} vendidos
+      </li>
+    </ul>
+  </div>
+
+  <!-- Productos menos vendidos -->
+  <div class="bg-purple-100 p-6 rounded-lg shadow-md mt-6">
+    <h3 class="text-xl font-semibold text-purple-800 mb-4">Productos Menos Vendidos</h3>
+    <ul>
+      <li *ngFor="let product of leastSellingProducts" class="mb-2 text-purple-900">
+        {{ product.name }} - {{ product.quantity }} vendidos
+      </li>
+    </ul>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Resumen -->
+    <div class="bg-purple-100 p-6 rounded-lg shadow-md mt-6 text-center" >
+      <p class="text-2xl font-semibold text-purple-800">Total Productos Vendidos</p>
+      <p class="text-3xl font-bold text-purple-900">{{ totalProductsSold }}</p>
+    </div>
+
+    <div class="bg-purple-100 p-6 rounded-lg shadow-md mt-6 text-center">
+      <p class="text-2xl font-semibold text-purple-800">Total Ingresos</p>
+      <p class="text-3xl font-bold text-purple-900">${{ totalRevenue | number }}</p>
+    </div>
+  </div>
+</div>

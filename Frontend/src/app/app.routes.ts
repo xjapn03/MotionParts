@@ -12,13 +12,14 @@ import { ProductsComponent } from './modules/admin/products/products.component';
 import { CategoriesComponent } from './modules/admin/categories/categories.component';
 import { OrdersComponent } from './modules/admin/orders/orders.component';
 import { InvoicesComponent } from './modules/admin/invoices/invoices.component';
-import { SalesReportComponent } from './modules/admin/sales-report/sales-report.component';
+import { SalesComponent } from './modules/admin/sales/sales.component';
 import { CheckoutComponent } from './modules/checkout/checkout.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { MyOrdersComponent } from './modules/orders/my-orders/my-orders.component';
 import { OrderDetailsComponent } from './modules/orders/order-details/order-details.component';
 import { AdminOrderDetailsComponent } from './modules/admin/orders/order-details/order-details.component'; // Para admin
 
+import { ProfileComponent } from './modules/user/profile/profile.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
@@ -32,14 +33,20 @@ export const routes: Routes = [
       { path: 'orders', component: OrdersComponent },
       { path: 'order-details/:id', component: AdminOrderDetailsComponent },
       { path: 'invoices', component: InvoicesComponent },
-      { path: 'sales-report', component: SalesReportComponent }
+      { path: 'sales', component: SalesComponent }
     ]
   },
+
+  { path: 'invoices', component: InvoicesComponent },
+  { path: 'adminproducts', component: ProductsComponent },
+  { path: 'users', component: UsersComponent },
+  { path: 'admin', component: AdminComponent },
   { path: 'faq', component: FaqComponent },
   { path: 'products', component: ProductosComponent },
   { path: 'acerca', component: AcercaComponent },
   { path: 'cart', component: ShoppingCartComponent },
   { path: 'checkout', component: CheckoutComponent }, // ✅ Agregada la ruta de checkout
+  { path: 'profile', component: ProfileComponent },
   { path: 'my-orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
   { path: 'my-orders/:id', component: OrderDetailsComponent, canActivate: [AuthGuard] },
   { path: 'contact', component: ContactComponent },

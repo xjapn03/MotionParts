@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { OrderService } from '../../../core/services/order.service';
 import { Order } from '../../../core/models/order.model';
 import { Router } from '@angular/router'; // ✅ Importamos Router
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-orders',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './orders.component.html',
-  styleUrl: './orders.component.css'
+  styleUrls: ['./orders.component.css'],
 })
 export class OrdersComponent implements OnInit {
   userId = 1; // TODO: Obtener el ID real del usuario autenticado

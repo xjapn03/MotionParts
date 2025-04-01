@@ -15,12 +15,12 @@ export class UsersComponent {
   categorias: string[] = ['Admin', 'Vendedor', 'Cliente']; // Ejemplo de categorías
 
   usuarios = [
-    { id: 1, name: 'Juan Pérez', email: 'juan@example.com', role: 'Admin' },
+    { id: 1, name: 'Juan Pérez', email: 'juan@example.com', password: '', role: 'Admin' },
     { id: 2, name: 'Ana Gómez', email: 'ana@example.com', role: 'Cliente' },
     { id: 3, name: 'Carlos López', email: 'carlos@example.com', role: 'Vendedor' },
   ];
 
-  usuario = { id: 0, name: '', email: '', role: '' }; // 🔥 Se cambió null a 0 para evitar errores
+  usuario = { id: 0, name: '', email: '', role: '', password: '' }; // 🔥 Se cambió null a 0 para evitar errores
 
   // Método para filtrar usuarios por nombre y categoría
   get filteredUsers() {
@@ -54,7 +54,7 @@ export class UsersComponent {
   }
 
   resetUsuario() {
-    this.usuario = { id: 0, name: '', email: '', role: '' };
+    this.usuario = { id: 0, name: '', email: '', role: '', password: '' };
   }
 }
 

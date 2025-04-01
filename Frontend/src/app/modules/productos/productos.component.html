@@ -50,7 +50,7 @@
            class="bg-white shadow-lg rounded-xl overflow-hidden transform transition hover:scale-105 hover:shadow-2xl cursor-pointer"
            (click)="verDetalles(producto)">
 
-        <img [src]="producto.image || 'assets/products/productDefault.jpg'"
+        <img [src]="producto.image_url || 'assets/products/productDefault.jpg'"
              alt="{{ producto.name }}"
              class="w-full h-48 object-cover"
              (error)="onImageError($event)">
@@ -80,7 +80,7 @@
       </button>
 
       <div class="image-container">
-        <img [src]="productoSeleccionado.image || 'assets/products/productDefault.jpg'"
+        <img [src]="productoSeleccionado.image_url || 'assets/products/productDefault.jpg'"
              alt="{{ productoSeleccionado.name }}"
              class="w-full h-64 object-cover"
              (error)="onImageError($event)">

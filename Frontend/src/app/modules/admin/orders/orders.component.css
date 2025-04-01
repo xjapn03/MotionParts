@@ -1,0 +1,66 @@
+/* invoices.component.css */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .bg-white {
+    background-color: #ffffff;
+  }
+  
+  .shadow-lg {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rounded-lg {
+    border-radius: 8px;
+  }
+  
+  .border-l-4 {
+    border-left-width: 4px;
+  }
+  
+  .text-gray-800 {
+    color: #2d3748;
+  }
+  
+  .text-gray-600 {
+    color: #718096;
+  }
+  
+  .text-blue-500 {
+    color: #4299e1;
+  }
+  
+  .text-green-500 {
+    color: #48bb78;
+  }
+  
+  .text-red-500 {
+    color: #f56565;
+  }
+  
+  .text-gray-900 {
+    color: #1a202c;
+  }
+  
+  .p-4 {
+    padding: 16px;
+  }
+  
+  .mb-6 {
+    margin-bottom: 24px;
+  }
+  
+  .mt-4 {
+    margin-top: 16px;
+  }
+  
+  .text-lg {
+    font-size: 1.125rem;
+  }
+  
+  .font-semibold {
+    font-weight: 600;
+  }
+  
