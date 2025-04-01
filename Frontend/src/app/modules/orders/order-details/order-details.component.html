@@ -1,28 +1,62 @@
-<div *ngIf="order" class="order-details">
-  <h2>Detalles de la Orden #{{ order.id }}</h2>
-  <p><strong>Fecha:</strong> {{ order.createdAt | date:'short' }}</p>
-  <p><strong>Total:</strong> \${{ order.total }}</p>
-  <p><strong>Estado:</strong> {{ order.status }}</p>
+<div *ngIf="order" class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Detalles de la Orden #{{ order.id }}</h2>
 
-  <h3>Productos</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Precio Unitario</th>
-        <th>Subtotal</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let detail of order.orderDetails">
-        <td>{{ detail.productName }}</td>
-        <td>{{ detail.quantity }}</td>
-        <td>\${{ detail.unitPrice }}</td>
-        <td>\${{ detail.subtotal }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="mb-4">
+    <p><strong>Fecha:</strong> {{ order.createdAt | date:'short' }}</p>
+    <p><strong>Total:</strong> ${{ order.total }}</p>
+    <p>
+      <strong>Estado:</strong>
+      <span class="px-2 py-1 text-white rounded"
+        [ngClass]="{
+          'bg-green-500': order.status === 'PAID',
+          'bg-yellow-500': order.status === 'PENDING',
+          'bg-blue-500': order.status === 'SHIPPED',
+          'bg-red-500': order.status === 'CANCELED'
+        }">
+        {{ order.status }}
+      </span>
+    </p>
+    <p><strong>Método de pago:</strong> {{ order.paymentMethod }}</p>
+  </div>
 
-  <button routerLink="/my-orders">Volver</button>
+  <div class="mb-4 p-4 bg-gray-100 rounded-lg">
+    <h3 class="text-lg font-semibold">Información del Cliente</h3>
+    <p><strong>Nombre:</strong> {{ order.billingData?.firstName }} {{ order.billingData?.lastName }}</p>
+    <p><strong>Email:</strong> {{ order.billingData?.email }}</p>
+  </div>
+
+  <div class="mb-4 p-4 bg-gray-100 rounded-lg">
+    <h3 class="text-lg font-semibold">Dirección de Envío</h3>
+    <p><strong>Destinatario:</strong> {{ order.shippingData?.firstName }} {{ order.shippingData?.lastName }}</p>
+    <p><strong>Dirección:</strong> {{ order.shippingData?.addressDetail }}, {{ order.shippingData?.address }}</p>
+    <p><strong>Ciudad:</strong> {{ order.shippingData?.city }}, {{ order.shippingData?.region }}</p>
+    <p><strong>País:</strong> {{ order.shippingData?.country }}</p>
+  </div>
+
+  <h3 class="text-lg font-semibold mb-2">Productos</h3>
+  <div class="overflow-x-auto">
+    <table class="w-full bg-gray-50 border rounded-lg">
+      <thead>
+        <tr class="bg-gray-200 text-left">
+          <th class="p-2">Producto</th>
+          <th class="p-2">Cantidad</th>
+          <th class="p-2">Precio Unitario</th>
+          <th class="p-2">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detail of order.orderDetails" class="border-t">
+          <td class="p-2">{{ detail.productName }}</td>
+          <td class="p-2">{{ detail.quantity }}</td>
+          <td class="p-2">${{ detail.unitPrice }}</td>
+          <td class="p-2">${{ detail.subtotal }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button (click)="goBack()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+    Volver
+  </button>
+
 </div>

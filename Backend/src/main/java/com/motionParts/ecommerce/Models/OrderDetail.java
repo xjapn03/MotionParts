@@ -1,5 +1,8 @@
 package com.motionParts.ecommerce.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,10 +15,12 @@ public class OrderDetail {
 
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
     private Order order;
 
-    @ManyToOne // 🔹 Se establece la relación con `Product`
+    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @JsonManagedReference
     private Product product;
 
     @Column(nullable = false)

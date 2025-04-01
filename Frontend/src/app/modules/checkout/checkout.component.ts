@@ -1,3 +1,4 @@
+import { AuthService } from '../../core/services/auth.service'; // ✅ Importar AuthService
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -20,13 +21,15 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private router: Router,
     private shoppingCartService: ShoppingCartService,
-    private orderService: OrderService // ✅ Agregado para poder enviar la orden
+    private orderService: OrderService, // ✅ Agregado para poder enviar la orden
+    private authService: AuthService // ✅ Inyectar AuthService
   ) {}
 
   currentStep: number = 1; // 🔹 Inicia en el paso 1
   enviarADireccionDiferente: boolean = false;
   cartItems: CartItem[] = [];
   total: number = 0;
+  isSubmitting = false;
 
   // Datos del formulario de facturación
   billingData = {
@@ -61,7 +64,7 @@ export class CheckoutComponent implements OnInit {
     cupon: '', // Código de cupón (si aplica)
     metodoEnvio: '', // Método de envío seleccionado
     metodoPago: '', // Método de pago seleccionado
-    aceptoTerminos: false, // Confirmación de términos y condiciones
+    aceptoTerminos: true, // Confirmación de términos y condiciones
   };
 
   paises = Object.keys(LOCATIONS); // Lista de países
@@ -190,32 +193,71 @@ export class CheckoutComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.isSubmitting) return; // Evita que se ejecute otra vez
+    this.isSubmitting = true; // Desactiva el botón
+
     if (this.validateStep(3)) {
-        // 🔹 Construimos los detalles de la orden basándonos en los productos del carrito
         const orderDetails: OrderDetail[] = this.cartItems.map(item => ({
-            id: 0, // Se asignará en el backend
-            orderId: 0, // Se asignará en el backend
-            productId: item.product.id,
-            productName: item.product.name, // Ajusta según tu modelo de producto
-            quantity: item.quantity,
-            unitPrice: item.product.price,
-            subtotal: item.quantity * item.product.price
+            id: 0, orderId: 0, productId: item.product.id,
+            productName: item.product.name, quantity: item.quantity,
+            unitPrice: item.product.price, subtotal: item.quantity * item.product.price
         }));
 
+        const user = this.authService.getUser(); // 🔹 Obtiene el usuario autenticado
+        if (!user) {
+          console.error("❌ No hay usuario autenticado");
+          alert("Error: Usuario no autenticado.");
+          this.isSubmitting = false;
+          return;
+        }
+
         const orderData: Order = {
-            id: 0, // Se asignará en el backend
-            userId: 1, // 🔹 Esto debe venir de la sesión del usuario autenticado
-            orderDetails, // ✅ Se agregan los detalles de la orden
-            total: this.total,
-            paymentMethod: this.orderData.metodoPago,
-            pickupLocation: this.orderData.metodoEnvio === 'Recoger en tienda' ? 'Bogotá, Carrera 27a #63g-46' : null,
-            status: 'PENDING', // Estado inicial de la orden
-            createdAt: new Date().toISOString() // Fecha actual en formato ISO
+          id: 0,
+          userId: user.id,
+          orderDetails,
+          total: this.total,
+          paymentMethod: this.orderData.metodoPago,
+          pickupLocation: this.orderData.metodoEnvio?.toLowerCase() === 'recoger_tienda'
+          ? 'Bogotá, Carrera 27a #63g-46'
+          : null,
+          status: 'PENDING',
+          createdAt: new Date().toISOString(),
+          acceptedTerms: this.orderData.aceptoTerminos,
+
+          // ✅ Facturación agrupada
+          billingData: this.billingData ? {
+            firstName: this.billingData.nombre,
+            lastName: this.billingData.apellidos,
+            idType: this.billingData.tipoIdentificacion,
+            idNumber: this.billingData.numeroIdentificacion,
+            address: this.billingData.direccion,
+            addressDetail: this.billingData.direccionDetalle,
+            country: this.billingData.pais,
+            region: this.billingData.departamento,
+            city: this.billingData.ciudad,
+            postalCode: this.billingData.codigoPostal,
+            phone: this.billingData.telefono,
+            email: this.billingData.email
+          } : null,
+
+          // ✅ Envío agrupado
+          shippingData: this.shippingData ? {
+            firstName: this.shippingData.nombre,
+            lastName: this.shippingData.apellidos,
+            address: this.shippingData.direccion,
+            addressDetail: this.shippingData.direccionDetalle,
+            country: this.shippingData.pais,
+            region: this.shippingData.departamento,
+            city: this.shippingData.ciudad,
+            postalCode: this.shippingData.codigoPostal,
+            notes: this.shippingData.notas
+          } : null,
+
+          // ✅ Cupón y método de envío
+          couponCode: this.orderData.cupon || null,
+          shippingMethod: this.orderData.metodoEnvio || null
         };
 
-        // 🔍 Logs para depuración
-        console.log('💳 Método de pago seleccionado:', this.orderData.metodoPago);
-        console.log('📦 Método de envío seleccionado:', this.orderData.metodoEnvio);
         console.log('📤 Enviando orden al backend:', orderData);
 
         this.orderService.createOrder(orderData)
@@ -223,17 +265,19 @@ export class CheckoutComponent implements OnInit {
             next: (response) => {
                 console.log('✅ Pedido guardado con éxito:', response);
                 alert('¡Pedido realizado con éxito!');
-                this.router.navigate(['/order-confirmation']); // Redirigir a la página de confirmación
+                this.shoppingCartService.clearCart(); // ✅ Vacía el carrito
+                this.router.navigate(['/order-confirmation']);
+                this.isSubmitting = false; // Habilita el botón para futuros pedidos
             },
             error: (error) => {
                 console.error('❌ Error al guardar el pedido:', error);
-                console.log('⚠️ Datos enviados al backend:', orderData);
                 alert('Hubo un error al procesar tu pedido.');
+                this.isSubmitting = false; // Rehabilita el botón en caso de error
             }
         });
-
     } else {
         console.log('❌ Falta información en el pedido.');
+        this.isSubmitting = false; // Habilita el botón si la validación falla
     }
 }
 

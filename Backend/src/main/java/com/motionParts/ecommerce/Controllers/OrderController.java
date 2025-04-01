@@ -25,6 +25,14 @@ public class OrderController {
         return ResponseEntity.ok(createdOrder);
     }
 
+    // ✅ Obtener TODAS las órdenes
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
+
 
     // ✅ Obtener todas las órdenes de un usuario
     @GetMapping("/users/{userId}")

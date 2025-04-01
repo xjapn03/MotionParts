@@ -4,6 +4,7 @@ import com.motionParts.ecommerce.Models.CartItem;
 import com.motionParts.ecommerce.Models.ShoppingCart;
 import com.motionParts.ecommerce.Models.Product;
 import com.motionParts.ecommerce.dto.CartItemDTO;
+import com.motionParts.ecommerce.dto.ProductDTO;
 import com.motionParts.ecommerce.repositories.CartItemRepository;
 import com.motionParts.ecommerce.repositories.ShoppingCartRepository;
 import com.motionParts.ecommerce.repositories.ProductRepository;
@@ -117,12 +118,12 @@ public class CartItemService {
 
     private CartItemDTO convertToDTO(CartItem cartItem) {
         return new CartItemDTO(
-                cartItem.getId(),
-                cartItem.getShoppingCart().getId(),
-                cartItem.getProduct(),
-                cartItem.getQuantity(),
-                cartItem.getUnitPrice(),
-                cartItem.getTotalPrice()
-        );
-    }
+        cartItem.getId(),
+        cartItem.getShoppingCart().getId(),
+        new ProductDTO(cartItem.getProduct()), // ✅ Convertimos `Product` a `ProductDTO`
+        cartItem.getQuantity(),
+        cartItem.getUnitPrice(),
+        cartItem.getTotalPrice()
+    );
+}
 }

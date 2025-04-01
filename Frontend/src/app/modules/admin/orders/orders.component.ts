@@ -22,7 +22,7 @@ export class OrdersComponent implements OnInit {
   }
 
   loadUserOrders(): void {
-    this.orderService.getUserOrders(this.userId).subscribe({
+    this.orderService.getAllOrdersWithUsernames().subscribe({
       next: (data) => (this.orders = data),
       error: (err) => console.error('Error al cargar órdenes:', err),
     });
@@ -30,8 +30,18 @@ export class OrdersComponent implements OnInit {
 
   // ✅ Método para ver detalles de una orden
   viewOrderDetails(orderId: number): void {
-    this.router.navigate(['/admin/orders', orderId]);
+    // Lógica para saber si el usuario es administrador o no
+    const isAdmin = true;  // O utilizar una variable de usuario o un guard para determinar esto
+
+    if (isAdmin) {
+      // Redirigir al detalle de la orden del admin
+      this.router.navigate(['/admin/order-details', orderId]);
+    } else {
+      // Redirigir al detalle de la orden del usuario
+      this.router.navigate(['/my-orders', orderId]);
+    }
   }
+
 
   // ✅ Método para cancelar una orden
   cancelOrder(orderId: number): void {

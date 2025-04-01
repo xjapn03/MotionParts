@@ -1,0 +1,153 @@
+<div *ngIf="order" class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+  <h2 class="text-2xl font-bold mb-4">Detalles de la Orden #{{ order.id }}</h2>
+
+  <div class="mb-4">
+    <p><strong>Fecha:</strong> {{ order.createdAt | date:'short' }}</p>
+    <div class="flex items-center space-x-4">
+      <p><strong>Total:</strong></p>
+      <input
+        [(ngModel)]="order.total"
+        class="w-32 p-2 border border-gray-300 rounded-md"
+        type="number"
+        step="0.01"
+        min="0"
+      />
+    </div>
+    <div class="flex items-center space-x-4">
+      <p><strong>Estado:</strong></p>
+      <select
+        [(ngModel)]="order.status"
+        class="border-gray-300 rounded-md p-2 w-48"
+        [ngClass]="{
+          'bg-yellow-100': order.status === 'PENDING',
+          'bg-green-100': order.status === 'PAID',
+          'bg-blue-100': order.status === 'SHIPPED',
+          'bg-red-100': order.status === 'CANCELED'
+        }"
+      >
+        <option value="PENDING">Pendiente</option>
+        <option value="PAID">Pagada</option>
+        <option value="SHIPPED">Enviada</option>
+        <option value="CANCELED">Cancelada</option>
+      </select>
+    </div>
+    <p><strong>Método de pago:</strong> {{ order.paymentMethod }}</p>
+  </div>
+
+  <div class="mb-4 p-4 bg-gray-100 rounded-lg">
+    <h3 class="text-lg font-semibold">Información del Cliente</h3>
+    <p *ngIf="order.billingData"><strong>Nombre:</strong> {{ order.billingData.firstName }} {{ order.billingData.lastName }}</p>
+    <p *ngIf="order.billingData"><strong>Email:</strong> {{ order.billingData.email }}</p>
+    <div class="flex items-center space-x-4" *ngIf="order.billingData">
+      <p><strong>Cambiar Email:</strong></p>
+      <input
+        [(ngModel)]="order.billingData.email"
+        class="w-64 p-2 border border-gray-300 rounded-md"
+        type="email"
+        placeholder="Nuevo email"
+      />
+    </div>
+  </div>
+
+  <div class="mb-4 p-4 bg-gray-100 rounded-lg">
+    <h3 class="text-lg font-semibold">Dirección de Envío</h3>
+    <div *ngIf="order.shippingData" class="flex items-center space-x-4">
+      <p><strong>Destinatario:</strong></p>
+      <input
+        [(ngModel)]="order.shippingData.firstName"
+        class="w-32 p-2 border border-gray-300 rounded-md"
+        placeholder="Nombre"
+      />
+      <input
+        [(ngModel)]="order.shippingData.lastName"
+        class="w-32 p-2 border border-gray-300 rounded-md"
+        placeholder="Apellido"
+      />
+    </div>
+    <div *ngIf="order.shippingData" class="flex items-center space-x-4">
+      <p><strong>Dirección:</strong></p>
+      <input
+        [(ngModel)]="order.shippingData.address"
+        class="w-full p-2 border border-gray-300 rounded-md"
+        placeholder="Dirección"
+      />
+      <input
+        [(ngModel)]="order.shippingData.addressDetail"
+        class="w-full p-2 border border-gray-300 rounded-md"
+        placeholder="Detalles de la dirección"
+      />
+    </div>
+    <div *ngIf="order.shippingData" class="flex items-center space-x-4">
+      <p><strong>Ciudad:</strong></p>
+      <input
+        [(ngModel)]="order.shippingData.city"
+        class="w-32 p-2 border border-gray-300 rounded-md"
+        placeholder="Ciudad"
+      />
+      <input
+        [(ngModel)]="order.shippingData.region"
+        class="w-32 p-2 border border-gray-300 rounded-md"
+        placeholder="Región"
+      />
+    </div>
+    <div *ngIf="order.shippingData" class="flex items-center space-x-4">
+      <p><strong>País:</strong></p>
+      <input
+        [(ngModel)]="order.shippingData.country"
+        class="w-32 p-2 border border-gray-300 rounded-md"
+        placeholder="País"
+      />
+    </div>
+  </div>
+
+  <h3 class="text-lg font-semibold mb-2">Productos</h3>
+  <div class="overflow-x-auto">
+    <table class="w-full bg-gray-50 border rounded-lg">
+      <thead>
+        <tr class="bg-gray-200 text-left">
+          <th class="p-2">Producto</th>
+          <th class="p-2">Cantidad</th>
+          <th class="p-2">Precio Unitario</th>
+          <th class="p-2">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detail of order.orderDetails" class="border-t">
+          <td class="p-2">{{ detail.productName }}</td>
+          <td class="p-2">
+            <input
+              [(ngModel)]="detail.quantity"
+              class="w-16 p-2 border border-gray-300 rounded-md"
+              type="number"
+              min="1"
+            />
+          </td>
+          <td class="p-2">
+            <input
+              [(ngModel)]="detail.unitPrice"
+              class="w-24 p-2 border border-gray-300 rounded-md"
+              type="number"
+              step="0.01"
+              min="0"
+            />
+          </td>
+          <td class="p-2">{{ detail.subtotal | currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button
+    (click)="updateOrder()"
+    class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+  >
+    Actualizar Orden
+  </button>
+
+  <button
+    (click)="goBack()"
+    class="mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
+  >
+    Volver
+  </button>
+</div>

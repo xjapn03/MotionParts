@@ -1,11 +1,12 @@
 <div class="container mx-auto p-6 bg-white rounded-lg shadow-md">
-  <h2 class="text-2xl font-semibold mb-4 text-gray-800">Ordenes</h2>
+  <h2 class="text-2xl font-semibold mb-4 text-gray-800">Órdenes</h2>
 
   <div class="overflow-x-auto">
     <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
       <thead class="bg-gray-100">
         <tr>
           <th class="px-4 py-2 text-left text-gray-600">ID</th>
+          <th class="px-4 py-2 text-left text-gray-600">Usuario</th> <!-- ✅ Nueva columna -->
           <th class="px-4 py-2 text-left text-gray-600">Fecha</th>
           <th class="px-4 py-2 text-left text-gray-600">Total</th>
           <th class="px-4 py-2 text-left text-gray-600">Estado</th>
@@ -15,8 +16,9 @@
       <tbody>
         <tr *ngFor="let order of orders" class="border-t border-gray-200 hover:bg-gray-50">
           <td class="px-4 py-2">{{ order.id }}</td>
+          <td class="px-4 py-2 font-semibold text-gray-700">{{ order.username || 'N/A' }}</td> <!-- ✅ Muestra el username -->
           <td class="px-4 py-2">{{ order.createdAt | date:'short' }}</td>
-          <td class="px-4 py-2 font-semibold text-gray-700">\${{ order.total }}</td>
+          <td class="px-4 py-2 font-semibold text-gray-700">${{ order.total }}</td>
           <td class="px-4 py-2">
             <span
               class="px-3 py-1 rounded-full text-xs font-semibold"
