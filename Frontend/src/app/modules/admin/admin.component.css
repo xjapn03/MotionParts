@@ -182,3 +182,53 @@ More comprehensive version at shenanigans.shoghisimon.ca/collection/css-rain-bg/
     }
   }
   
+
+
+  /* Estilos adicionales para el Panel de Administración */
+
+/* Asegurar que el sidebar ocupe toda la altura en dispositivos de escritorio */
+@media (min-width: 1024px) {
+  .sidebar-container {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+}
+
+/* Animación para el mensaje de bienvenida */
+.animate__animated {
+  animation-duration: 0.8s;
+}
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mejorar responsividad en dispositivos móviles */
+@media (max-width: 640px) {
+  .content-container {
+    padding: 1rem;
+  }
+}
+
+/* Estilo activo para enlaces de navegación */
+.nav-link.active {
+  background-color: rgba(59, 130, 246, 0.8);
+  font-weight: 500;
+}
+
+/* Transición suave para cambios en el contenido */
+.router-container {
+  transition: opacity 0.3s ease;
+}
