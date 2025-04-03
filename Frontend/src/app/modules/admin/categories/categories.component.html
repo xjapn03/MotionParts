@@ -1,61 +1,63 @@
-<div class="container mx-auto p-6 max-w-2xl bg-white shadow-lg rounded-lg">
+<div class="container mx-auto p-3 sm:p-6 max-w-2xl bg-white shadow-lg rounded-lg">
     <!-- Título -->
-    <h2 class="text-2xl font-bold mb-6 text-gray-800">Gestión de Categorías</h2>
+    <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800">Gestión de Categorías</h2>
 
     <!-- Sección para agregar categoría -->
-    <div class="mb-4 flex gap-2">
+    <div class="mb-4 flex flex-col sm:flex-row gap-2">
         <input [(ngModel)]="newCategoryName" type="text" placeholder="Nombre de la categoría"
-            class="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <button (click)="addCategory()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button (click)="addCategory()" class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
             Agregar Categoría
         </button>
     </div>
 
     <!-- Búsqueda por ID -->
-    <div class="mb-4 flex gap-2">
+    <div class="mb-4 flex flex-col sm:flex-row gap-2">
         <input [(ngModel)]="searchCategoryId" type="text" placeholder="Buscar categoría por ID"
-            class="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" />
-        <button (click)="findCategoryById()" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
+            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" />
+        <button (click)="findCategoryById()" class="w-full sm:w-auto px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
             Buscar
         </button>
     </div>
 
     <!-- Lista de categorías -->
     <div *ngIf="categories.length > 0" class="mt-4">
-        <h3 class="font-bold text-xl mb-3 text-gray-700">Categorías</h3>
-        <div *ngFor="let category of categories" class="mb-4 p-4 bg-gray-100 rounded-lg">
-            <div class="flex justify-between items-center">
-                <span (click)="selectCategory(category)" class="cursor-pointer text-lg"
+        <h3 class="font-bold text-lg sm:text-xl mb-3 text-gray-700">Categorías</h3>
+        <div *ngFor="let category of categories" class="mb-4 p-3 sm:p-4 bg-gray-100 rounded-lg">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
+                <span (click)="selectCategory(category)" class="cursor-pointer text-base sm:text-lg"
                     [class.font-semibold]="category === selectedCategory">
                     {{ category.id }} - {{ category.name }}
                 </span>
                 <button (click)="deleteCategory(category)"
-                    class="text-red-500 hover:text-red-700 transition">
+                    class="text-red-500 hover:text-red-700 transition text-sm sm:text-base py-1 px-2 border border-red-300 rounded">
                     Eliminar Categoría
                 </button>
             </div>
 
             <!-- Subcategorías -->
-            <div *ngIf="category === selectedCategory" class="ml-4 mt-3 border-l-4 border-blue-400 pl-4">
-                <div class="flex gap-2">
+            <div *ngIf="category === selectedCategory" class="ml-2 sm:ml-4 mt-3 border-l-4 border-blue-400 pl-2 sm:pl-4">
+                <div class="flex flex-col sm:flex-row gap-2">
                     <input [(ngModel)]="newSubcategoryName" type="text" placeholder="Nombre de la subcategoría"
-                        class="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
-                    <button (click)="addSubcategory(category.id)" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                        class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
+                    <button (click)="addSubcategory(category.id)" class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                         Agregar Subcategoría
                     </button>
                 </div>
                 <ul class="mt-2">
                     <li *ngFor="let subcategory of category.subcategories"
-                        class="flex justify-between items-center py-1">
-                        <span class="text-gray-800">{{ subcategory.id }} - {{ subcategory.name }}</span>
-                        <button (click)="deleteSubcategory(subcategory)"
-                            class="text-red-500 hover:text-red-700 transition">
-                            Eliminar Subcategoría
-                        </button>
-                        <button (click)="assignSubcategoryToCategory(subcategory.id)"
-                            class="ml-2 px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                            Asignar a otra Categoría
-                        </button>
+                        class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-1 mb-2 border-b border-gray-200 pb-2">
+                        <span class="text-gray-800 mb-1 sm:mb-0">{{ subcategory.id }} - {{ subcategory.name }}</span>
+                        <div class="flex flex-wrap gap-2">
+                            <button (click)="deleteSubcategory(subcategory)"
+                                class="text-red-500 hover:text-red-700 transition text-sm py-1 px-2 border border-red-300 rounded">
+                                Eliminar
+                            </button>
+                            <button (click)="assignSubcategoryToCategory(subcategory.id)"
+                                class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 text-sm py-1 px-2 border border-yellow-300 rounded">
+                                Reasignar
+                            </button>
+                        </div>
                     </li>
                 </ul>
             </div>

@@ -1,20 +1,183 @@
-<div class="flex min-h-screen">
-  <!-- Sidebar -->
-  <div class="w-64 bg-blue-800 text-white p-5">
-    <h1 class="text-xl font-semibold mb-5">Admin Dashboard</h1>
-    <ul class="space-y-2">
-      <li><a routerLink="/admin/users" class="block p-2 hover:bg-blue-700 rounded">Usuarios</a></li>
-      <li><a routerLink="/admin/products" class="block p-2 hover:bg-blue-700 rounded">Productos</a></li>
-      <li><a routerLink="/admin/categories" class="block p-2 hover:bg-blue-700 rounded">Categorías</a></li>
-      <li><a routerLink="/admin/orders" class="block p-2 hover:bg-blue-700 rounded">Ordenes</a></li>
-      <li><a routerLink="/admin/invoices" class="block p-2 hover:bg-blue-700 rounded">Facturas</a></li>
-      <li><a routerLink="/admin/sales" class="block p-2 hover:bg-blue-700 rounded">Ventas</a></li>
-      <li><a routerLink="/admin/reports" class="block p-2 hover:bg-blue-700 rounded">Reportes</a></li>
-    </ul>
+<div class="flex min-h-screen bg-gray-50">
+  <!-- Sidebar - Ocupa el 100% del alto de la pantalla -->
+  <div 
+    [style.transform]="sidebarOpen ? 'translateX(0)' : 'translateX(-100%)'"
+    [style.position]="isDesktop ? 'sticky' : 'fixed'"
+    [style.top]="isDesktop ? '0' : 'auto'"
+    [style.height]="isDesktop ? '100vh' : '100%'"
+    class="w-64 bg-blue-800 text-white z-40 transition-transform duration-300 ease-in-out shadow-lg"
+    [style.boxShadow]="sidebarOpen && !isDesktop ? '0 0 10px rgba(0,0,0,0.5)' : 'none'">
+    
+    <div class="p-5 flex justify-between items-center border-b border-blue-700">
+      <div class="flex items-center">
+        <!-- Puedes reemplazar esto con tu logo -->
+        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-blue-800 font-bold mr-3">A</div>
+        <h1 class="text-xl font-semibold">Admin Panel</h1>
+      </div>
+      <!-- Botón X -->
+      <button 
+        *ngIf="!isDesktop"
+        (click)="closeSidebar()"
+        class="p-2 text-white hover:bg-blue-700 rounded transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    
+    <nav class="mt-4">
+      <p class="px-5 text-xs text-blue-300 font-medium uppercase tracking-wider mb-2">Gestión</p>
+      <ul class="space-y-1 px-3">
+        <li>
+          <a (click)="navigateTo('/admin/users')" routerLinkActive="bg-blue-700 font-medium" 
+             class="flex items-center px-2 py-2 hover:bg-blue-700 rounded transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            Usuarios
+          </a>
+        </li>
+        <li>
+          <a (click)="navigateTo('/admin/products')" routerLinkActive="bg-blue-700 font-medium" 
+             class="flex items-center px-2 py-2 hover:bg-blue-700 rounded transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            </svg>
+            Productos
+          </a>
+        </li>
+        <li>
+          <a (click)="navigateTo('/admin/categories')" routerLinkActive="bg-blue-700 font-medium" 
+             class="flex items-center px-2 py-2 hover:bg-blue-700 rounded transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            Categorías
+          </a>
+        </li>
+      </ul>
+      
+      <p class="px-5 text-xs text-blue-300 font-medium uppercase tracking-wider mb-2 mt-6">Ventas</p>
+      <ul class="space-y-1 px-3">
+        <li>
+          <a (click)="navigateTo('/admin/orders')" routerLinkActive="bg-blue-700 font-medium" 
+             class="flex items-center px-2 py-2 hover:bg-blue-700 rounded transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            Órdenes
+          </a>
+        </li>
+        <li>
+          <a (click)="navigateTo('/admin/invoices')" routerLinkActive="bg-blue-700 font-medium" 
+             class="flex items-center px-2 py-2 hover:bg-blue-700 rounded transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Facturas
+          </a>
+        </li>
+        <li>
+          <a (click)="navigateTo('/admin/sales')" routerLinkActive="bg-blue-700 font-medium" 
+             class="flex items-center px-2 py-2 hover:bg-blue-700 rounded transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+            Ventas
+          </a>
+        </li>
+        <li>
+          <a (click)="navigateTo('/admin/reports')" routerLinkActive="bg-blue-700 font-medium" 
+             class="flex items-center px-2 py-2 hover:bg-blue-700 rounded transition-colors cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+            </svg>
+            Reportes
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
 
-  <!-- Contenido -->
-  <div class="flex-1 p-10 bg-gray-100">
-    <router-outlet></router-outlet>
+  <!-- Overlay para pantallas pequeñas -->
+  <div 
+    *ngIf="sidebarOpen && !isDesktop"
+    (click)="closeSidebar()"
+    class="fixed inset-0 bg-black bg-opacity-50 z-30">
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="flex-1 flex flex-col">
+    <!-- Header con botón hamburguesa -->
+    <header class="bg-white shadow-sm p-4 flex items-center justify-between border-b border-gray-200">
+      <div class="flex items-center">
+        <button 
+          *ngIf="!isDesktop"
+          (click)="openSidebar()"
+          class="mr-4 p-2 hover:bg-gray-100 rounded transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        
+      </div>
+    </header>
+    
+    <!-- Contenido -->
+    <main class="p-6 flex-1 overflow-auto">
+      <div class="max-w-7xl mx-auto">
+        <!-- Mensaje de bienvenida condicional -->
+        <div *ngIf="showWelcome" class="bg-white shadow rounded-lg p-6 mb-6 animate__animated animate__fadeIn">
+          <div class="flex items-start">
+            <div class="flex-shrink-0 bg-blue-100 rounded-lg p-3">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+              </svg>
+            </div>
+            <div class="ml-5">
+              <h2 class="text-2xl font-bold text-gray-900">¡Bienvenido al Panel de Administración!</h2>
+              <p class="text-gray-600 mt-2">Desde aquí puedes gestionar todos los aspectos de tu plataforma:</p>
+              <ul class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                <li class="flex items-center text-gray-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Administrar usuarios y permisos
+                </li>
+                <li class="flex items-center text-gray-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Gestionar productos y categorías
+                </li>
+                <li class="flex items-center text-gray-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Dar seguimiento a órdenes y ventas
+                </li>
+                <li class="flex items-center text-gray-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Visualizar reportes y estadísticas
+                </li>
+              </ul>
+              <p class="mt-4 text-gray-600">Selecciona cualquier opción del menú lateral para comenzar.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Contenido de rutas -->
+        <div class="bg-white shadow rounded-lg p-6">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 p-4 text-center text-sm text-gray-600">
+      © 2025 Sistema de Administración. Todos los derechos reservados.
+    </footer>
   </div>
 </div>
