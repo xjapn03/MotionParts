@@ -1,0 +1,92 @@
+/* Estilos básicos optimizados */
+.form-group {
+    transition: all 0.3s ease-out; /* Añade ease-out para transición más suave */
+  }
+   
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
+   
+  /* Estilos para campos inválidos */
+  input.ng-invalid.ng-touched,
+  select.ng-invalid.ng-touched,
+  textarea.ng-invalid.ng-touched {
+    border-color: #ef4444;
+  }
+   
+  /* Estilos para la tabla con transiciones menos agresivas */
+  .table-row {
+    transition: background-color 0.2s ease-out;
+  }
+  
+  .table-row:hover {
+    background-color: rgba(16, 185, 129, 0.05);
+  }
+   
+  /* Animación para las alertas - optimizada */
+  .alert {
+    animation: fadeInSmooth 0.4s ease-out;
+    will-change: opacity, transform; /* Optimiza el rendering */
+  }
+   
+  @keyframes fadeInSmooth {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+   
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    .action-buttons {
+      flex-direction: column;
+    }
+  }
+   
+  /* Indicadores de stock con transiciones */
+  .stock-indicator {
+    transition: color 0.3s ease;
+  }
+  
+  .stock-low {
+    color: #ef4444;
+  }
+   
+  .stock-medium {
+    color: #f59e0b;
+  }
+   
+  .stock-high {
+    color: #10b981;
+  }
+   
+  /* Spinner de carga optimizado */
+  .loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #10b981;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    will-change: transform; /* Optimiza la animación */
+  }
+   
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Previene el parpadeo en elementos con cambios de estado */
+  .stable-element {
+    transform: translateZ(0); /* Fuerza aceleración GPU */
+  }
+  

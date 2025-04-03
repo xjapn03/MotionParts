@@ -1,97 +1,200 @@
-<div class="max-w-6xl mx-auto p-8 bg-gradient-to-r from-green-50 to-gray-100 shadow-xl rounded-lg">
-  <h2 class="text-4xl font-bold mb-8 text-center text-gray-800">Gestión de Productos</h2>
+<div class="max-w-6xl mx-auto p-4 md:p-6 lg:p-8 bg-gradient-to-r from-green-50 to-gray-100 shadow-xl rounded-lg">
+  <h2 class="text-3xl md:text-4xl font-bold mb-6 text-center text-gray-800">Gestión de Productos</h2>
 
-  <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="bg-white p-6 rounded-lg shadow-md space-y-4">
+  <!-- Alerta -->
+  <div *ngIf="showAlert" 
+       [ngClass]="{
+         'bg-green-100 border-green-500 text-green-700': alertType === 'success',
+         'bg-red-100 border-red-500 text-red-700': alertType === 'error',
+         'bg-yellow-100 border-yellow-500 text-yellow-700': alertType === 'warning'
+       }"
+       class="border-l-4 p-4 mb-4 rounded-md flex items-start justify-between">
+    <div class="flex items-center">
+      <div *ngIf="alertType === 'success'" class="text-green-500 mr-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <div *ngIf="alertType === 'error'" class="text-red-500 mr-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+      <div *ngIf="alertType === 'warning'" class="text-yellow-500 mr-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <p>{{ alertMessage }}</p>
+    </div>
+    <button (click)="showAlert = false" class="text-gray-500 hover:text-gray-700">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Modal de confirmación de eliminación -->
+  <div *ngIf="showDeleteConfirm" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 shadow-xl max-w-md w-full m-4">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Confirmar Eliminación</h3>
+      <p class="text-gray-600 mb-6">¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.</p>
+      <div class="flex flex-col sm:flex-row sm:justify-end gap-2">
+        <button 
+          (click)="cancelDelete()" 
+          class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300">
+          Cancelar
+        </button>
+        <button 
+          (click)="confirmDelete()" 
+          class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300">
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicador de carga -->
+  <div *ngIf="isLoading" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-4 rounded-lg shadow-xl flex items-center">
+      <svg class="animate-spin h-6 w-6 text-green-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span>Procesando...</span>
+    </div>
+  </div>
+
+  <!-- Formulario de producto -->
+  <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="bg-white p-4 md:p-6 rounded-lg shadow-md space-y-4 transition-all duration-300 transform hover:shadow-lg">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label class="block text-sm font-semibold text-gray-700">Nombre del Producto</label>
+      <div class="form-group">
+        <label class="block text-sm font-semibold text-gray-700">Nombre del Producto <span class="text-red-500">*</span></label>
         <input
           type="text"
-          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
           [(ngModel)]="product.name"
           name="name"
           required
+          #name="ngModel"
         />
+        <p *ngIf="name.invalid && (name.dirty || name.touched)" class="text-red-500 text-xs mt-1">
+          Este campo es obligatorio
+        </p>
       </div>
 
-      <div>
-        <label class="block text-sm font-semibold text-gray-700">Referencia</label>
+      <div class="form-group">
+        <label class="block text-sm font-semibold text-gray-700">Referencia <span class="text-red-500">*</span></label>
         <input
-          type="number"
-          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          type="text"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
           [(ngModel)]="product.reference"
           name="reference"
           required
+          #reference="ngModel"
         />
+        <p *ngIf="reference.invalid && (reference.dirty || reference.touched)" class="text-red-500 text-xs mt-1">
+          Este campo es obligatorio
+        </p>
       </div>
 
-      <div>
-        <label class="block text-sm font-semibold text-gray-700">Precio</label>
-        <input
-          type="number"
-          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
-          [(ngModel)]="product.price"
-          name="price"
-          required
-        />
+      <div class="form-group">
+        <label class="block text-sm font-semibold text-gray-700">Precio <span class="text-red-500">*</span></label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">$</span>
+          <input
+            type="number"
+            class="w-full p-3 pl-7 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+            [(ngModel)]="product.price"
+            name="price"
+            required
+            min="0.01"
+            step="0.01"
+            #price="ngModel"
+          />
+        </div>
+        <p *ngIf="price.invalid && (price.dirty || price.touched)" class="text-red-500 text-xs mt-1">
+          Ingrese un precio válido mayor a 0
+        </p>
       </div>
 
-      <div>
-        <label class="block text-sm font-semibold text-gray-700">Stock</label>
+      <div class="form-group">
+        <label class="block text-sm font-semibold text-gray-700">Stock <span class="text-red-500">*</span></label>
         <input
           type="number"
-          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
           [(ngModel)]="product.stock"
           name="stock"
           required
+          min="0"
+          #stock="ngModel"
         />
+        <p *ngIf="stock.invalid && (stock.dirty || stock.touched)" class="text-red-500 text-xs mt-1">
+          Ingrese una cantidad válida (0 o más)
+        </p>
       </div>
 
       <div class="md:col-span-2">
-        <label class="block text-sm font-semibold text-gray-700">Descripción</label>
-        <input
-          type="text"
-          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+        <label class="block text-sm font-semibold text-gray-700">Descripción <span class="text-red-500">*</span></label>
+        <textarea
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
           [(ngModel)]="product.description"
           name="description"
           required
-        />
+          rows="3"
+          #description="ngModel"
+        ></textarea>
+        <p *ngIf="description.invalid && (description.dirty || description.touched)" class="text-red-500 text-xs mt-1">
+          Este campo es obligatorio
+        </p>
       </div>
 
       <div class="md:col-span-2">
-        <label class="block text-sm font-semibold text-gray-700">Imagen URL</label>
-        <input
-          type="text"
-          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
-          [(ngModel)]="product.image_url"
-          name="image_url"
-          required
-        />
+        <label class="block text-sm font-semibold text-gray-700">Imagen URL <span class="text-red-500">*</span></label>
+        <div class="flex items-center space-x-2">
+          <input
+            type="text"
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+            [(ngModel)]="product.image_url"
+            name="image_url"
+            required
+            #imageUrl="ngModel"
+          />
+          <div *ngIf="product.image_url" class="h-10 w-10 flex-shrink-0">
+            <img [src]="product.image_url" alt="Vista previa" class="h-full w-full object-cover rounded-md" onerror="this.src='assets/images/no-image.png'">
+          </div>
+        </div>
+        <p *ngIf="imageUrl.invalid && (imageUrl.dirty || imageUrl.touched)" class="text-red-500 text-xs mt-1">
+          Este campo es obligatorio
+        </p>
       </div>
 
       <div>
-        <label class="block text-sm font-semibold text-gray-700">Categoría</label>
+        <label class="block text-sm font-semibold text-gray-700">Categoría <span class="text-red-500">*</span></label>
         <select
-          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
           [(ngModel)]="selectedCategoryId"
           (change)="onCategoryChange()"
           name="category"
           required
+          #category="ngModel"
         >
           <option value="" disabled selected>Seleccione una categoría</option>
           <option *ngFor="let category of categories" [value]="category.id">
             {{ category.name }}
           </option>
         </select>
+        <p *ngIf="category.invalid && (category.dirty || category.touched)" class="text-red-500 text-xs mt-1">
+          Seleccione una categoría
+        </p>
       </div>
 
       <div *ngIf="subcategories.length > 0">
         <label class="block text-sm font-semibold text-gray-700">Subcategoría</label>
         <select
-          class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
           [(ngModel)]="selectedSubcategoryId"
           name="subcategory"
-          required
         >
           <option value="" disabled selected>Seleccione una subcategoría</option>
           <option *ngFor="let subcategory of subcategories" [value]="subcategory.id">
@@ -101,66 +204,121 @@
       </div>
     </div>
 
-    <button
-      type="submit"
-      class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition duration-300 shadow-md font-semibold"
-    >
-      {{ product.id ? 'Actualizar Producto' : 'Crear Producto' }}
-    </button>
+    <div class="flex justify-between gap-3 mt-6">
+      <button
+        type="button"
+        (click)="resetForm()"
+        class="flex-1 bg-gray-300 text-gray-800 p-3 rounded-lg hover:bg-gray-400 transition duration-300 shadow-md font-semibold"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        [disabled]="productForm.invalid"
+        class="flex-1 bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition duration-300 shadow-md font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {{ product.id ? 'Actualizar Producto' : 'Crear Producto' }}
+      </button>
+    </div>
   </form>
 
-  <div class="flex flex-col md:flex-row justify-between items-center my-6 p-4 bg-white rounded-lg shadow-md">
-    <input
-      type="number"
-      [(ngModel)]="searchId"
-      placeholder="Buscar por ID..."
-      class="w-full md:w-1/3 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500"
-    />
+  <!-- Sección de búsqueda -->
+  <div class="flex flex-col md:flex-row gap-4 my-6 p-4 bg-white rounded-lg shadow-md">
+    <div class="flex-1">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">Buscar por ID</label>
+      <input
+        type="number"
+        [(ngModel)]="searchId"
+        placeholder="Buscar por ID..."
+        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+      />
+    </div>
+    <div class="flex-1">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">Buscar por nombre/descripción</label>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Buscar por nombre o descripción..."
+        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all"
+      />
+    </div>
+    <div class="flex items-end">
+      <button
+        (click)="onSearch()"
+        class="w-full p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 shadow-md font-semibold"
+      >
+        Buscar
+      </button>
+    </div>
   </div>
 
-  <hr class="my-6 border-gray-300" />
-
-  <div class="overflow-x-auto bg-white rounded-lg shadow-md">
-    <table class="w-full text-left border border-gray-300 rounded-md">
-      <thead>
-        <tr class="bg-gray-200 text-gray-800">
-          <th class="p-2 md:p-4">ID</th>
-          <th class="p-2 md:p-4">Referencia</th>
-          <th class="p-2 md:p-4">Nombre</th>
-          <th class="p-2 md:p-4">Precio</th>
-          <th class="p-2 md:p-4">Stock</th>
-          <th class="p-2 md:p-4 hidden md:table-cell">Descripción</th>
-          <th class="p-2 md:p-4 hidden md:table-cell">Imagen</th>
-          <th class="p-2 md:p-4 hidden md:table-cell">Categoria</th>
-          <th class="p-2 md:p-4 text-center">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let product of filteredProducts" class="border-b hover:bg-gray-100 transition">
-          <td class="p-2 md:p-4">{{ product.id }}</td>
-          <td class="p-2 md:p-4">{{ product.reference }}</td>
-          <td class="p-2 md:p-4">{{ product.name }}</td>
-          <td class="p-2 md:p-4">{{ product.price | currency }}</td>
-          <td class="p-2 md:p-4">{{ product.stock }}</td>
-          <td class="p-2 md:p-4 hidden md:table-cell">{{ product.description }}</td>
-          <td class="p-2 md:p-4 hidden md:table-cell">{{ product.image_url }}</td>
-          <td class="p-2 md:p-4 hidden md:table-cell">{{ product.categories }}</td>
-          <td class="p-2 md:p-4 text-center flex flex-col md:flex-row gap-2 justify-center">
-            <button
-              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 shadow-md"
-              (click)="onEdit(product)"
-            >
-              Editar
-            </button>
-            <button
-              class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 shadow-md"
-              (click)="onDelete(product.id)"
-            >
-              Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Tabla de productos -->
+  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-gray-100 text-gray-800 border-b border-gray-300">
+            <th class="p-3 font-semibold whitespace-nowrap">ID</th>
+            <th class="p-3 font-semibold whitespace-nowrap">Referencia</th>
+            <th class="p-3 font-semibold whitespace-nowrap">Nombre</th>
+            <th class="p-3 font-semibold whitespace-nowrap">Precio</th>
+            <th class="p-3 font-semibold whitespace-nowrap">Stock</th>
+            <th class="p-3 font-semibold whitespace-nowrap hidden md:table-cell">Descripción</th>
+            <th class="p-3 font-semibold whitespace-nowrap hidden lg:table-cell">Imagen</th>
+            <th class="p-3 font-semibold whitespace-nowrap hidden md:table-cell">Categoría</th>
+            <th class="p-3 font-semibold whitespace-nowrap text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="filteredProducts.length === 0">
+            <td colspan="9" class="p-4 text-center text-gray-500">No se encontraron productos</td>
+          </tr>
+          <tr *ngFor="let product of filteredProducts" class="border-b border-gray-200 hover:bg-gray-50 transition">
+            <td class="p-3">{{ product.id }}</td>
+            <td class="p-3">{{ product.reference }}</td>
+            <td class="p-3">{{ product.name }}</td>
+            <td class="p-3">{{ product.price | currency }}</td>
+            <td class="p-3" [ngClass]="{'text-red-500': product.stock <= 5, 'text-yellow-500': product.stock > 5 && product.stock <= 20, 'text-green-500': product.stock > 20}">
+              {{ product.stock }}
+            </td>
+            <td class="p-3 hidden md:table-cell max-w-xs">
+              <div class="truncate">{{ product.description }}</div>
+            </td>
+            <td class="p-3 hidden lg:table-cell">
+              <div class="h-10 w-10">
+                <img [src]="product.image_url" alt="{{ product.name }}" class="h-full w-full object-cover rounded-md" onerror="this.src='assets/images/no-image.png'">
+              </div>
+            </td>
+            <td class="p-3 hidden md:table-cell">
+              <div *ngFor="let cat of product.categories" class="inline-block bg-gray-200 rounded-full px-3 py-1 text-xs font-semibold text-gray-700 mr-2 mb-1">
+                {{ cat.name }}
+              </div>
+            </td>
+            <td class="p-3">
+              <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                <button
+                  class="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition duration-300 shadow-sm text-sm flex items-center justify-center"
+                  (click)="onEdit(product)"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Editar
+                </button>
+                <button
+                  class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition duration-300 shadow-sm text-sm flex items-center justify-center"
+                  (click)="initiateDelete(product.id)"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

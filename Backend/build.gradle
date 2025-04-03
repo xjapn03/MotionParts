@@ -30,6 +30,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// Hibernate Validator (JSR 380)
+    implementation 'org.hibernate:hibernate-validator:6.1.5.Final'
+    // API de Validación de Java (JSR 303/JSR 380)
+    implementation 'javax.validation:validation-api:2.0.1.Final'
+    // Spring Boot Starter Validation (si usas Spring Boot)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'

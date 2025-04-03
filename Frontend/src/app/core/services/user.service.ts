@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { User } from '../models/user.model';
 
 @Injectable({
@@ -11,11 +12,31 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+  // Obtener todos los usuarios
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.apiUrl);
+    return this.http.get<User[]>(this.apiUrl).pipe(
+      catchError(this.handleError) // Manejo de errores
+    );
   }
 
+  // Obtener un usuario por su ID
   getUserById(id: number): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${id}`);
+    return this.http.get<User>(`${this.apiUrl}/${id}`).pipe(
+      catchError(this.handleError) // Manejo de errores
+    );
+  }
+
+  // Método para manejar errores en las solicitudes HTTP
+  private handleError(error: any): Observable<never> {
+    let errorMessage = 'Algo salió mal; por favor intenta de nuevo más tarde.';
+    if (error.error instanceof ErrorEvent) {
+      // Errores del cliente
+      errorMessage = `Error en la solicitud: ${error.error.message}`;
+    } else {
+      // Errores del servidor
+      errorMessage = `Código de error: ${error.status}, Mensaje: ${error.message}`;
+    }
+    console.error(errorMessage); // Imprimir en la consola
+    return throwError(errorMessage); // Lanzar el error
   }
 }

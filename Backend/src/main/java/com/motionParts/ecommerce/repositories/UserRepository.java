@@ -11,8 +11,14 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    
+    // Buscar un usuario por su nombre de usuario (username)
     Optional<User> findByUsername(String username);
 
-     @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.username = :username")
+    // Buscar un usuario por su nombre de usuario y cargar sus roles
+    @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.username = :username")
     Optional<User> findByUsernameWithRoles(String username);
+
+    // Buscar un usuario por su correo electrónico 
+    Optional<User> findByEmail(String email);
 }

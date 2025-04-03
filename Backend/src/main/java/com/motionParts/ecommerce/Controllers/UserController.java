@@ -3,31 +3,48 @@ package com.motionParts.ecommerce.Controllers;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.motionParts.ecommerce.Models.User;
-import com.motionParts.ecommerce.repositories.UserRepository;
+import com.motionParts.ecommerce.services.UserService;
+import com.motionParts.ecommerce.services.RoleService;
+import com.motionParts.ecommerce.dto.UserDTO;
+import org.springframework.http.ResponseEntity;
+import javax.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:4200") // Permite peticiones desde Angular
+@Validated
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
+    @Autowired
+    private RoleService roleService;
+
+    // Obtener todos los usuarios
     @GetMapping
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
 
-    @GetMapping("/{id}")
-    public Optional<User> getUserById(@PathVariable Long id) {
-        return userRepository.findById(id);
-    }
-
+    // Crear un nuevo usuario
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepository.save(user);
+    public User createUser(@RequestBody @Valid UserDTO userDTO) {
+        return userService.createUser(userDTO);  // Llamamos a createUser, no a updateUser
+    }
+
+    // Actualizar un usuario existente
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody @Valid UserDTO userDTO) {
+        return userService.updateUser(id, userDTO);  // Llamamos a updateUser pasando el id y el DTO
+    }
+
+    // Eliminar un usuario por ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();  // Retorna respuesta no content al eliminar
     }
 }

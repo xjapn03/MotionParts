@@ -26,11 +26,11 @@ public class User {
     private String username;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime created_at = LocalDateTime.now();
+    private LocalDateTime created_at;
 
-    private LocalDateTime updated_at = LocalDateTime.now();
+    private LocalDateTime updated_at;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),
@@ -45,7 +45,17 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.created_at = LocalDateTime.now();
+    }
+
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.created_at = now;
+        this.updated_at = now;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
         this.updated_at = LocalDateTime.now();
     }
 
@@ -70,4 +80,18 @@ public class User {
 
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
+
+    // Sobrescribir equals y hashCode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id != null && id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * (id != null ? id.hashCode() : 0);
+    }
 }

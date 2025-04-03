@@ -16,18 +16,16 @@ public class Role {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
+    // Relación Many-to-Many con User
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY) 
     @JsonBackReference // Evita la serialización recursiva
     private Set<User> users = new HashSet<>();
 
+    // Constructor por defecto necesario para JPA
     public Role() {}
 
+    // Constructor con parámetros para inicializar el nombre del rol
     public Role(String name) {
-        this.name = name;
-    }
-
-    public Role(Long id, String name) {
-        this.id = id;
         this.name = name;
     }
 
@@ -40,4 +38,18 @@ public class Role {
 
     public Set<User> getUsers() { return users; }
     public void setUsers(Set<User> users) { this.users = users; }
+
+    // Sobrescribir equals y hashCode para comparar correctamente las entidades basadas en el ID
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return id != null && id.equals(role.id); // Compara basado en el ID
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0; // Utiliza el ID para el hashCode
+    }
 }

@@ -8,8 +8,8 @@
       <input
         type="text"
         class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        [(ngModel)]="usuario.name"
-        name="name"
+        [(ngModel)]="usuario.username"
+        name="username"
         required
       />
     </div>
@@ -24,6 +24,7 @@
         required
       />
     </div>
+
     <div>
       <label class="block text-sm font-semibold text-gray-700">Contraseña</label>
       <input
@@ -34,17 +35,20 @@
         required
       />
     </div>
+
     <div>
-      <label class="block text-sm font-semibold text-gray-700">Rol</label>
+      <label class="block text-sm font-semibold text-gray-700">Roles</label>
       <select
         class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        [(ngModel)]="usuario.role"
-        name="role"
+        [(ngModel)]="usuario.roles"
+        name="roles"
         required
+        multiple
       >
-        <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
+        <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
       </select>
     </div>
+    
 
     <button
       type="submit"
@@ -77,8 +81,11 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
     <div *ngFor="let user of filteredUsers" class="card">
       <div class="card-border-top"></div>
-      <span>{{ user.name }}</span>
-      <p class="job">{{ user.role }}</p>
+      <span>{{ user.username }}</span>
+      <p class="job">
+        <!-- Muestra los roles del usuario -->
+        <span *ngFor="let role of user.roles">{{ role.name }} </span>
+      </p>
       <button (click)="onEditar(user)">Editar</button>
       <button (click)="onEliminar(user.id)" class="mt-2 bg-red-500 hover:bg-red-600">Eliminar</button>
     </div>
