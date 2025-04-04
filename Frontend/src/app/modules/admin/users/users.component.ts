@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../../core/services/user.service'; // Asegúrate de importar el servicio
-import { User } from '../../../core/models/user.model'; // Importa el modelo User
-import { Role } from '../../../core/models/login.model'; // Asegúrate de tener el modelo de Role
-import { FormsModule } from '@angular/forms'; 
+import { UserService } from '../../../core/services/user.service';
+import { User } from '../../../core/models/user.model';
+import { Role } from '../../../core/models/login.model';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -15,70 +15,124 @@ import { CommonModule } from '@angular/common';
 export class UsersComponent implements OnInit {
   searchTerm: string = '';
   selectedCategory: string = '';
-  Role: string[] = ['Admin', 'Vendedor', 'Cliente']; // Ejemplo de categorías
-  
-  usuarios: User[] = [];  // Aseguramos que usuarios sea un array de User
-  roles: Role[] = []; // Aquí puedes almacenar los roles si es necesario
+  roleOptions: string[] = ['Admin', 'Vendedor', 'Cliente']; // Etiquetas visibles
 
-  usuario: User = { id: 0, username: '', email: '', roles: [] };  // Asegúrate de que usuario tenga la propiedad roles
-  
+  usuarios: User[] = [];
+  roles: Role[] = []; // En caso de que los cargues de un servicio
+
+  usuario: User = { id: 0, username: '', email: '', password: '', roles: [] };
+
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    // Obtener usuarios desde el backend
-    this.getUsuarios();
-    // Si necesitas los roles para llenar un selector o algo similar, puedes hacer algo similar
-    // this.getRoles(); // Si tienes un servicio para obtener roles también
+    this.getUsers();
+    this.getRoles();
+    // this.getRoles(); // Si luego agregas esta función
   }
 
-  // Método para obtener usuarios desde el backend
-  getUsuarios(): void {
+  getUsers(): void {
     this.userService.getUsers().subscribe(
       (data: User[]) => {
         this.usuarios = data;
       },
       (error) => {
-        console.error('Error fetching users', error);
+        console.error('Error al obtener usuarios', error);
       }
     );
   }
 
-  // Método para filtrar usuarios por nombre y categoría
   get filteredUsers() {
     return this.usuarios.filter((user) => {
       return (
-        (!this.selectedCategory || user.roles.some(role => role.name === this.selectedCategory)) &&
+        (!this.selectedCategory || user.roles?.some(role => role.name === this.selectedCategory)) &&
         (!this.searchTerm || user.username.toLowerCase().includes(this.searchTerm.toLowerCase()))
       );
     });
   }
 
-  // Método para manejar el envío del formulario
-  onSubmit() {
-    if (this.usuario.id !== 0) {
-      const index = this.usuarios.findIndex((u) => u.id === this.usuario.id);
-      if (index !== -1) {
-        this.usuarios[index] = { ...this.usuario };
+  // Crear usuario (POST)
+  onCreate(): void {
+    const dto = {
+      ...this.usuario,
+      roleId: this.usuario.roles.map(role => role.id)
+    };
+
+    console.log('Creando usuario:', dto); // 🔵 Log al crear
+
+    this.userService.createUser(dto).subscribe(
+      (created) => {
+        console.log('Usuario creado exitosamente:', created); // 🔵 Log al crear exitosamente
+        this.getUsers();
+        this.resetUser();
+      },
+      (error) => {
+        console.error('Error al crear usuario', error);
       }
-    } else {
-      this.usuario.id = this.usuarios.length + 1; // Asegurar un ID numérico
-      this.usuarios.push({ ...this.usuario });
-    }
-    this.resetUsuario();
+    );
   }
 
-  // Método para editar un usuario
-  onEditar(user: User) {
+  // Actualizar usuario (PUT)
+  onUpdate(): void {
+    const dto = {
+      ...this.usuario,
+      roleId: this.usuario.roles.map(role => role.id)
+    };
+
+    console.log('Actualizando usuario:', dto); // 🔵 Log al editar
+
+    if (this.usuario.id) {
+      this.userService.updateUser(this.usuario.id, dto).subscribe(
+        () => {
+          console.log('Usuario actualizado exitosamente'); // 🔵 Log al editar exitosamente
+          this.getUsers();
+          this.resetUser();
+        },
+        (error) => {
+          console.error('Error al actualizar usuario', error);
+        }
+      );
+    }
+  }
+
+
+  // Eliminar usuario (DELETE)
+  onDelete(id: number): void {
+    const confirmacion = confirm('¿Está seguro de eliminar a este usuario?');
+    if (confirmacion) {
+      this.userService.deleteUser(id).subscribe(
+        () => {
+          console.log(`Usuario con ID ${id} eliminado exitosamente.`); // 🔵 Log de eliminación
+          this.getUsers();
+        },
+        (error) => {
+          console.error('Error al eliminar usuario', error);
+        }
+      );
+    }
+  }
+
+  // Cargar datos en el formulario (modo edición)
+  onEdit(user: User): void {
     this.usuario = { ...user };
   }
 
-  // Método para eliminar un usuario
-  onEliminar(id: number) {
-    this.usuarios = this.usuarios.filter((u) => u.id !== id);
+  getRoles(): void {
+    this.userService.getRoles().subscribe(
+      (data: Role[]) => {
+        this.roles = data;
+      },
+      (error) => {
+        console.error('Error al obtener roles', error);
+      }
+    );
   }
-
-  // Resetear el formulario de usuario
-  resetUsuario() {
-    this.usuario = { id: 0, username: '', email: '', roles: [] };
+  
+  compareRoles(role1: Role, role2: Role): boolean {
+    return role1 && role2 ? role1.id === role2.id : false;
+  }
+  
+  // Limpiar formulario
+  resetUser(): void {
+    this.usuario = { id: 0, username: '', email: '', password: '', roles: [] };
   }
 }

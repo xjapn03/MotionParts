@@ -98,6 +98,11 @@ public class RoleService {
         userRepository.save(user);
     }
 
+    //comprobar si el rol con ese id existe antes de actualizarlo
+    public boolean existsById(Long id) {
+        return roleRepository.existsById(id);
+    }    
+
     // Método común para obtener el usuario y rol
     private User getUserAndRole(Long userId, Long roleId) {
         User user = userRepository.findById(userId)

@@ -2,7 +2,7 @@
   <h2 class="text-4xl font-bold mb-8 text-center text-gray-800">Gestión de Usuarios</h2>
 
   <!-- Formulario de Usuario -->
-  <form (ngSubmit)="onSubmit()" #usuarioForm="ngForm" class="bg-white p-6 rounded-lg shadow-md space-y-4">
+  <form (ngSubmit)="usuario.id ? onUpdate() : onCreate()" #usuarioForm="ngForm" class="bg-white p-6 rounded-lg shadow-md space-y-4">
     <div>
       <label class="block text-sm font-semibold text-gray-700">Nombre</label>
       <input
@@ -28,7 +28,7 @@
     <div>
       <label class="block text-sm font-semibold text-gray-700">Contraseña</label>
       <input
-        type="text"
+        type="password"
         class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
         [(ngModel)]="usuario.password"
         name="password"
@@ -42,20 +42,30 @@
         class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
         [(ngModel)]="usuario.roles"
         name="roles"
-        required
+        [compareWith]="compareRoles"
         multiple
+        required
       >
         <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
       </select>
     </div>
-    
 
-    <button
-      type="submit"
-      class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md font-semibold"
-    >
-      {{ usuario.id ? 'Actualizar Usuario' : 'Crear Usuario' }}
-    </button>
+    <div class="flex gap-4">
+      <button
+        type="submit"
+        class="flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md font-semibold"
+      >
+        {{ usuario.id ? 'Actualizar Usuario' : 'Crear Usuario' }}
+      </button>
+
+      <button
+        type="button"
+        (click)="resetUser()"
+        class="flex-1 bg-gray-400 text-white p-3 rounded-lg hover:bg-gray-500 transition duration-300 shadow-md font-semibold"
+      >
+        Limpiar
+      </button>
+    </div>
   </form>
 
   <!-- Búsqueda y filtro -->
@@ -71,7 +81,7 @@
       class="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
     >
       <option value="">Todos</option>
-      <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
+      <option *ngFor="let role of roles" [value]="role.name">{{ role.name }}</option>
     </select>
   </div>
 
@@ -79,15 +89,28 @@
 
   <!-- Tarjetas de Usuarios -->
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-    <div *ngFor="let user of filteredUsers" class="card">
-      <div class="card-border-top"></div>
-      <span>{{ user.username }}</span>
-      <p class="job">
-        <!-- Muestra los roles del usuario -->
-        <span *ngFor="let role of user.roles">{{ role.name }} </span>
+    <div *ngFor="let user of filteredUsers" class="card bg-white rounded-xl shadow-md p-4 text-center">
+      <div class="card-border-top mb-2 h-1 bg-blue-500 rounded-full"></div>
+      <span class="text-lg font-bold text-gray-800">{{ user.username }}</span>
+      <!-- Roles -->
+      <p class="text-sm text-gray-600 mt-2">
+        <span *ngFor="let role of user.roles" 
+              class="inline-block bg-black-200 text-black-800 px-3 py-1 m-1 rounded-lg text-xs font-semibold">
+          {{ role.name }}
+        </span>
       </p>
-      <button (click)="onEditar(user)">Editar</button>
-      <button (click)="onEliminar(user.id)" class="mt-2 bg-red-500 hover:bg-red-600">Eliminar</button>
+
+      <!-- Botones en columna -->
+      <div class="mt-1 flex flex-col">
+        <button (click)="onEdit(user)" 
+                class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm shadow">
+          Editar
+        </button>
+        <button (click)="onDelete(user.id)" 
+                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm shadow">
+          Eliminar
+        </button>
+      </div>
     </div>
   </div>
 </div>

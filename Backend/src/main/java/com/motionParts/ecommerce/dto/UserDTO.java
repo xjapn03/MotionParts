@@ -3,7 +3,7 @@ package com.motionParts.ecommerce.dto;  // Solo esta línea debe existir
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
-import javax.validation.Valid;
+//USerimport javax.validation.Valid;
 
 public class UserDTO {
     private Long id;  // Declarar el campo id que falta

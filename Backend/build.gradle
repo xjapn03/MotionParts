@@ -34,7 +34,7 @@ dependencies {
     implementation 'org.hibernate:hibernate-validator:6.1.5.Final'
     // API de Validación de Java (JSR 303/JSR 380)
     implementation 'javax.validation:validation-api:2.0.1.Final'
-    // Spring Boot Starter Validation (si usas Spring Boot)
+    // Spring Boot Starter Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

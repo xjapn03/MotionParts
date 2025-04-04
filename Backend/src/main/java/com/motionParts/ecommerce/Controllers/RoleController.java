@@ -2,6 +2,9 @@ package com.motionParts.ecommerce.Controllers;
 
 import com.motionParts.ecommerce.dto.RoleDTO;
 import com.motionParts.ecommerce.services.RoleService;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,16 +32,20 @@ public class RoleController {
         return roleService.getRoleById(id);
     }
 
-    // Crear un nuevo rol
     @PostMapping
-    public RoleDTO createRole(@RequestBody RoleDTO roleDTO) {
-        return roleService.createRole(roleDTO);
+    public ResponseEntity<RoleDTO> createRole(@RequestBody RoleDTO roleDTO) {
+        if (roleDTO.getName() == null || roleDTO.getName().trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(roleService.createRole(roleDTO));
     }
 
-    // Actualizar un rol existente
     @PutMapping("/{id}")
-    public RoleDTO updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
-        return roleService.updateRole(id, roleDTO);
+    public ResponseEntity<RoleDTO> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
+        if (!roleService.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(roleService.updateRole(id, roleDTO));
     }
 
     // Eliminar un rol
@@ -48,14 +55,22 @@ public class RoleController {
     }
 
     // Asignar un rol a un usuario
-    @PostMapping("/assign/{userId}/{roleId}")
-    public void assignRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
+    public ResponseEntity<String> assignRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
+    try {
         roleService.assignRoleToUser(userId, roleId);
+        return ResponseEntity.ok("Rol asignado correctamente.");
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al asignar el rol.");
+    }
     }
 
     // Remover un rol de un usuario
-    @PostMapping("/remove/{userId}/{roleId}")
-    public void removeRoleFromUser(@PathVariable Long userId, @PathVariable Long roleId) {
-        roleService.removeRoleFromUser(userId, roleId);
+    public ResponseEntity<String> removeRoleFromUser(@PathVariable Long userId, @PathVariable Long roleId) {
+        try {
+            roleService.removeRoleFromUser(userId, roleId);
+            return ResponseEntity.ok("Rol removido correctamente.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al remover el rol.");
+        }
     }
 }
