@@ -51,39 +51,39 @@ export class UsersComponent implements OnInit {
   }
 
   // Crear usuario (POST)
-  onCreate(): void {
-    const dto = {
-      ...this.usuario,
-      roleId: this.usuario.roles.map(role => role.id)
-    };
+onCreate(): void {
+  const dto = {
+    ...this.usuario,
+    roleId: this.usuario.roles.map(role => role.id)
+  };
 
-    console.log('Creando usuario:', dto); // 🔵 Log al crear
+  console.log('Creando usuario:', dto); //  Log al crear
 
-    this.userService.createUser(dto).subscribe(
-      (created) => {
-        console.log('Usuario creado exitosamente:', created); // 🔵 Log al crear exitosamente
-        this.getUsers();
-        this.resetUser();
-      },
-      (error) => {
-        console.error('Error al crear usuario', error);
-      }
-    );
-  }
+  this.userService.createUser(dto).subscribe(
+    (created) => {
+      console.log('Usuario creado exitosamente:', created); // Log al crear exitosamente
+      this.getUsers();
+      this.resetUser();
+    },
+    (error) => {
+      console.error('Error al crear usuario', error);
+    }
+  );
+}
 
-  // Actualizar usuario (PUT)
+// Actualizar usuario (PUT)
   onUpdate(): void {
     const dto = {
       ...this.usuario,
       roleId: this.usuario.roles.map(role => role.id)
     };
 
-    console.log('Actualizando usuario:', dto); // 🔵 Log al editar
+    console.log('Actualizando usuario:', dto); // Log al editar
 
     if (this.usuario.id) {
       this.userService.updateUser(this.usuario.id, dto).subscribe(
         () => {
-          console.log('Usuario actualizado exitosamente'); // 🔵 Log al editar exitosamente
+          console.log('Usuario actualizado exitosamente'); // Log al editar exitosamente
           this.getUsers();
           this.resetUser();
         },
@@ -93,7 +93,6 @@ export class UsersComponent implements OnInit {
       );
     }
   }
-
 
   // Eliminar usuario (DELETE)
   onDelete(id: number): void {
