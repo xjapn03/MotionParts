@@ -1,6 +1,7 @@
 package com.motionParts.ecommerce.dto;
 
 import com.motionParts.ecommerce.Models.Product;
+import com.motionParts.ecommerce.Models.Category;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,11 +40,15 @@ public class ProductDTO {
         
         // ✅ Corregido: Obtener el nombre desde `productCategory.getCategory().getName()`
         this.categories = product.getProductCategories().stream()
-        .map(productCategory -> new CategoryDTO(
-            productCategory.getCategory().getId(), 
-            productCategory.getCategory().getName(),
-            productCategory.getCategory().getDescription() // ✅ Asegura que esta propiedad existe en `Category`
-        ))
+        .map(productCategory -> {
+            Category category = productCategory.getCategory();
+            return new CategoryDTO(
+                category.getId(),
+                category.getName(),
+                category.getDescription(),
+                category.getParent() != null ? category.getParent().getId() : null
+            );
+        })        
         .collect(Collectors.toList());
     }
     

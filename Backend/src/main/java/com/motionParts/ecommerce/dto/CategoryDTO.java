@@ -4,13 +4,15 @@ public class CategoryDTO {
     private Long id;
     private String name;
     private String description;
+    private Long parentId;
 
     public CategoryDTO() {}
 
-    public CategoryDTO(Long id, String name, String description) {
+    public CategoryDTO(Long id, String name, String description, Long parentId) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.parentId = parentId;
     }
 
     public Long getId() { return id; }
@@ -21,4 +23,7 @@ public class CategoryDTO {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public Long getParentId() { return parentId; }
+    public void setParentId(Long parentId) { this.parentId = parentId; }
 }

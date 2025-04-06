@@ -56,11 +56,15 @@ public class ProductService {
     public List<CategoryDTO> getCategoriesByProductId(Long productId) {
         return productCategoryRepository.findByProductId(productId)
                 .stream()
-                .map(pc -> new CategoryDTO(
-                        pc.getCategory().getId(),
-                        pc.getCategory().getName(),
-                        pc.getCategory().getDescription()
-                ))
+                .map(pc -> {
+                    Category cat = pc.getCategory();
+                    return new CategoryDTO(
+                        cat.getId(),
+                        cat.getName(),
+                        cat.getDescription(),
+                        cat.getParent() != null ? cat.getParent().getId() : null
+                    );
+                })                
                 .collect(Collectors.toList());
     }
 

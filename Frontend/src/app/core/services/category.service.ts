@@ -20,8 +20,11 @@ export class CategoryService {
   }
 
   updateCategory(category: Category): Observable<Category> {
+    if (!category.id) {
+      throw new Error('La categoría debe tener un ID para actualizarse');
+    }
     return this.http.put<Category>(`${this.apiUrl}/${category.id}`, category);
-  }
+  }  
 
   deleteCategory(categoryId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${categoryId}`);

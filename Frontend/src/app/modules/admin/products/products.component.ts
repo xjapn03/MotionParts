@@ -46,11 +46,11 @@ export class ProductsComponent implements OnInit {
 
   // Función trackBy para optimizar el ngFor
   trackByProductId(index: number, item: Product): number {
-    return item.id;
+    return item.id!; 
   }
 
   trackByCategoryId(index: number, item: Category): number {
-    return item.id;
+    return item.id!;
   }
 
   loadProducts() {
@@ -224,8 +224,8 @@ export class ProductsComponent implements OnInit {
     this.product = JSON.parse(JSON.stringify(product));
   
     if (product.categories && product.categories.length > 0) {
-      const mainCategory = product.categories.find(cat => !cat.parent) ?? null;
-      const subCategory = product.categories.find(cat => cat.parent) ?? null;
+      const mainCategory = product.categories.find(cat => !cat.parentId) ?? null;
+    const subCategory = product.categories.find(cat => cat.parentId) ?? null; 
   
       this.selectedCategoryId = mainCategory?.id ?? null;
       this.onCategoryChange();

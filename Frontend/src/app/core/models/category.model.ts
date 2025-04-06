@@ -1,6 +1,6 @@
 export interface Category {
-  id: number;
+  id?: number;
   name: string;
   description: string;
-  parent?: Category;  // `?` indica que puede ser null si es una categoría raíz
+  parentId?: number;  // null si es una categoría raíz
 }
