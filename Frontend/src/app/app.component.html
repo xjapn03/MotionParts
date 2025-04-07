@@ -107,32 +107,164 @@
 
 
 <!-- Modal del carrito (Sidebar) -->
-<div *ngIf="isCartModalOpen" class="modal">
-  <div class="bg-white rounded-lg shadow-lg p-6 w-80 h-full fixed top-0 right-0">
-    <h2 class="text-lg font-bold border-b pb-2">Carrito de Compras</h2>
-
-    <ng-container *ngIf="(cartItems$ | async) as cartItems">
-      <div *ngIf="cartItems.length === 0" class="text-gray-500 mt-4">Tu carrito está vacío.</div>
-
-      <ul *ngIf="cartItems.length > 0" class="mt-2">
-        <li *ngFor="let item of cartItems" class="border-b py-2 flex justify-between items-center">
-          <span class="w-1/3">{{ item.product.name }}</span>
-          <div class="flex items-center">
-            <button class="bg-gray-300 px-2 rounded" (click)="decreaseQuantity(item)">-</button>
-            <span class="mx-2">{{ item.quantity }}</span>
-            <button class="bg-gray-300 px-2 rounded" (click)="increaseQuantity(item)">+</button>
-          </div>
-          <span class="font-bold w-1/3 text-right">${{ item.product.price * item.quantity }}</span>
-        </li>
-      </ul>
-
-      <div class="mt-4 font-bold text-right">Total: ${{ getTotal(cartItems) }}</div>
-    </ng-container>
-
-    <div class="mt-4 flex justify-between">
-      <button class="bg-gray-500 text-white px-4 py-2 rounded" (click)="closeCartModal()">Cerrar</button>
-      <button class="bg-blue-500 text-white px-4 py-2 rounded" routerLink="/cart">Ver más</button>
+<div *ngIf="isCartModalOpen" class="fixed inset-0 z-50 overflow-hidden">
+  <!-- Overlay con efecto de fade -->
+  <div class="absolute inset-0 bg-black bg-opacity-40 transition-opacity duration-300" (click)="closeCartModal()"></div>
+  
+  <!-- Sidebar con animación de slide-in -->
+  <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+    <!-- Encabezado del carrito -->
+    <div class="flex items-center justify-between p-4 border-b">
+      <h2 class="text-lg font-semibold flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+        </svg>
+        Carrito de Compras
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">{{cartItemCount}}</span>
+      </h2>
+      <button class="text-gray-500 hover:text-gray-700 transition-colors" (click)="closeCartModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
+    
+    <!-- Contenido del carrito -->
+    <div class="flex flex-col h-[calc(100%-8rem)]">
+      <div class="flex-1 overflow-y-auto p-4">
+        <ng-container *ngIf="(cartItems$ | async) as cartItems">
+          <!-- Estado vacío -->
+          <div *ngIf="cartItems.length === 0" class="flex flex-col items-center justify-center text-center h-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <p class="text-gray-500 font-medium">Tu carrito está vacío</p>
+            <p class="text-gray-400 text-sm mt-1">Agrega productos para comenzar tu compra</p>
+            <button 
+              routerLink="/products" 
+              (click)="closeCartModal()"
+              class="mt-4 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition">
+              Ver productos
+            </button>
+          </div>
+          
+          <!-- Lista de productos -->
+          <ul *ngIf="cartItems.length > 0" class="space-y-3">
+            <li *ngFor="let item of cartItems; trackBy: trackById" 
+                class="flex gap-3 p-2 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
+                [class.border-yellow-200]="item.product.stock < 3 && item.product.stock > 0"
+                [class.border-red-200]="item.product.stock === 0">
+              
+              <!-- Imagen del producto (si existe) -->
+              <div class="relative w-16 h-16 flex-shrink-0">
+                <img [src]="item.product.image_url || 'assets/products/productDefault.jpg'"
+                     class="w-full h-full object-cover rounded"
+                     [class.opacity-50]="item.product.stock === 0">
+                
+                <!-- Indicador de stock -->
+                <div *ngIf="item.product.stock === 0" 
+                     class="absolute -top-1 -right-1 bg-red-500 text-white text-xs p-0.5 w-4 h-4 flex items-center justify-center rounded-full">
+                  !
+                </div>
+              </div>
+              
+              <!-- Información del producto -->
+              <div class="flex-1 min-w-0">
+                <div class="flex justify-between items-start">
+                  <p class="text-sm font-medium truncate" [class.text-red-600]="item.product.stock === 0">
+                    {{ item.product.name }}
+                  </p>
+                  <button (click)="removeItem(item)" class="text-gray-400 hover:text-red-500 transition p-0.5 -mt-1 -mr-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <div class="flex justify-between items-center mt-2">
+                  <!-- Controles de cantidad -->
+                  <div class="flex items-center border rounded overflow-hidden">
+                    <button 
+                      (click)="decreaseQuantity(item)" 
+                      class="w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50"
+                      [disabled]="item.quantity <= 1 || item.product.stock === 0">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                      </svg>
+                    </button>
+                    <span class="w-8 text-center text-sm">{{ item.quantity }}</span>
+                    <button 
+                      (click)="increaseQuantity(item)" 
+                      class="w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50"
+                      [disabled]="item.product.stock === 0 || item.quantity >= item.product.stock">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <!-- Precio -->
+                  <span class="text-sm font-semibold">{{ item.product.price * item.quantity | currency }}</span>
+                </div>
+                
+                <!-- Advertencia de stock -->
+                <div *ngIf="item.product.stock === 0" class="mt-1 text-xs text-red-600">
+                  Producto agotado
+                </div>
+                <div *ngIf="item.product.stock > 0 && item.product.stock < 3" class="mt-1 text-xs text-yellow-600">
+                  ¡Solo {{ item.product.stock }} disponibles!
+                </div>
+              </div>
+            </li>
+          </ul>
+        </ng-container>
+      </div>
+      
+      <!-- Resumen y acciones -->
+        <ng-container *ngIf="cartItems$ | async as items">
+        <div class="border-t p-4 bg-gray-50" *ngIf="items.length > 0">
+          <div class="mb-3">
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-600">Subtotal</span>
+              <span>{{ getSubtotal() | currency }}</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Impuestos (22%)</span>
+              <span>{{ getTaxes() | currency }}</span>
+            </div>
+            <div class="flex justify-between font-semibold mt-2 pt-2 border-t">
+              <span>Total</span>
+              <span>{{ getTotal() | currency }}</span>
+            </div>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="grid grid-cols-2 gap-3">
+            <button 
+              routerLink="/cart" 
+              (click)="closeCartModal()"
+              class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+              Ver carrito
+            </button>
+            <button 
+              routerLink="/checkout" 
+              (click)="closeCartModal()"
+              [disabled]="hasUnavailableItems()"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+              Checkout
+            </button>
+          </div>
+        </div>
+</ng-container>
+
+    </div>
+  </div>
+</div>
+
+<!-- Indicador de carga (spinner) -->
+<div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-[60]">
+  <div class="bg-white p-3 rounded-full">
+    <div class="w-6 h-6 border-2 border-t-blue-600 border-r-blue-600 border-b-gray-200 border-l-gray-200 rounded-full animate-spin"></div>
   </div>
 </div>
 
