@@ -1,14 +1,24 @@
 package com.motionParts.ecommerce.Controllers;
 
+import com.motionParts.ecommerce.Models.Product;
+import com.motionParts.ecommerce.Models.ProductImage;
 import com.motionParts.ecommerce.dto.ProductDTO;
+import com.motionParts.ecommerce.repositories.ProductImageRepository;
+import com.motionParts.ecommerce.repositories.ProductRepository;
 import com.motionParts.ecommerce.services.ProductService;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
+import com.motionParts.ecommerce.services.ImageStorageService;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Optional;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Map;       
 
 @RestController
 @RequestMapping("/api/products")
@@ -16,6 +26,15 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ProductImageRepository productImageRepository;
+
+    @Autowired
+    private ImageStorageService imageStorageService;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     // Obtener todos los productos en formato DTO
     @GetMapping
@@ -73,5 +92,45 @@ public class ProductController {
         return ResponseEntity.noContent().build();  // Devuelve 204 sin contenido
     }
 
+    @PostMapping("/{id}/upload-images")
+    public ResponseEntity<List<String>> uploadImages(
+    @PathVariable Long id,
+    @RequestParam("images") MultipartFile[] images
+    ) {
+    try {
+        System.out.println("Subiendo imágenes para el producto ID: " + id);
+        List<String> urls = imageStorageService.storeImages(id, images);
+        System.out.println("Rutas generadas: " + urls);
+        
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isPresent()) {
+            Product product = optionalProduct.get();
+            List<ProductImage> savedImages = new ArrayList<>();
+            for (String url : urls) {
+                ProductImage image = new ProductImage();
+                image.setImage_url(url);
+                image.setProduct(product);
+                savedImages.add(productImageRepository.save(image));
+            }
+        }
+        return ResponseEntity.ok(urls);
+    } catch (IOException e) {
+        System.err.println("Error al subir imágenes: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+    }
 
+    @PostMapping("/{id}/upload-main-image")
+    public ResponseEntity<String> uploadMainImage(
+        @PathVariable Long id,
+        @RequestParam("image") MultipartFile image
+    ) {
+        try {
+            String imageUrl = imageStorageService.storeMainImage(id, image);
+            productService.updateProductImage(id, imageUrl); // <-- este método guarda image_url
+            return ResponseEntity.ok(imageUrl);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

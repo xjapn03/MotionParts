@@ -11,12 +11,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String description;
     private double price;
     private int stock;
     private String reference;
+
+    // Imagen principal (una sola URL)
+    @Column(name = "image_url")
     private String image_url;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> imageGallery = new ArrayList<>();
 
     @Column(updatable = false)
     private LocalDateTime created_at;
@@ -28,13 +35,15 @@ public class Product {
     private List<ProductCategory> productCategories = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    @JsonBackReference // Evita la serialización infinita
+    @JsonBackReference
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
-    // Constructor vacío para JPA
+    // Imágenes adicionales (galería)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductImage> productImages = new ArrayList<>();
+
     public Product() {}
 
-    // Constructor con imagen
     public Product(String name, String description, double price, int stock, String reference, String image_url) {
         this.name = name;
         this.description = description;
@@ -47,9 +56,6 @@ public class Product {
     }
 
     // Getters y Setters
-    public List<OrderDetail> getOrderDetails() { return orderDetails; }
-    public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -79,4 +85,10 @@ public class Product {
 
     public List<ProductCategory> getProductCategories() { return productCategories; }
     public void setProductCategories(List<ProductCategory> productCategories) { this.productCategories = productCategories; }
+
+    public List<OrderDetail> getOrderDetails() { return orderDetails; }
+    public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
+
+    public List<ProductImage> getImageGallery() { return imageGallery; }
+    public void setImageGallery(List<ProductImage> imageGallery) { this.imageGallery = imageGallery; }
 }

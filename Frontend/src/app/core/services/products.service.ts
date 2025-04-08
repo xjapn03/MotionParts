@@ -27,30 +27,30 @@ export class ProductService {
   }
 
   // Crear un nuevo producto
-createProduct(product: Product): Observable<Product> {
-  // Asegúrate de que solo se envíen los IDs de las categorías
-  const productToSend = { 
-    ...product,
-    categories: product.categories?.map(category => ({ id: category.id })) ?? []  // Solo envía los IDs
-  };
+  createProduct(product: Product): Observable<Product> {
+    // Asegúrate de que solo se envíen los IDs de las categorías
+    const productToSend = { 
+      ...product,
+      categories: product.categories?.map(category => ({ id: category.id })) ?? []  // Solo envía los IDs
+    };
 
-  return this.http.post<Product>(this.apiUrl, productToSend).pipe(
-    catchError(this.handleError)
-  );
-}
+    return this.http.post<Product>(this.apiUrl, productToSend).pipe(
+      catchError(this.handleError)
+    );
+  }
 
-// Actualizar un producto existente
-updateProduct(product: Product): Observable<Product> {
-  // Asegúrate de que solo se envíen los IDs de las categorías
-  const productToSend = { 
-    ...product,
-    categories: product.categories?.map(category => ({ id: category.id })) ?? []  // Solo envía los IDs
-  };
+  // Actualizar un producto existente
+  updateProduct(product: Product): Observable<Product> {
+    // Asegúrate de que solo se envíen los IDs de las categorías
+    const productToSend = { 
+      ...product,
+      categories: product.categories?.map(category => ({ id: category.id })) ?? []  // Solo envía los IDs
+    };
 
-  return this.http.put<Product>(`${this.apiUrl}/${product.id}`, productToSend).pipe(
-    catchError(this.handleError)
-  );
-}
+    return this.http.put<Product>(`${this.apiUrl}/${product.id}`, productToSend).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   // Eliminar un producto
   deleteProduct(id: number): Observable<void> {
@@ -58,6 +58,37 @@ updateProduct(product: Product): Observable<Product> {
       catchError(this.handleError) // Manejo de errores
     );
   }
+
+  uploadMainImage(productId: number, formData: FormData): Observable<{ imageUrl: string }> {
+    return this.http.post<{ imageUrl: string }>(
+      `${this.apiUrl}/${productId}/upload-main-image`,
+      formData
+    );
+  }       
+
+  uploadImages(productId: number, files: File[]): Observable<string[]> {
+    const formData = new FormData();
+    files.forEach(file => formData.append('images', file)); // 👈 Nombre correcto: 'images'
+  
+    // Opcional: para debug de contenido del FormData
+    for (const [key, value] of formData.entries()) {
+      console.log(`[GALLERY] FormData campo: ${key}`, value);
+    }
+  
+    return this.http.post<string[]>(
+      `${this.apiUrl}/${productId}/upload-images`,
+      formData
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }    
+
+  uploadGalleryImages(productId: number, images: File[]): Observable<any> {
+    const formData = new FormData();
+    images.forEach(image => formData.append('images', image));
+  
+    return this.http.post(`${this.apiUrl}/${productId}/upload-images`, formData);
+  }  
 
   // Función de manejo de errores
   private handleError(error: any) {

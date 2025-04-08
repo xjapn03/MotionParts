@@ -5,6 +5,7 @@ import { ProductService } from '../../../core/services/products.service';
 import { Product } from '../../../core/models/product.model';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -17,13 +18,17 @@ import { Category } from '../../../core/models/category.model';
 export class ProductsComponent implements OnInit {
   searchId: number | null = null;
   products: Product[] = [];
-  product: Product = { id: 0, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [] };
+  product: Product = { id: 0, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [], gallery: [] };
   filteredProducts: Product[] = [];
   categories: Category[] = [];
   selectedCategoryId: number | null = null;
   selectedSubcategoryId: number | null = null;
   subcategories: Category[] = [];
-  
+  mainImageFile: File | null = null;
+  galleryFiles: File[] = [];
+  mainImagePreview: string | null = null;
+  galleryPreviews: string [] = [];
+
   // Propiedades para el manejo de alertas
   alertMessage: string = '';
   alertType: 'success' | 'error' | 'warning' | '' = '';
@@ -52,6 +57,42 @@ export class ProductsComponent implements OnInit {
   trackByCategoryId(index: number, item: Category): number {
     return item.id!;
   }
+
+  onMainImageSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.mainImageFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.mainImagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onGalleryImagesSelected(event: Event): void {
+    const files = (event.target as HTMLInputElement).files;
+    this.galleryFiles = [];
+    this.galleryPreviews = [];
+
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        this.galleryFiles.push(file);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.galleryPreviews.push(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+  
+  onImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/products/productDefault.jpg'; // Asegúrate de que esta imagen exista
+  }  
 
   loadProducts() {
     this.isLoading = true;
@@ -105,7 +146,7 @@ export class ProductsComponent implements OnInit {
       if (this.searchTerm && this.searchTerm.trim() !== '') {
         const term = this.searchTerm.toLowerCase();
         return product.name.toLowerCase().includes(term) || 
-               product.description.toLowerCase().includes(term);
+              product.description.toLowerCase().includes(term);
       }
       
       return true;
@@ -136,81 +177,113 @@ export class ProductsComponent implements OnInit {
   }
   
   onSubmit() {
-    if (!this.validateForm()) {
-      return;
-    }
-    
+    if (!this.validateForm()) return;
+  
     this.isLoading = true;
     this.cdr.markForCheck();
-    
-    // Configurar categorías - crea un nuevo objeto para evitar problemas de referencia
-    const productToSave = { ...this.product };
-    
+  
     const selectedCategory = this.categories.find(cat => Number(cat.id) === Number(this.selectedCategoryId));
     const selectedSubcategory = this.categories.find(cat => Number(cat.id) === Number(this.selectedSubcategoryId));
-    
-    productToSave.categories = [
-      ...(selectedCategory ? [{
-        id: selectedCategory.id,
-        name: selectedCategory.name,
-        description: selectedCategory.description
-      }] : []),
-      ...(selectedSubcategory ? [{
-        id: selectedSubcategory.id,
-        name: selectedSubcategory.name,
-        description: selectedSubcategory.description
-      }] : []),
-    ];
-    
+  
+    const productToSave = {
+      ...this.product,
+      categories: [
+        ...(selectedCategory ? [selectedCategory] : []),
+        ...(selectedSubcategory ? [selectedSubcategory] : [])
+      ]
+    };
+  
+    const saveAndUploadImages = (savedProduct: Product) => {
+      const imageUpload$ = [];
+  
+      // 🟢 SUBIR IMAGEN PRINCIPAL
+      if (this.mainImageFile) {
+        const formData = new FormData();
+        formData.append('image', this.mainImageFile); // 👈🏼 importante que sea 'image'
+        console.log('[MAIN IMG] FormData contiene:', formData.get('image'));
+  
+        imageUpload$.push(this.productService.uploadMainImage(savedProduct.id, formData));
+      } else {
+        console.warn('⚠️ No hay imagen principal para subir.');
+      }
+  
+      // 🟢 SUBIR GALERÍA DE IMÁGENES
+      if (this.galleryFiles.length > 0) {
+        imageUpload$.push(this.productService.uploadImages(savedProduct.id, this.galleryFiles));
+      } else {
+        console.warn('⚠️ No hay imágenes de galería para subir.');
+      }
+  
+      // 🧵 Ejecutar uploads
+      if (imageUpload$.length > 0) {
+        forkJoin(imageUpload$).subscribe({
+          next: (responses) => {
+            console.log('Respuestas al subir imágenes:', responses);
+            this.displayAlert('¡Producto e imágenes subidos correctamente!', 'success');
+            this.resetForm();
+            this.loadProducts();
+            this.isLoading = false;
+            this.cdr.markForCheck();
+          },
+          error: (err) => {
+            console.error('Error al subir imágenes (forkJoin):', JSON.stringify(err, null, 2));
+            this.displayAlert('Producto guardado, pero error al subir imágenes', 'warning');
+            this.isLoading = false;
+            this.cdr.markForCheck();
+          }          
+        });        
+      } else {
+        this.displayAlert('¡Producto guardado correctamente!', 'success');
+        this.resetForm();
+        this.loadProducts();
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }
+    };
+  
+    // Crear o actualizar producto
     if (productToSave.id && productToSave.id !== 0) {
       this.productService.updateProduct(productToSave).subscribe({
-        next: () => {
-          this.displayAlert('¡Producto actualizado correctamente!', 'success');
-          this.resetForm();
-          this.loadProducts();
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        },
-        error: (error) => {
-          this.displayAlert('Error al actualizar el producto', 'error');
+        next: saveAndUploadImages,
+        error: () => {
+          this.displayAlert('Error al actualizar producto', 'error');
           this.isLoading = false;
           this.cdr.markForCheck();
         }
       });
     } else {
       this.productService.createProduct(productToSave).subscribe({
-        next: () => {
-          this.displayAlert('¡Producto creado correctamente!', 'success');
-          this.resetForm();
-          this.loadProducts();
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        },
-        error: (error) => {
-          this.displayAlert('Error al crear el producto', 'error');
+        next: saveAndUploadImages,
+        error: () => {
+          this.displayAlert('Error al crear producto', 'error');
           this.isLoading = false;
           this.cdr.markForCheck();
         }
       });
     }
-  }
+  }  
 
   validateForm(): boolean {
-    if (!this.product.name || !this.product.reference || this.product.price <= 0 || 
-        this.product.stock < 0 || !this.product.description || !this.product.image_url ||
+    if (!this.product.name || 
+        !this.product.reference || 
+        this.product.price <= 0 || 
+        this.product.stock < 0 || 
+        !this.product.description || 
+        !this.mainImageFile || // Usamos la imagen principal cargada
         !this.selectedCategoryId) {
       this.displayAlert('Por favor, complete todos los campos obligatorios', 'warning');
       return false;
     }
     return true;
   }
-
+  
   resetForm() {
     // Crea un nuevo objeto para evitar referencias
-    this.product = { id: 0, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [] };
-    this.selectedCategoryId = null;
-    this.selectedSubcategoryId = null;
-    this.cdr.markForCheck();
+    this.product = { id: 0, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [], gallery: [] };
+    this.mainImageFile = null;
+    this.mainImagePreview = null;
+    this.galleryFiles = [];
+    this.galleryPreviews = [];
   }
 
   onEdit(product: Product) {
@@ -271,6 +344,4 @@ export class ProductsComponent implements OnInit {
     this.productToDelete = null;
     this.cdr.markForCheck();
   }
-
-  
 }
