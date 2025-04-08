@@ -21,15 +21,16 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
     this.checkScreenSize();
     
-    // Detectar cambios de ruta para ocultar el mensaje de bienvenida
+    // Detectar cambios de ruta para controlar el mensaje de bienvenida
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
       this.currentRoute = event.url;
       
-      // Ocultar el mensaje de bienvenida cuando se navega a una ruta específica
-      // y no estamos en la ruta principal de admin
-      if (this.currentRoute !== '/admin') {
+      // Mostrar el mensaje de bienvenida solo cuando estemos en /admin
+      if (this.currentRoute === '/admin') {
+        this.showWelcome = true;
+      } else {
         this.showWelcome = false;
       }
     });

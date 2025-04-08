@@ -1,69 +1,270 @@
-<div class="container mx-auto p-3 sm:p-6 max-w-2xl bg-white shadow-lg rounded-lg">
-    <!-- Título -->
-    <h2 class="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800">Gestión de Categorías</h2>
-  
-    <!-- Sección para agregar categoría -->
-    <div class="mb-4 flex flex-col sm:flex-row gap-2">
-      <input [(ngModel)]="newCategoryName" type="text" placeholder="Nombre de la categoría"
-        class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <button (click)="addCategory()" class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-        Agregar Categoría
+<!-- categories.component.html -->
+<div class="container mx-auto p-3 sm:p-6 max-w-3xl bg-white shadow-lg rounded-lg">
+  <!-- Encabezado -->
+  <div class="flex justify-between items-center mb-6 border-b pb-3">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Gestión de Categorías</h2>
+    <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+      Total: {{ categories.length }}
+    </span>
+  </div>
+
+  <!-- Tabs para navegar entre la vista por jerarquía y vista completa -->
+  <div class="mb-6">
+    <div class="flex border-b">
+      <button 
+        [ngClass]="{'border-b-2 border-blue-500 text-blue-600': activeTab === 'hierarchy'}"
+        class="py-2 px-4 mr-2 font-medium" 
+        (click)="setActiveTab('hierarchy')">
+        Vista Jerárquica
+      </button>
+      <button 
+        [ngClass]="{'border-b-2 border-blue-500 text-blue-600': activeTab === 'all'}"
+        class="py-2 px-4 font-medium" 
+        (click)="setActiveTab('all')">
+        Todas las Categorías
       </button>
     </div>
-  
-    <!-- Búsqueda por ID -->
-    <div class="mb-4 flex flex-col sm:flex-row gap-2">
-      <input [(ngModel)]="searchCategoryId" type="text" placeholder="Buscar categoría por ID"
-        class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" />
-      <button (click)="findCategoryById()" class="w-full sm:w-auto px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600">
-        Buscar
-      </button>
+  </div>
+
+  <!-- Panel de acciones -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+    <!-- Agregar categoría principal -->
+    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <h3 class="text-lg font-semibold mb-3 text-gray-700">Agregar Categoría Principal</h3>
+      <div class="flex flex-col gap-3">
+        <input [(ngModel)]="newCategoryName" type="text" placeholder="Nombre de la categoría"
+          class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <input [(ngModel)]="newCategoryDescription" type="text" placeholder="Descripción (opcional)"
+          class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button (click)="addCategory()" 
+          class="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
+          [disabled]="!newCategoryName.trim()">
+          Agregar Categoría
+        </button>
+      </div>
     </div>
-  
-    <!-- Lista de categorías -->
-    <div *ngIf="categories.length > 0" class="mt-4">
-      <h3 class="font-bold text-lg sm:text-xl mb-3 text-gray-700">Categorías</h3>
-  
-      <div *ngFor="let category of categories" class="mb-4 p-3 sm:p-4 bg-gray-100 rounded-lg">
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
-          <span (click)="selectCategory(category)" class="cursor-pointer text-base sm:text-lg"
-            [class.font-semibold]="category === selectedCategory">
-            {{ category.id }} - {{ category.name }}
-          </span>
-          <button (click)="deleteCategory(category.id!)"
-            class="text-red-500 hover:text-red-700 transition text-sm sm:text-base py-1 px-2 border border-red-300 rounded">
-            Eliminar Categoría
+
+    <!-- Búsqueda y filtros -->
+    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <h3 class="text-lg font-semibold mb-3 text-gray-700">Buscar Categoría</h3>
+      <div class="flex flex-col gap-3">
+        <div class="flex gap-2">
+          <input [(ngModel)]="searchCategoryId" type="number" placeholder="ID de categoría"
+            class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" />
+          <button (click)="findCategoryById()" 
+            class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 disabled:bg-purple-300"
+            [disabled]="!searchCategoryId">
+            Buscar
           </button>
         </div>
-  
-        <!-- Subcategorías -->
-        <div *ngIf="category === selectedCategory" class="ml-2 sm:ml-4 mt-3 border-l-4 border-blue-400 pl-2 sm:pl-4">
-          <div class="flex flex-col sm:flex-row gap-2">
-            <input [(ngModel)]="newSubcategoryName" type="text" placeholder="Nombre de la subcategoría"
-              class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
-            <button (click)="addSubcategory(category.id!)"
-              class="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-              Agregar Subcategoría
+        <input [(ngModel)]="searchTerm" type="text" placeholder="Buscar por nombre"
+          class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista Jerárquica -->
+  <div *ngIf="activeTab === 'hierarchy'" class="mb-6">
+    <div class="mb-4 flex justify-between">
+      <h3 class="font-bold text-lg text-gray-700">Categorías Principales</h3>
+      <div *ngIf="selectedCategory" class="text-sm text-gray-500">
+        Categoría seleccionada: <span class="font-medium">{{ selectedCategory.name }}</span>
+        <button (click)="clearSelection()" class="ml-2 text-blue-500 hover:text-blue-700">
+          <span class="text-xs">(limpiar)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Categorías Principales -->
+    <div *ngIf="getRootCategories().length > 0; else noRootCats" class="space-y-4">
+      <div *ngFor="let category of getRootCategories() | filterCategories:searchTerm" 
+        class="p-4 bg-gray-100 rounded-lg border-l-4"
+        [ngClass]="{'border-blue-500': category === selectedCategory, 'border-gray-300': category !== selectedCategory}">
+        
+        <!-- Cabecera de categoría -->
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <span (click)="selectCategory(category)" 
+              class="cursor-pointer text-lg hover:text-blue-600"
+              [ngClass]="{'font-semibold text-blue-600': category === selectedCategory}">
+              {{ category.name }}
+            </span>
+            <span class="text-sm text-gray-500">(ID: {{ category.id }})</span>
+          </div>
+          <div class="flex gap-2">
+            <button (click)="toggleExpandCategory(category)" class="text-gray-500 hover:text-gray-700">
+              <span *ngIf="!isCategoryExpanded(category)">▼ Mostrar</span>
+              <span *ngIf="isCategoryExpanded(category)">▲ Ocultar</span>
+            </button>
+            <button (click)="deleteCategory(category.id!)" 
+              class="text-red-500 hover:text-red-700 transition text-sm py-1 px-2 border border-red-300 rounded">
+              Eliminar
             </button>
           </div>
-  
-          <div class="border-t border-blue-300 mt-4 pt-2" *ngIf="category.id && getSubcategories(category.id).length > 0">
-            <div *ngFor="let sub of getSubcategories(category.id!)" class="flex justify-between items-center py-1 mb-2 border-b border-gray-200">
-              <span class="text-gray-800">{{ sub.id }} - {{ sub.name }}</span>
-              <div class="flex flex-wrap gap-2">
-                <button (click)="deleteCategory(sub.id!)"
-                  class="text-red-500 hover:text-red-700 transition text-sm py-1 px-2 border border-red-300 rounded">
-                  Eliminar
-                </button>
-                <button (click)="assignSubcategoryToCategory(sub.id!)"
-                  class="text-yellow-600 bg-yellow-100 hover:bg-yellow-200 text-sm py-1 px-2 border border-yellow-300 rounded">
-                  Reasignar
+        </div>
+
+        <!-- Descripción de categoría -->
+        <p *ngIf="category.description" class="text-sm text-gray-600 mt-1">{{ category.description }}</p>
+
+        <!-- Panel de subcategorías -->
+        <div *ngIf="isCategoryExpanded(category)" class="mt-4">
+          <!-- Contador de subcategorías -->
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm font-medium text-gray-600">
+              Subcategorías ({{ getSubcategories(category.id!).length }})
+            </span>
+            <button (click)="toggleSubcategoryForm(category)" 
+              class="text-xs text-blue-600 hover:text-blue-800">
+              {{ showSubcategoryForm === category.id ? '- Cancelar' : '+ Agregar Subcategoría' }}
+            </button>
+          </div>
+
+          <!-- Formulario para agregar subcategoría -->
+          <div *ngIf="showSubcategoryForm === category.id" class="mb-3 p-3 bg-white rounded border border-blue-200">
+            <div class="mb-2">
+              <div class="flex gap-2 mb-2">
+                <div class="w-full">
+                  <label class="block text-xs font-medium text-gray-700 mb-1">Crear Nueva</label>
+                  <input [(ngModel)]="newSubcategoryName" type="text" placeholder="Nombre de la subcategoría"
+                    class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
+                </div>
+                <div class="mt-6">
+                  <button (click)="addSubcategory(category.id!)" 
+                    class="h-full px-3 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-green-300"
+                    [disabled]="!newSubcategoryName.trim()">
+                    +
+                  </button>
+                </div>
+              </div>
+              <div class="text-xs text-gray-500 mb-3">O selecciona una categoría existente para añadirla como subcategoría:</div>
+              <div class="flex gap-2">
+                <select [(ngModel)]="selectedCategoryToAssign" class="w-full p-2 border border-gray-300 rounded">
+                  <option [ngValue]="null">Seleccionar categoría existente...</option>
+                  <option *ngFor="let cat of getAvailableCategoriesToAssign(category.id!)" [ngValue]="cat">
+                    {{ cat.name }} (ID: {{ cat.id }})
+                  </option>
+                </select>
+                <button (click)="assignExistingAsSubcategory(category.id!)" 
+                  class="px-3 bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:bg-yellow-300"
+                  [disabled]="!selectedCategoryToAssign">
+                  +
                 </button>
               </div>
             </div>
           </div>
-  
+
+          <!-- Lista de subcategorías -->
+          <div *ngIf="getSubcategories(category.id!).length > 0" class="pl-3 border-l border-gray-300">
+            <div *ngFor="let sub of getSubcategories(category.id!) | filterCategories:searchTerm" 
+                class="flex justify-between items-center py-2 px-3 my-1 rounded hover:bg-gray-200">
+              <div>
+                <span class="text-gray-800">{{ sub.name }}</span>
+                <span class="text-xs text-gray-500 ml-1">(ID: {{ sub.id }})</span>
+              </div>
+              <div class="flex gap-2">
+                <button (click)="deleteCategory(sub.id!)"
+                  class="text-red-500 hover:text-red-700 transition text-xs py-1 px-2 border border-red-300 rounded">
+                  Eliminar
+                </button>
+                <button (click)="unassignSubcategory(sub.id!)"
+                  class="text-gray-600 hover:text-gray-800 transition text-xs py-1 px-2 border border-gray-300 rounded">
+                  Desasignar
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mensaje si no hay subcategorías -->
+          <div *ngIf="getSubcategories(category.id!).length === 0" class="text-sm text-gray-500 italic mt-2">
+            No hay subcategorías. Agrégalas usando el botón de arriba.
+          </div>
         </div>
       </div>
     </div>
-  </div>  
+
+    <!-- Mensaje si no hay categorías principales -->
+    <ng-template #noRootCats>
+      <div class="text-center p-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+        <p class="text-gray-600">No hay categorías principales. Crea una nueva para comenzar.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Vista de todas las categorías -->
+  <div *ngIf="activeTab === 'all'" class="mb-6">
+    <h3 class="font-bold text-lg mb-3 text-gray-700">Todas las Categorías</h3>
+    
+    <div *ngIf="categories.length > 0; else noCats" class="overflow-x-auto">
+      <table class="min-w-full bg-white rounded-lg overflow-hidden border">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="py-2 px-4 border-b text-left">ID</th>
+            <th class="py-2 px-4 border-b text-left">Nombre</th>
+            <th class="py-2 px-4 border-b text-left">Categoría Padre</th>
+            <th class="py-2 px-4 border-b text-left">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let category of categories | filterCategories:searchTerm" 
+              class="border-b hover:bg-gray-50"
+              [ngClass]="{'bg-blue-50': category === selectedCategory}">
+            <td class="py-2 px-4">{{ category.id }}</td>
+            <td class="py-2 px-4">{{ category.name }}</td>
+            <td class="py-2 px-4">
+              <span *ngIf="category.parentId">
+                {{ getCategoryName(category.parentId) }} (ID: {{ category.parentId }})
+              </span>
+              <span *ngIf="!category.parentId" class="text-gray-500 italic">Categoría principal</span>
+            </td>
+            <td class="py-2 px-4">
+              <div class="flex gap-2">
+                <button (click)="selectCategory(category)" 
+                  class="text-blue-500 hover:text-blue-700 transition text-xs py-1 px-2 border border-blue-300 rounded">
+                  Seleccionar
+                </button>
+                <button (click)="deleteCategory(category.id!)"
+                  class="text-red-500 hover:text-red-700 transition text-xs py-1 px-2 border border-red-300 rounded">
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Mensaje si no hay categorías -->
+    <ng-template #noCats>
+      <div class="text-center p-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+        <p class="text-gray-600">No hay categorías disponibles. Crea una nueva para comenzar.</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Panel de acciones para la categoría seleccionada -->
+  <div *ngIf="selectedCategory" class="p-4 bg-blue-50 rounded-lg border border-blue-200 mb-6">
+    <h3 class="font-medium text-lg mb-2">Editar Categoría: {{ selectedCategory.name }}</h3>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <input [(ngModel)]="selectedCategory.name" type="text" placeholder="Nombre de la categoría"
+        class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input [(ngModel)]="selectedCategory.description" type="text" placeholder="Descripción (opcional)"
+        class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <div>
+        <select [(ngModel)]="selectedCategory.parentId" class="w-full p-2 border border-gray-300 rounded">
+          <option [ngValue]="undefined">Sin categoría padre</option>
+          <option *ngFor="let cat of getValidParentCategories(selectedCategory)" [ngValue]="cat.id">
+            {{ cat.name }} (ID: {{ cat.id }})
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="flex justify-end mt-3 gap-2">
+      <button (click)="clearSelection()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400">
+        Cancelar
+      </button>
+      <button (click)="updateCategory()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+        Guardar Cambios
+      </button>
+    </div>
+  </div>
+</div>
