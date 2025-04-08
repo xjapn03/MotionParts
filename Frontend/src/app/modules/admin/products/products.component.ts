@@ -18,7 +18,7 @@ import { forkJoin } from 'rxjs';
 export class ProductsComponent implements OnInit {
   searchId: number | null = null;
   products: Product[] = [];
-  product: Product = { id: 0, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [], gallery: [] };
+  product: Product = { id: null, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [], gallery: [] };
   filteredProducts: Product[] = [];
   categories: Category[] = [];
   selectedCategoryId: number | null = null;
@@ -39,7 +39,7 @@ export class ProductsComponent implements OnInit {
   searchTerm: string = '';
 
   constructor(
-    private productService: ProductService, 
+    private productService: ProductService,
     private categoryService: CategoryService,
     private cdr: ChangeDetectorRef // Inyecta ChangeDetectorRef
   ) {}
@@ -51,7 +51,7 @@ export class ProductsComponent implements OnInit {
 
   // Función trackBy para optimizar el ngFor
   trackByProductId(index: number, item: Product): number {
-    return item.id!; 
+    return item.id!;
   }
 
   trackByCategoryId(index: number, item: Category): number {
@@ -88,11 +88,11 @@ export class ProductsComponent implements OnInit {
       }
     }
   }
-  
+
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
     img.src = 'assets/products/productDefault.jpg'; // Asegúrate de que esta imagen exista
-  }  
+  }
 
   loadProducts() {
     this.isLoading = true;
@@ -133,7 +133,7 @@ export class ProductsComponent implements OnInit {
     this.selectedSubcategoryId = null;
     this.cdr.markForCheck();
   }
-  
+
   applyFilters() {
     // Usa una función pura para filtrar
     const filtered = this.products.filter(product => {
@@ -141,17 +141,17 @@ export class ProductsComponent implements OnInit {
       if (this.searchId !== null && product.id !== this.searchId) {
         return false;
       }
-      
+
       // Filtrar por término de búsqueda si existe
       if (this.searchTerm && this.searchTerm.trim() !== '') {
         const term = this.searchTerm.toLowerCase();
-        return product.name.toLowerCase().includes(term) || 
+        return product.name.toLowerCase().includes(term) ||
               product.description.toLowerCase().includes(term);
       }
-      
+
       return true;
     });
-    
+
     // Asigna los resultados filtrados de una sola vez
     this.filteredProducts = [...filtered];
     this.cdr.markForCheck();
@@ -160,13 +160,13 @@ export class ProductsComponent implements OnInit {
   onSearch() {
     this.applyFilters();
   }
-  
+
   displayAlert(message: string, type: 'success' | 'error' | 'warning') {
     this.alertMessage = message;
     this.alertType = type;
     this.showAlert = true;
     this.cdr.markForCheck();
-    
+
     // Auto-ocultar la alerta después de 3 segundos
     setTimeout(() => {
       this.showAlert = false;
@@ -175,16 +175,16 @@ export class ProductsComponent implements OnInit {
       this.cdr.markForCheck();
     }, 3000);
   }
-  
+
   onSubmit() {
     if (!this.validateForm()) return;
-  
+
     this.isLoading = true;
     this.cdr.markForCheck();
-  
+
     const selectedCategory = this.categories.find(cat => Number(cat.id) === Number(this.selectedCategoryId));
     const selectedSubcategory = this.categories.find(cat => Number(cat.id) === Number(this.selectedSubcategoryId));
-  
+
     const productToSave = {
       ...this.product,
       categories: [
@@ -192,28 +192,28 @@ export class ProductsComponent implements OnInit {
         ...(selectedSubcategory ? [selectedSubcategory] : [])
       ]
     };
-  
+
     const saveAndUploadImages = (savedProduct: Product) => {
       const imageUpload$ = [];
-  
+
       // 🟢 SUBIR IMAGEN PRINCIPAL
       if (this.mainImageFile) {
         const formData = new FormData();
         formData.append('image', this.mainImageFile); // 👈🏼 importante que sea 'image'
         console.log('[MAIN IMG] FormData contiene:', formData.get('image'));
-  
-        imageUpload$.push(this.productService.uploadMainImage(savedProduct.id, formData));
+
+        imageUpload$.push(this.productService.uploadMainImage(savedProduct.id!, formData));
       } else {
         console.warn('⚠️ No hay imagen principal para subir.');
       }
-  
+
       // 🟢 SUBIR GALERÍA DE IMÁGENES
       if (this.galleryFiles.length > 0) {
-        imageUpload$.push(this.productService.uploadImages(savedProduct.id, this.galleryFiles));
+        imageUpload$.push(this.productService.uploadImages(savedProduct.id!, this.galleryFiles));
       } else {
         console.warn('⚠️ No hay imágenes de galería para subir.');
       }
-  
+
       // 🧵 Ejecutar uploads
       if (imageUpload$.length > 0) {
         forkJoin(imageUpload$).subscribe({
@@ -230,8 +230,8 @@ export class ProductsComponent implements OnInit {
             this.displayAlert('Producto guardado, pero error al subir imágenes', 'warning');
             this.isLoading = false;
             this.cdr.markForCheck();
-          }          
-        });        
+          }
+        });
       } else {
         this.displayAlert('¡Producto guardado correctamente!', 'success');
         this.resetForm();
@@ -240,7 +240,7 @@ export class ProductsComponent implements OnInit {
         this.cdr.markForCheck();
       }
     };
-  
+
     // Crear o actualizar producto
     if (productToSave.id && productToSave.id !== 0) {
       this.productService.updateProduct(productToSave).subscribe({
@@ -261,14 +261,14 @@ export class ProductsComponent implements OnInit {
         }
       });
     }
-  }  
+  }
 
   validateForm(): boolean {
-    if (!this.product.name || 
-        !this.product.reference || 
-        this.product.price <= 0 || 
-        this.product.stock < 0 || 
-        !this.product.description || 
+    if (!this.product.name ||
+        !this.product.reference ||
+        this.product.price <= 0 ||
+        this.product.stock < 0 ||
+        !this.product.description ||
         !this.mainImageFile || // Usamos la imagen principal cargada
         !this.selectedCategoryId) {
       this.displayAlert('Por favor, complete todos los campos obligatorios', 'warning');
@@ -276,7 +276,7 @@ export class ProductsComponent implements OnInit {
     }
     return true;
   }
-  
+
   resetForm() {
     // Crea un nuevo objeto para evitar referencias
     this.product = { id: 0, reference: '', name: '', price: 0, stock: 0, description: '', image_url: '', categories: [], gallery: [] };
@@ -292,14 +292,14 @@ export class ProductsComponent implements OnInit {
       top: 0,
       behavior: 'smooth'
     });
-    
+
     // Crea una copia profunda para evitar cambios no deseados
     this.product = JSON.parse(JSON.stringify(product));
-  
+
     if (product.categories && product.categories.length > 0) {
       const mainCategory = product.categories.find(cat => !cat.parentId) ?? null;
-    const subCategory = product.categories.find(cat => cat.parentId) ?? null; 
-  
+    const subCategory = product.categories.find(cat => cat.parentId) ?? null;
+
       this.selectedCategoryId = mainCategory?.id ?? null;
       this.onCategoryChange();
       this.selectedSubcategoryId = subCategory?.id ?? null;
@@ -307,21 +307,21 @@ export class ProductsComponent implements OnInit {
       this.selectedCategoryId = null;
       this.selectedSubcategoryId = null;
     }
-    
+
     this.cdr.markForCheck();
   }
-  
+
   initiateDelete(productId: number) {
     this.productToDelete = productId;
     this.showDeleteConfirm = true;
     this.cdr.markForCheck();
   }
-  
+
   confirmDelete() {
     if (this.productToDelete) {
       this.isLoading = true;
       this.cdr.markForCheck();
-      
+
       this.productService.deleteProduct(this.productToDelete).subscribe({
         next: () => {
           this.displayAlert('Producto eliminado correctamente', 'success');
@@ -338,7 +338,7 @@ export class ProductsComponent implements OnInit {
       this.cancelDelete();
     }
   }
-  
+
   cancelDelete() {
     this.showDeleteConfirm = false;
     this.productToDelete = null;

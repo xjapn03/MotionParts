@@ -14,9 +14,17 @@ import com.motionParts.ecommerce.repositories.ProductImageRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.io.File;
+
+
 
 @Service
 public class ProductService {
@@ -77,47 +85,34 @@ public class ProductService {
 
     // Actualizar un producto
     @Transactional
-public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
-    System.out.println("Actualizando producto con ID: " + id);
-    Product product = productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
+        System.out.println("Actualizando producto con ID: " + id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
 
-    product.setName(productDTO.getName());
-    product.setDescription(productDTO.getDescription());
-    product.setPrice(productDTO.getPrice());
-    product.setStock(productDTO.getStock());
-    product.setReference(productDTO.getReference());
-    product.setImage_url(productDTO.getImage_url());
-    product.setUpdated_at(LocalDateTime.now());
+        product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setStock(productDTO.getStock());
+        product.setReference(productDTO.getReference());
+        product.setImage_url(productDTO.getImage_url());
+        product.setUpdated_at(LocalDateTime.now());
 
-    // Guardar el producto actualizado
-    product = productRepository.save(product);
+        // Guardar el producto actualizado
+        product = productRepository.save(product);
 
-    // Actualizar categorías
-    productCategoryRepository.deleteByProductId(id);
-    if (productDTO.getCategories() != null && !productDTO.getCategories().isEmpty()) {
-        for (CategoryDTO categoryDTO : productDTO.getCategories()) {
-            Category category = categoryRepository.findById(categoryDTO.getId())
-                    .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + categoryDTO.getId()));
-            ProductCategory productCategory = new ProductCategory(product, category);
-            productCategoryRepository.save(productCategory);
+        // Actualizar categorías
+        productCategoryRepository.deleteByProductId(id);
+        if (productDTO.getCategories() != null && !productDTO.getCategories().isEmpty()) {
+            for (CategoryDTO categoryDTO : productDTO.getCategories()) {
+                Category category = categoryRepository.findById(categoryDTO.getId())
+                        .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + categoryDTO.getId()));
+                ProductCategory productCategory = new ProductCategory(product, category);
+                productCategoryRepository.save(productCategory);
+            }
         }
-    }
 
-    // Actualizar galería de imágenes
-    List<ProductImage> existingImages = product.getImageGallery();
-    if (existingImages != null && !existingImages.isEmpty()) {
-        productImageRepository.deleteAll(existingImages);
-    }
-
-    if (productDTO.getGallery() != null && !productDTO.getGallery().isEmpty()) {
-        for (String url : productDTO.getGallery()) {
-            ProductImage image = new ProductImage(url, product);
-            productImageRepository.save(image);
-        }
-    }
-
-    return convertToDTO(product);
+        return convertToDTO(product);
     }
 
 
@@ -173,19 +168,46 @@ public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         if (!productRepository.existsById(id)) {
             throw new RuntimeException("Producto no encontrado con ID: " + id);
         }
+
         try {
+            // Primero eliminar carpeta de imágenes del producto
+            Path productDir = Paths.get("src/main/assets/products", String.valueOf(id));
+            File directory = productDir.toFile();
+
+            if (directory.exists()) {
+                deleteDirectoryRecursively(directory);
+            }
+
+            // Luego eliminar el producto de la base de datos (esto también elimina imágenes si tienes cascade o lo manejas manualmente)
             productRepository.deleteById(id);
+
         } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar el producto con ID: " + id);
+            throw new RuntimeException("Error al eliminar el producto con ID: " + id + ". " + e.getMessage());
         }
     }
+
+    private void deleteDirectoryRecursively(File directory) throws IOException {
+        if (directory.isDirectory()) {
+            File[] entries = directory.listFiles();
+            if (entries != null) {
+                for (File entry : entries) {
+                    deleteDirectoryRecursively(entry);
+                }
+            }
+        }
+        if (!directory.delete()) {
+            throw new IOException("No se pudo eliminar: " + directory.getAbsolutePath());
+        }
+    }
+    
+
 
     // Convertir Product a ProductDTO
     private ProductDTO convertToDTO(Product product) {
         List<CategoryDTO> categories = getCategoriesByProductId(product.getId());
     
         List<String> gallery = product.getImageGallery().stream()
-                .map(ProductImage::getImage_url)
+                .map(ProductImage::getImageUrl)
                 .collect(Collectors.toList());
     
         return new ProductDTO(

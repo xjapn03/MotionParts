@@ -41,8 +41,8 @@ public class ProductDTO {
         this.price = product.getPrice();
         this.image_url = product.getImage_url();
         this.gallery = product.getImageGallery().stream()
-                .map(ProductImage::getImage_url)
-                .collect(Collectors.toList());
+        .map(ProductImage::getImageUrl)
+        .collect(Collectors.toList());
 
         this.categories = product.getProductCategories().stream()
                 .map(productCategory -> {

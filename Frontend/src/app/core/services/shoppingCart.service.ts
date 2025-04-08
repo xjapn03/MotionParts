@@ -224,7 +224,7 @@ export class ShoppingCartService {
 
 
   private sortCartItems(cartItems: CartItem[]) {
-    return cartItems.sort((a, b) => a.product.id - b.product.id);
+    return cartItems.sort((a, b) => (a.product.id ?? 0) - (b.product.id ?? 0));
   }
 
   increaseQuantity(item: CartItem) {
@@ -273,13 +273,13 @@ export class ShoppingCartService {
       console.log('Cantidad mínima alcanzada para el producto:', item.product.name);
 
       if (this.userId) {
-        this.removeCartItem(item.product.id).subscribe(() => {
+        this.removeCartItem(item.product.id!).subscribe(() => {
           const updatedCart = this.cartItems.getValue().filter(cartItem => cartItem.product.id !== item.product.id);
           this.cartItems.next(updatedCart);
           this.updateCartCount();
         });
       } else {
-        this.removeGuestCartItem(item.product.id);
+        this.removeGuestCartItem(item.product.id!);
       }
     }
   }

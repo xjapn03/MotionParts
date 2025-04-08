@@ -197,11 +197,15 @@ export class CheckoutComponent implements OnInit {
     this.isSubmitting = true; // Desactiva el botón
 
     if (this.validateStep(3)) {
-        const orderDetails: OrderDetail[] = this.cartItems.map(item => ({
-            id: 0, orderId: 0, productId: item.product.id,
-            productName: item.product.name, quantity: item.quantity,
-            unitPrice: item.product.price, subtotal: item.quantity * item.product.price
-        }));
+      const orderDetails: OrderDetail[] = this.cartItems.map(item => ({
+        id: 0,
+        orderId: 0,
+        productId: item.product.id!, // <-- <- el cambio está aquí
+        productName: item.product.name,
+        quantity: item.quantity,
+        unitPrice: item.product.price,
+        subtotal: item.quantity * item.product.price
+    }));
 
         const user = this.authService.getUser(); // 🔹 Obtiene el usuario autenticado
         if (!user) {

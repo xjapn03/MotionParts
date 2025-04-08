@@ -8,6 +8,8 @@ import { CategoryService } from '../../core/services/category.service';
 import { Category } from '../../core/models/category.model';
 import { ShoppingCartService } from '../../core/services/shoppingCart.service'; // Importa el servicio
 import { CartItem } from '../../core/models/cartItem.model';
+import { environment } from '../../../environments/environment';
+
 
 // ... Importaciones (igual que antes)
 
@@ -33,6 +35,11 @@ export class ProductosComponent implements OnInit {
   categorias: Category[] = [];
   categoriasPadre: Category[] = [];
   subcategorias: Category[] = [];
+
+  imageUrl(url: string): string {
+    return url ? `${environment.apiUrl}${url}` : 'assets/products/productDefault.jpg';
+  }
+
 
   constructor(
     private productService: ProductService,

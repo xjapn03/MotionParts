@@ -16,7 +16,6 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
-import java.util.Optional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,47 +31,46 @@ public class ImageStorageService {
     private ProductImageRepository productImageRepository;
 
     @Value("${file.upload-dir}")
-    private String uploadDir;
+    private String uploadDir; // Debe apuntar a: src/main/resources/static/assets/products
 
     public List<String> storeImages(Long productId, MultipartFile[] files) throws IOException {
-    Path productDir = Paths.get(uploadDir, productId.toString());
-    Files.createDirectories(productDir);
+        Path productDir = Paths.get(uploadDir, productId.toString());
+        Files.createDirectories(productDir);
 
-    List<String> imagePaths = new ArrayList<>();
+        List<String> imagePaths = new ArrayList<>();
 
-    Optional<Product> productOpt = productRepository.findById(productId);
-    if (!productOpt.isPresent()) {
-        throw new IllegalArgumentException("Producto no encontrado con ID: " + productId);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con ID: " + productId));
+
+        for (MultipartFile file : files) {
+            String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
+            Path targetPath = productDir.resolve(filename);
+            Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            String relativeUrl = "/assets/products/" + productId + "/" + filename;
+            imagePaths.add(relativeUrl);
+
+            // Evitar duplicados
+            if (!productImageRepository.existsByImageUrl(relativeUrl)) {
+                ProductImage productImage = new ProductImage();
+                productImage.setImageUrl(relativeUrl);
+                productImage.setProduct(product);
+                productImageRepository.save(productImage);
+            }
+        }
+
+        return imagePaths;
     }
-    Product product = productOpt.get();
-
-    for (MultipartFile file : files) {
-        String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
-        Path targetPath = productDir.resolve(filename);
-        Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-
-        String relativeUrl = "/assets/products/" + productId + "/" + filename;
-        imagePaths.add(relativeUrl);
-
-        // Guardar en la base de datos
-        ProductImage productImage = new ProductImage();
-        productImage.setImage_url(relativeUrl);
-        productImage.setProduct(product);
-        productImageRepository.save(productImage);
-    }
-
-    return imagePaths;
-}
 
     public String storeMainImage(Long productId, MultipartFile file) throws IOException {
-        String productDir = uploadDir + "/" + productId;
-        Files.createDirectories(Paths.get(productDir)); // Crea si no existe
-    
+        Path productDir = Paths.get(uploadDir, productId.toString());
+        Files.createDirectories(productDir);
+
         String uniqueFilename = "main-" + UUID.randomUUID() + "-" + file.getOriginalFilename();
-        Path filePath = Paths.get(productDir, uniqueFilename);
+        Path filePath = productDir.resolve(uniqueFilename);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-    
-        // Devuelve la ruta relativa para el frontend
+
+        // Devuelve la ruta accesible desde Angular
         return "/assets/products/" + productId + "/" + uniqueFilename;
-    }    
+    }
 }

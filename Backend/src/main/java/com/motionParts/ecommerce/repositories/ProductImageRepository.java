@@ -11,4 +11,6 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
     
     // Eliminar todas las imágenes asociadas a un producto
     void deleteByProductId(Long productId);
+
+    boolean existsByImageUrl(String imageUrl); // ← ahora sí funcionará
 }

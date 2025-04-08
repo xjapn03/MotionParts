@@ -1,6 +1,6 @@
 <div class="min-h-full">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <nav class="bg-gray-800">  
+  <nav class="bg-gray-800">
     <div class=" mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex h-16 items-center justify-between">
         <div class="flex items-center">
@@ -110,7 +110,7 @@
 <div *ngIf="isCartModalOpen" class="fixed inset-0 z-50 overflow-hidden">
   <!-- Overlay con efecto de fade -->
   <div class="absolute inset-0 bg-black bg-opacity-40 transition-opacity duration-300" (click)="closeCartModal()"></div>
-  
+
   <!-- Sidebar con animación de slide-in -->
   <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
     <!-- Encabezado del carrito -->
@@ -128,7 +128,7 @@
         </svg>
       </button>
     </div>
-    
+
     <!-- Contenido del carrito -->
     <div class="flex flex-col h-[calc(100%-8rem)]">
       <div class="flex-1 overflow-y-auto p-4">
@@ -140,34 +140,31 @@
             </svg>
             <p class="text-gray-500 font-medium">Tu carrito está vacío</p>
             <p class="text-gray-400 text-sm mt-1">Agrega productos para comenzar tu compra</p>
-            <button 
-              routerLink="/products" 
+            <button
+              routerLink="/products"
               (click)="closeCartModal()"
               class="mt-4 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition">
               Ver productos
             </button>
           </div>
-          
+
           <!-- Lista de productos -->
           <ul *ngIf="cartItems.length > 0" class="space-y-3">
-            <li *ngFor="let item of cartItems; trackBy: trackById" 
+            <li *ngFor="let item of cartItems; trackBy: trackById"
                 class="flex gap-3 p-2 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
                 [class.border-yellow-200]="item.product.stock < 3 && item.product.stock > 0"
                 [class.border-red-200]="item.product.stock === 0">
-              
+
               <!-- Imagen del producto (si existe) -->
               <div class="relative w-16 h-16 flex-shrink-0">
-                <img [src]="item.product.image_url || 'assets/products/productDefault.jpg'"
-                     class="w-full h-full object-cover rounded"
-                     [class.opacity-50]="item.product.stock === 0">
-                
+                <img [src]="imageUrl(item.product.image_url)" />
                 <!-- Indicador de stock -->
-                <div *ngIf="item.product.stock === 0" 
+                <div *ngIf="item.product.stock === 0"
                      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs p-0.5 w-4 h-4 flex items-center justify-center rounded-full">
                   !
                 </div>
               </div>
-              
+
               <!-- Información del producto -->
               <div class="flex-1 min-w-0">
                 <div class="flex justify-between items-start">
@@ -180,12 +177,12 @@
                     </svg>
                   </button>
                 </div>
-                
+
                 <div class="flex justify-between items-center mt-2">
                   <!-- Controles de cantidad -->
                   <div class="flex items-center border rounded overflow-hidden">
-                    <button 
-                      (click)="decreaseQuantity(item)" 
+                    <button
+                      (click)="decreaseQuantity(item)"
                       class="w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50"
                       [disabled]="item.quantity <= 1 || item.product.stock === 0">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -193,8 +190,8 @@
                       </svg>
                     </button>
                     <span class="w-8 text-center text-sm">{{ item.quantity }}</span>
-                    <button 
-                      (click)="increaseQuantity(item)" 
+                    <button
+                      (click)="increaseQuantity(item)"
                       class="w-6 h-6 flex items-center justify-center bg-gray-100 hover:bg-gray-200 transition disabled:opacity-50"
                       [disabled]="item.product.stock === 0 || item.quantity >= item.product.stock">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -202,11 +199,11 @@
                       </svg>
                     </button>
                   </div>
-                  
+
                   <!-- Precio -->
                   <span class="text-sm font-semibold">{{ item.product.price * item.quantity | currency }}</span>
                 </div>
-                
+
                 <!-- Advertencia de stock -->
                 <div *ngIf="item.product.stock === 0" class="mt-1 text-xs text-red-600">
                   Producto agotado
@@ -219,7 +216,7 @@
           </ul>
         </ng-container>
       </div>
-      
+
       <!-- Resumen y acciones -->
         <ng-container *ngIf="cartItems$ | async as items">
         <div class="border-t p-4 bg-gray-50" *ngIf="items.length > 0">
@@ -240,14 +237,14 @@
 
           <!-- Botones de acción -->
           <div class="grid grid-cols-2 gap-3">
-            <button 
-              routerLink="/cart" 
+            <button
+              routerLink="/cart"
               (click)="closeCartModal()"
               class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
               Ver carrito
             </button>
-            <button 
-              routerLink="/checkout" 
+            <button
+              routerLink="/checkout"
               (click)="closeCartModal()"
               [disabled]="hasUnavailableItems()"
               class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">

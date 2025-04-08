@@ -1,11 +1,13 @@
-# Generales
+# ───── Generales ─────
 .DS_Store
 Thumbs.db
-.idea/        # IntelliJ IDEA
+
+# ───── IDEs y editores ─────
+.idea/              # IntelliJ IDEA
+.vscode/            # Visual Studio Code
 *.iws
 *.iml
 *.ipr
-.vscode/     # VS Code
 .apt_generated
 .classpath
 .factorypath
@@ -13,57 +15,64 @@ Thumbs.db
 .settings
 .springBeans
 .sts4-cache
+out/
+.nb-gradle/
+HELP.md
+.gitattributes
 
-# Frontend (Angular)
-node_modules/
-dist/
-.angular/
-*.json-c  # Angular Language Service cache
-.editorconfig # Si no quieres que se versionen las configs de editor
-
-# Backend (Spring Boot)
-target/
-build/       # General build artifacts
-*.log
-.mvn/wrapper/ # Maven Wrapper (si usas Maven)
-.gradle/caches/
-.gradle/daemon/
-.gradle/wrapper/gradle-wrapper.jar # Se versiona el wrapper, pero no la caché
-!gradle/wrapper/gradle-wrapper.jar # Excepción para el wrapper JAR
-bin/         # Binarios de compilación (generalmente en target, pero puede haber configuraciones distintas)
-!**/src/main/**/bin/   # Excepción para binarios de main (si es necesario)
-!**/src/test/**/bin/   # Excepción para binarios de test (si es necesario)
-
-# Archivos de configuración sensibles (¡MUY IMPORTANTE!)
-#application*.properties
-application*.yml
-.env  # Archivos de entorno (si los usas)
-
-# Sistemas operativos y archivos temporales
-.envrc
+# ───── Archivos temporales / del sistema ─────
 *.swp
 *~
 *.tmp
 *.bak
 *.lock
+.envrc
 
-# IDEs y editores (puedes ajustar según tu preferencia)
-out/
-!**/src/main/**/out/   # Excepción para out de main (si es necesario)
-!**/src/test/**/out/   # Excepción para out de test (si es necesario)
-/nbproject/private/   # NetBeans
+# ───── Archivos sensibles ─────
+.env
+#application*.properties  # Descomenta si quieres ignorar archivos .properties
+application*.yml
+
+# ───── FRONTEND (Angular) ─────
+node_modules/
+dist/
+.angular/
+*.json-c              # Angular Language Service cache
+.editorconfig         
+
+# ───── BACKEND (Spring Boot con Gradle) ─────
+build/                # Carpeta generada al compilar
+bin/
+target/
+*.log
+
+.gradle/
+.gradle/caches/
+.gradle/daemon/
+.gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar  # Incluye solo el wrapper JAR si usas gradlew
+
+.mvn/wrapper/         # Si en algún momento usas Maven
+
+# ───── NetBeans (por si acaso) ─────
+/nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
-/.nb-gradle/
 
-# Otros
-HELP.md       # Archivo de ayuda (si no quieres que se versionen los cambios)
-.gitattributes # Archivo de atributos Git (si no quieres que se versionen los cambios)
+# ───── Excepciones para bin/out/build si las necesitas en src ─────
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+!**/src/main/**/out/
+!**/src/test/**/out/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Excepciones para build (si usas subdirectorios específicos)
-!**/src/main/**/build/  # No ignorar los build dentro de src/main
-!**/src/test/**/build/  # No ignorar los build dentro de src/test
+# ───── Assets e imágenes (permitimos la carpeta de imágenes de productos) ─────
+# Ignora todo en assets/products excepto productDefault.jpg si decides mantenerlo en recursos
+#src/main/resources/static/assets/products/*
+#!src/main/resources/static/assets/products/productDefault.jpg
 
-# Archivos específicos que SI quieres versionar (ejemplos)
-# !/path/to/important/file.txt
+# O bien, permite toda la carpeta si vas a subir todo
+# (puedes comentarlo si prefieres versionar solo algunas imágenes)
+# (nada que ignorar aquí si quieres subirlas todas)

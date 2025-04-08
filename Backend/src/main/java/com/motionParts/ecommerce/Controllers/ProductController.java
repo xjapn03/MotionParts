@@ -94,43 +94,45 @@ public class ProductController {
 
     @PostMapping("/{id}/upload-images")
     public ResponseEntity<List<String>> uploadImages(
-    @PathVariable Long id,
-    @RequestParam("images") MultipartFile[] images
+        @PathVariable Long id,
+        @RequestParam("images") MultipartFile[] images
     ) {
-    try {
-        System.out.println("Subiendo imágenes para el producto ID: " + id);
-        List<String> urls = imageStorageService.storeImages(id, images);
-        System.out.println("Rutas generadas: " + urls);
-        
-        Optional<Product> optionalProduct = productRepository.findById(id);
-        if (optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            List<ProductImage> savedImages = new ArrayList<>();
-            for (String url : urls) {
-                ProductImage image = new ProductImage();
-                image.setImage_url(url);
-                image.setProduct(product);
-                savedImages.add(productImageRepository.save(image));
+        try {
+            System.out.println("Subiendo imágenes para el producto ID: " + id);
+            List<String> urls = imageStorageService.storeImages(id, images);
+            System.out.println("Rutas generadas: " + urls);
+
+            Optional<Product> optionalProduct = productRepository.findById(id);
+            if (optionalProduct.isPresent()) {
+                Product product = optionalProduct.get();
+                List<ProductImage> savedImages = new ArrayList<>();
+                for (String url : urls) {
+                    ProductImage image = new ProductImage();
+                    image.setImageUrl(url);
+                    image.setProduct(product);
+                    savedImages.add(productImageRepository.save(image));
+                }
             }
+            return ResponseEntity.ok(urls);
+        } catch (IOException e) {
+            System.err.println("Error al subir imágenes: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.ok(urls);
-    } catch (IOException e) {
-        System.err.println("Error al subir imágenes: " + e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
     }
 
+    // 🔧 Este método fue corregido para devolver JSON en lugar de texto plano
     @PostMapping("/{id}/upload-main-image")
-    public ResponseEntity<String> uploadMainImage(
+    public ResponseEntity<Map<String, String>> uploadMainImage(
         @PathVariable Long id,
         @RequestParam("image") MultipartFile image
     ) {
         try {
             String imageUrl = imageStorageService.storeMainImage(id, image);
-            productService.updateProductImage(id, imageUrl); // <-- este método guarda image_url
-            return ResponseEntity.ok(imageUrl);
+            productService.updateProductImage(id, imageUrl); // este método guarda image_url
+            return ResponseEntity.ok(Map.of("url", imageUrl)); // ✅ JSON con la URL
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(Map.of("error", "Error al guardar la imagen principal"));
         }
     }
 }

@@ -103,7 +103,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
   // Eliminar un producto del carrito
   onRemoveCartItem(item: CartItem): void {
     this.isLoading = true;
-    this.shoppingCartService.removeCartItem(item.product.id)
+    this.shoppingCartService.removeCartItem(item.product.id!)
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(() => {
         this.shoppingCartService.loadShoppingCart();
@@ -116,7 +116,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     if (item.product.stock === 0 || item.quantity >= item.product.stock) {
       return;
     }
-    
+
     console.log('Aumentando cantidad del producto:', item.product.name, 'Cantidad actual:', item.quantity);
     this.isLoading = true;
     this.shoppingCartService.increaseQuantity(item);
@@ -128,7 +128,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     if (item.quantity <= 1) {
       return;
     }
-    
+
     console.log('Disminuyendo cantidad del producto:', item.product.name, 'Cantidad actual:', item.quantity);
     this.isLoading = true;
     this.shoppingCartService.decreaseQuantity(item);
@@ -157,7 +157,8 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
 
   // Trackear los items del carrito para optimizar el rendimiento
   trackByItemId(index: number, item: CartItem): number {
-    return item.product.id;
+    return item.product.id!;
+
   }
 
   // Proceder al checkout
@@ -167,7 +168,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
       alert('Elimina los productos sin stock para continuar');
       return;
     }
-    
+
     this.router.navigate(['/checkout']);
   }
 

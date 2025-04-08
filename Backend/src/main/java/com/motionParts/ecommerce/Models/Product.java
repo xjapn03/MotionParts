@@ -38,10 +38,6 @@ public class Product {
     @JsonBackReference
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
-    // Imágenes adicionales (galería)
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> productImages = new ArrayList<>();
-
     public Product() {}
 
     public Product(String name, String description, double price, int stock, String reference, String image_url) {
