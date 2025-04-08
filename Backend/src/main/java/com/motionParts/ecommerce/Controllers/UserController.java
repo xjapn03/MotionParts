@@ -29,6 +29,15 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    // Obtener un usuario por ID
+    // Obtener un usuario por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id)
+                    .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        return ResponseEntity.ok(user);
+    }
+
     // Crear un nuevo usuario
     @PostMapping
     public User createUser(@RequestBody @Valid UserDTO userDTO) {

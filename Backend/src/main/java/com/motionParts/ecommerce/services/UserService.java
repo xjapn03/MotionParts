@@ -3,7 +3,7 @@ package com.motionParts.ecommerce.services;
 import com.motionParts.ecommerce.dto.UserDTO;
 import com.motionParts.ecommerce.Models.Role;
 import com.motionParts.ecommerce.Models.User;
-import com.motionParts.ecommerce.Models.UserRole;
+//import com.motionParts.ecommerce.Models.UserRole;
 import com.motionParts.ecommerce.repositories.RoleRepository;
 import com.motionParts.ecommerce.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
