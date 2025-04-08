@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.motionParts.ecommerce.Models.User;
 import com.motionParts.ecommerce.services.UserService;
 import com.motionParts.ecommerce.services.RoleService;
+import com.motionParts.ecommerce.dto.RoleDTO;
 import com.motionParts.ecommerce.dto.UserDTO;
+import com.motionParts.ecommerce.dto.UserInfoDTO;
+
 import org.springframework.http.ResponseEntity;
 import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
@@ -39,9 +42,9 @@ public class UserController {
     }
 
     // Crear un nuevo usuario
-    @PostMapping
-    public User createUser(@RequestBody @Valid UserDTO userDTO) {
-        return userService.createUser(userDTO);  // Llamamos a createUser, no a updateUser
+   @PostMapping
+    public User createUser(@RequestBody @Valid UserDTO userDTO, @RequestBody @Valid UserInfoDTO userInfoDTO) {
+        return userService.createUser(userDTO, userInfoDTO);  // Llamamos a createUser con ambos DTOs
     }
 
     // Actualizar un usuario existente
@@ -55,5 +58,10 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();  // Retorna respuesta no content al eliminar
+    }
+
+    @GetMapping("/roles")
+    public List<RoleDTO> getAllRoles() {
+        return roleService.getAllRoles();  // Ahora el servicio retorna una lista de RoleDTO
     }
 }

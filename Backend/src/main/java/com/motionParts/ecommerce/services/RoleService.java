@@ -105,10 +105,12 @@ public class RoleService {
 
     // Método común para obtener el usuario y rol
     private User getUserAndRole(Long userId, Long roleId) {
+        // Obtener al usuario por id
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));  // Usando RuntimeException
-        Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));  // Usando RuntimeException
-        return user;
+        
+        // Ya no necesitas obtener el rol aquí, ya que no lo estás utilizando
+    
+        return user; // Solo devolvemos el usuario
     }
 }
