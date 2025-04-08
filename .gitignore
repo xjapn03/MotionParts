@@ -4,6 +4,7 @@ Thumbs.db
 
 # ───── IDEs y editores ─────
 .idea/
+Backend/.idea/
 .vscode/         
 *.iws
 *.iml
@@ -47,6 +48,7 @@ bin/
 target/
 *.log
 
+Backend/.gradle/
 .gradle/
 .gradle/caches/
 .gradle/daemon/
