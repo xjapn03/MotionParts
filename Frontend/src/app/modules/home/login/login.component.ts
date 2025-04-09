@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router'; // 👈 importa esto también
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule, RouterModule] // ✅ agrega RouterModule aquí
+  imports: [ReactiveFormsModule, RouterModule] // ✅ agrega RouterModule aquí
 })
 
 export class LoginComponent {
