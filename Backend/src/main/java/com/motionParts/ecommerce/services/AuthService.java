@@ -1,12 +1,15 @@
 package com.motionParts.ecommerce.services;
 
 import com.motionParts.ecommerce.dto.LoginRequest;
+import com.motionParts.ecommerce.dto.RegisterRequest;
 import com.motionParts.ecommerce.Models.User;
 import com.motionParts.ecommerce.Models.Role;
 import com.motionParts.ecommerce.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthService {
+
+     @Autowired
+    private UserService userService;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -46,6 +52,10 @@ public class AuthService {
 
         // Generar JWT con roles
         return generateToken(user);
+    }
+
+    public User register(RegisterRequest request) {
+        return userService.createUser(request.getUser(), request.getUserInfo());
     }
 
     private String generateToken(User user) {

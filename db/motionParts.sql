@@ -390,6 +390,64 @@ ALTER SEQUENCE public.shopping_carts_id_seq OWNED BY public.shopping_carts.id;
 
 
 --
+-- Name: user_info; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_info (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    type character varying(255) NOT NULL,
+    document_type character varying(255) NOT NULL,
+    document_number character varying(255) NOT NULL,
+    document_exp date,
+    exp_country character varying(255),
+    exp_region character varying(255),
+    exp_city character varying(255),
+    first_name character varying(255),
+    middle_name character varying(255),
+    last_name character varying(255),
+    second_last_name character varying(255),
+    other_names character varying(255),
+    legal_name character varying(255),
+    email character varying(255) NOT NULL,
+    country character varying(255) NOT NULL,
+    region character varying(255),
+    city character varying(255),
+    address character varying(255),
+    address_detail character varying(255),
+    postal_code character varying(255),
+    phone character varying(255),
+    phone2 character varying(255),
+    created_at date DEFAULT CURRENT_TIMESTAMP,
+    updated_at date DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.user_info OWNER TO postgres;
+
+--
+-- Name: user_info_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_info_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.user_info_id_seq OWNER TO postgres;
+
+--
+-- Name: user_info_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_info_id_seq OWNED BY public.user_info.id;
+
+
+--
 -- Name: user_role; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -520,6 +578,13 @@ ALTER TABLE ONLY public.roles ALTER COLUMN id SET DEFAULT nextval('public.roles_
 --
 
 ALTER TABLE ONLY public.shopping_carts ALTER COLUMN id SET DEFAULT nextval('public.shopping_carts_id_seq'::regclass);
+
+
+--
+-- Name: user_info id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_info ALTER COLUMN id SET DEFAULT nextval('public.user_info_id_seq'::regclass);
 
 
 --
@@ -711,6 +776,15 @@ COPY public.shopping_carts (id, user_id, status, created_at, updated_at) FROM st
 
 
 --
+-- Data for Name: user_info; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_info (id, user_id, type, document_type, document_number, document_exp, exp_country, exp_region, exp_city, first_name, middle_name, last_name, second_last_name, other_names, legal_name, email, country, region, city, address, address_detail, postal_code, phone, phone2, created_at, updated_at) FROM stdin;
+1	4	natural	CC	98786554	1999-03-01	Colombia	Cundinamarca	Bogota	Juan	Esteban	Peraza	Pinzon	NA	Juan SAS	juansas@gmail.com	COLOMBIA	cundinamarca	Bogota	carrera 12 23-88	casa 5 	111011	3108876654	2407783	\N	\N
+\.
+
+
+--
 -- Data for Name: user_role; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -725,6 +799,7 @@ COPY public.user_role (id, role_id, user_id) FROM stdin;
 COPY public.user_roles (user_id, role_id) FROM stdin;
 1	1
 2	2
+4	2
 \.
 
 
@@ -736,6 +811,7 @@ COPY public.users (id, username, email, password, created_at, updated_at) FROM s
 1	juanperez	juan.perez@example.com	$2a$12$.19iyV1u7ix26Rk1BIV/nuF37qAFHQ5YTYwegrCvehM1gGVxFGfBq	2025-03-10 19:05:29.907813	2025-03-10 19:05:29.907813
 2	mariagonzalez	maria.gonzalez@example.com	$2a$12$.19iyV1u7ix26Rk1BIV/nuF37qAFHQ5YTYwegrCvehM1gGVxFGfBq	2025-03-10 19:05:29.907813	2025-03-10 19:05:29.907813
 3	carlosramirez	carlos.ramirez@example.com	sapo123	2025-03-10 19:05:29.907813	2025-03-10 19:05:29.907813
+4	minecraft	minecra@gmail.com	$2a$10$AzrqqLKaeG3009oLzcQ6yurM6CwkKVm.bAEXWxjKF0bqIHwzftAWa	2025-04-08 19:43:48.141715	2025-04-08 19:43:48.141715
 \.
 
 
@@ -803,6 +879,13 @@ SELECT pg_catalog.setval('public.shopping_carts_id_seq', 14, true);
 
 
 --
+-- Name: user_info_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.user_info_id_seq', 1, true);
+
+
+--
 -- Name: user_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -813,7 +896,7 @@ SELECT pg_catalog.setval('public.user_role_id_seq', 1, false);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 3, true);
+SELECT pg_catalog.setval('public.users_id_seq', 4, true);
 
 
 --
@@ -913,6 +996,22 @@ ALTER TABLE ONLY public.shopping_carts
 
 
 --
+-- Name: user_info user_info_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_info
+    ADD CONSTRAINT user_info_email_key UNIQUE (email);
+
+
+--
+-- Name: user_info user_info_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_info
+    ADD CONSTRAINT user_info_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_role user_role_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1005,6 +1104,14 @@ ALTER TABLE ONLY public.orders
 
 ALTER TABLE ONLY public.orders
     ADD CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: user_info fk_user; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_info
+    ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --

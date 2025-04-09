@@ -1,137 +1,149 @@
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 
-<form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
-    <div
-      class="bg-purple-900 absolute top-0 left-0 bg-gradient-to-b from-gray-900 via-gray-900 to-purple-800 bottom-0 leading-5 h-full w-full overflow-hidden">
+<form (ngSubmit)="onSubmit()" class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-xl space-y-6">
+
+  <!-- Datos de cuenta -->
+  <h2 class="text-xl font-semibold text-gray-800">Datos de cuenta</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
+      <input type="text" [(ngModel)]="form.user.username" name="username" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
     </div>
-    <div class="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent rounded-3xl shadow-xl">
-      <div class="flex-col flex self-center lg:px-14 sm:max-w-4xl xl:max-w-md z-10">
-        <div class="self-start hidden lg:flex flex-col text-gray-300">
-          <h1 class="my-3 font-semibold text-4xl">Únete a nosotros</h1>
-          <p class="pr-3 text-sm opacity-75">Crea una cuenta para acceder a nuestro catálogo completo de autopartes
-            y disfruta de descuentos exclusivos para miembros registrados</p>
-        </div>
-      </div>
-      <div class="flex justify-center self-center z-10">
-        <div class="p-12 bg-white mx-auto rounded-3xl w-96">
-          <div class="mb-7">
-            <h3 class="font-semibold text-2xl text-gray-800">Crear Cuenta</h3>
-            <p class="text-gray-400">¿Ya tienes una cuenta? <a routerLink="/login"
-                class="text-sm text-purple-700 hover:text-purple-700">Iniciar Sesión</a></p>
-          </div>
-          <div class="space-y-6">
-            <div class="">
-              <input id="nombre" formControlName="nombre" class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" type="text" placeholder="Nombre completo">
-              <div *ngIf="registroForm.get('nombre')?.invalid && registroForm.get('nombre')?.touched" class="text-red-500 text-xs mt-1">
-                Nombre es requerido
-              </div>
-            </div>
-
-            <div class="">
-              <input id="email" formControlName="email" class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" type="email" placeholder="Correo electrónico">
-              <div *ngIf="registroForm.get('email')?.invalid && registroForm.get('email')?.touched" class="text-red-500 text-xs mt-1">
-                Correo electrónico válido es requerido
-              </div>
-            </div>
-
-            <div class="">
-              <input id="username" formControlName="username" class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400" type="text" placeholder="Nombre de usuario">
-              <div *ngIf="registroForm.get('username')?.invalid && registroForm.get('username')?.touched" class="text-red-500 text-xs mt-1">
-                Nombre de usuario es requerido
-              </div>
-            </div>
-
-            <div class="relative">
-              <input id="password" formControlName="password" placeholder="Contraseña" [type]="showPassword ? 'text' : 'password'" class="text-sm text-black-200 px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-purple-400">
-              <div class="flex items-center absolute inset-y-0 right-0 mr-3 text-sm leading-5">
-                <button type="button" (click)="showPassword = !showPassword" class="text-purple-700">
-                  <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                  </svg>
-                </button>
-              </div>
-              <div *ngIf="registroForm.get('password')?.invalid && registroForm.get('password')?.touched" class="text-red-500 text-xs mt-1">
-                La contraseña debe tener al menos 6 caracteres
-              </div>
-            </div>
-
-            <div class="relative">
-              <input id="confirmPassword" formControlName="confirmPassword" placeholder="Confirmar contraseña" [type]="showConfirmPassword ? 'text' : 'password'" class="text-sm text-black-200 px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-purple-400">
-              <div class="flex items-center absolute inset-y-0 right-0 mr-3 text-sm leading-5">
-                <button type="button" (click)="showConfirmPassword = !showConfirmPassword" class="text-purple-700">
-                  <svg *ngIf="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  <svg *ngIf="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                  </svg>
-                </button>
-              </div>
-              <div *ngIf="registroForm.get('confirmPassword')?.invalid && registroForm.get('confirmPassword')?.touched || registroForm.hasError('passwordMismatch') && registroForm.get('confirmPassword')?.touched" class="text-red-500 text-xs mt-1">
-                Las contraseñas no coinciden
-              </div>
-            </div>
-
-            <div class="flex items-start">
-              <div class="flex items-center h-5">
-                <input id="terminos" formControlName="terminos" type="checkbox" class="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded">
-              </div>
-              <div class="ml-3 text-sm">
-                <label for="terminos" class="text-gray-500">Acepto los <a href="#" class="text-purple-700 hover:text-purple-600">términos y condiciones</a></label>
-                <div *ngIf="registroForm.get('terminos')?.invalid && registroForm.get('terminos')?.touched" class="text-red-500 text-xs mt-1">
-                  Debes aceptar los términos y condiciones
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <button type="submit" [disabled]="registroForm.invalid" class="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500">
-                Registrarse
-              </button>
-            </div>
-            <div class="flex items-center justify-center space-x-2 my-5">
-              <span class="h-px w-16 bg-gray-100"></span>
-              <span class="text-gray-300 font-normal">o regístrate con</span>
-              <span class="h-px w-16 bg-gray-100"></span>
-            </div>
-            <div class="flex justify-center gap-5 w-full ">
-              <button type="button" class="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 text-sm text-gray-500 p-3 rounded-lg tracking-wide font-medium cursor-pointer transition ease-in duration-500">
-                <svg class="w-4 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115Z"/>
-                  <path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 0 1-6.723-4.823l-4.04 3.067A11.965 11.965 0 0 0 12 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987Z"/>
-                  <path fill="#4A90E2" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9 0-.71-.109-1.473-.272-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.558L19.834 21Z"/>
-                  <path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067Z"/>
-                </svg>
-                <span>Google</span>
-              </button>
-
-              <button type="button" class="w-full flex items-center justify-center mb-6 md:mb-0 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 text-sm text-gray-500 p-3 rounded-lg tracking-wide font-medium cursor-pointer transition ease-in duration-500 px-">
-                <svg class="w-4 mr-2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                  <g id="Layer_2">
-                    <path d="M50 2.5c-58.892 1.725-64.898 84.363-7.46 95h14.92c57.451-10.647 51.419-93.281-7.46-95z" style="fill:#1877f2"/>
-                    <path d="M57.46 64.104h11.125l2.117-13.814H57.46v-8.965c0-3.779 1.85-7.463 7.781-7.463h6.021V22.101c-12.894-2.323-28.385-1.616-28.722 17.66V50.29H30.417v13.814H42.54V97.5h14.92V64.104z" style="fill:#f1f1f1"/>
-                  </g>
-                </svg>
-                <span>Facebook</span>
-              </button>
-            </div>
-          </div>
-          <div class="mt-7 text-center text-gray-300 text-xs">
-            <span>
-              Copyright ©️ 2025
-              <a href="#" rel="" target="_blank" class="text-purple-500 hover:text-purple-600">Autopartes Premium</a>
-            </span>
-          </div>
-        </div>
-      </div>
-      <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+      <input type="email" [(ngModel)]="form.user.email" name="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
     </div>
-  </form>
-  <svg class="absolute bottom-0 left-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-    <path fill="#fff" fill-opacity="1" d="M0,0L40,42.7C80,85,160,171,240,197.3C320,224,400,192,480,154.7C560,117,640,75,720,74.7C800,75,880,117,960,154.7C1040,192,1120,224,1200,213.3C1280,203,1360,149,1400,122.7L1440,96L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z"></path>
-  </svg>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+      <input type="password" [(ngModel)]="form.user.password" name="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
+    </div>
+  </div>
+
+  <!-- Información personal -->
+  <h2 class="text-xl font-semibold text-gray-800 pt-4">Información personal</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <!-- Tipo y Documento -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Tipo</label>
+      <select [(ngModel)]="form.userInfo.type" name="type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+        <option value="natural">Persona Natural</option>
+        <option value="juridica">Persona Jurídica</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Tipo de documento</label>
+      <input type="text" [(ngModel)]="form.userInfo.documentType" name="documentType" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Número de documento</label>
+      <input type="text" [(ngModel)]="form.userInfo.documentNumber" name="documentNumber" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Fecha de expedición</label>
+      <input type="date" [(ngModel)]="form.userInfo.documentExp" name="documentExp" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">País de expedición</label>
+      <input type="text" [(ngModel)]="form.userInfo.expCountry" name="expCountry" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Región de expedición</label>
+      <input type="text" [(ngModel)]="form.userInfo.expRegion" name="expRegion" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Ciudad de expedición</label>
+      <input type="text" [(ngModel)]="form.userInfo.expCity" name="expCity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <!-- Nombres -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Primer nombre</label>
+      <input type="text" [(ngModel)]="form.userInfo.firstName" name="firstName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Segundo nombre</label>
+      <input type="text" [(ngModel)]="form.userInfo.middleName" name="middleName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Apellido paterno</label>
+      <input type="text" [(ngModel)]="form.userInfo.lastName" name="lastName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Apellido materno</label>
+      <input type="text" [(ngModel)]="form.userInfo.secondLastName" name="secondLastName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-700">Otros nombres</label>
+      <input type="text" [(ngModel)]="form.userInfo.otherNames" name="otherNames" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-700">Nombre legal</label>
+      <input type="text" [(ngModel)]="form.userInfo.legalName" name="legalName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <!-- Contacto y Dirección -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+      <input type="email" [(ngModel)]="form.userInfo.email" name="infoEmail" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">País</label>
+      <input type="text" [(ngModel)]="form.userInfo.country" name="country" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Región</label>
+      <input type="text" [(ngModel)]="form.userInfo.region" name="region" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Ciudad</label>
+      <input type="text" [(ngModel)]="form.userInfo.city" name="city" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium text-gray-700">Dirección</label>
+      <input type="text" [(ngModel)]="form.userInfo.address" name="address" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Detalle dirección</label>
+      <input type="text" [(ngModel)]="form.userInfo.addressDetail" name="addressDetail" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Código postal</label>
+      <input type="text" [(ngModel)]="form.userInfo.postalCode" name="postalCode" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Teléfono principal</label>
+      <input type="text" [(ngModel)]="form.userInfo.phone" name="phone" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Teléfono secundario</label>
+      <input type="text" [(ngModel)]="form.userInfo.phone2" name="phone2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    </div>
+  </div>
+
+  <!-- Botón de envío -->
+  <div class="pt-4">
+    <button type="submit" class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow">
+      Registrarse
+    </button>
+  </div>
+</form>

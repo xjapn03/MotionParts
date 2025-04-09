@@ -2,6 +2,7 @@ package com.motionParts.ecommerce.Controllers;
 
 import com.motionParts.ecommerce.services.AuthService;
 import com.motionParts.ecommerce.dto.LoginRequest;
+import com.motionParts.ecommerce.dto.RegisterRequest;
 import com.motionParts.ecommerce.dto.AuthResponse;
 import com.motionParts.ecommerce.Models.User;
 import com.motionParts.ecommerce.Models.Role;
@@ -26,6 +27,13 @@ public class AuthController {
         this.authService = authService;
         this.userRepository = userRepository;
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody RegisterRequest request) {
+        User user = authService.register(request); // delegamos al AuthService
+        return ResponseEntity.ok(user);
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {

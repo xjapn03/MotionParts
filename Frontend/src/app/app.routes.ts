@@ -18,10 +18,12 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { MyOrdersComponent } from './modules/orders/my-orders/my-orders.component';
 import { OrderDetailsComponent } from './modules/orders/order-details/order-details.component';
 import { AdminOrderDetailsComponent } from './modules/admin/orders/order-details/order-details.component'; // Para admin
+import { RegisterComponent } from './modules/register/register.component';
 
 import { ProfileComponent } from './modules/user/profile/profile.component';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent }, // ✅ Ruta de registro
   {
     path: 'admin',
     component: AdminComponent,

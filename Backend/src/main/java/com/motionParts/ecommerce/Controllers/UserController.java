@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.motionParts.ecommerce.Models.User;
 import com.motionParts.ecommerce.services.UserService;
 import com.motionParts.ecommerce.services.RoleService;
+import com.motionParts.ecommerce.dto.RegisterRequest;
 import com.motionParts.ecommerce.dto.RoleDTO;
 import com.motionParts.ecommerce.dto.UserDTO;
-import com.motionParts.ecommerce.dto.UserInfoDTO;
 
 import org.springframework.http.ResponseEntity;
 import javax.validation.Valid;
@@ -33,7 +33,6 @@ public class UserController {
     }
 
     // Obtener un usuario por ID
-    // Obtener un usuario por ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id)
@@ -43,9 +42,11 @@ public class UserController {
 
     // Crear un nuevo usuario
    @PostMapping
-    public User createUser(@RequestBody @Valid UserDTO userDTO, @RequestBody @Valid UserInfoDTO userInfoDTO) {
-        return userService.createUser(userDTO, userInfoDTO);  // Llamamos a createUser con ambos DTOs
+    public ResponseEntity<User> createUser(@RequestBody @Valid RegisterRequest request) {
+        User user = userService.createUser(request.getUser(), request.getUserInfo());
+        return ResponseEntity.ok(user);
     }
+
 
     // Actualizar un usuario existente
     @PutMapping("/{id}")

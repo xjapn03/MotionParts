@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from '../models/user.model';
 import { Role } from '../models/login.model';
+import { RegisterRequest } from '../models/register-request.model';
 
 
 @Injectable({
@@ -53,6 +54,12 @@ export class UserService {
   getRoles(): Observable<Role[]> {
     return this.http.get<Role[]>('http://localhost:8080/api/roles').pipe(
       catchError(this.handleError) // Manejo de errores
+    );
+  }
+
+  registerUserWithInfo(request: RegisterRequest): Observable<any> {
+    return this.http.post<any>('http://localhost:8080/api/auth/register', request).pipe(
+      catchError(this.handleError)
     );
   }
 

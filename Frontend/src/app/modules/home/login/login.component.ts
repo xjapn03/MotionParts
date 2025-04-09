@@ -3,14 +3,16 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common'; // Importa NgIf
 import { AuthService } from '../../../core/services/auth.service';
+import { RouterModule } from '@angular/router'; // 👈 importa esto también
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [NgIf, ReactiveFormsModule] // Corrige los imports en un solo array
+  imports: [NgIf, ReactiveFormsModule, RouterModule] // ✅ agrega RouterModule aquí
 })
+
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string = '';
