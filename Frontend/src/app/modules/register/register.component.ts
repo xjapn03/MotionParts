@@ -48,6 +48,7 @@ interface RegisterRequest {
   imports: [CommonModule, FormsModule], // 👈 Aquí se importa FormsModule
 })
 export class RegisterComponent {
+  activeTab: string = 'cuenta';
   form: RegisterRequest = {
     user: {
       username: '',
@@ -80,10 +81,31 @@ export class RegisterComponent {
     }
   };
 
+  previousTab: string = '';
+
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
+
+  setActiveTab(tabId: string) {
+    this.previousTab = this.activeTab;
+    this.activeTab = tabId;
+  }
+
+  continue() {
+    if (this.activeTab === 'cuenta') {
+      this.activeTab = 'personal';
+    } else if (this.activeTab === 'personal') {
+      this.activeTab = 'contacto';
+    }
+  }
+
+  // Método para ir atrás
+  goBack() {
+    this.activeTab = this.previousTab;
+  }
+
 
   onSubmit() {
     this.authService.registerUserWithInfo(this.form).subscribe({
