@@ -17,6 +17,10 @@ public class ProductImage {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(name = "original_filename")
+    private String originalFilename;
+
+
     public ProductImage() {}
 
     public ProductImage(String imageUrl, Product product) {
@@ -32,4 +36,7 @@ public class ProductImage {
 
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
+
+    public String getOriginalFilename() { return originalFilename; }
+    public void setOriginalFilename(String originalFilename) { this.originalFilename = originalFilename; }
 }

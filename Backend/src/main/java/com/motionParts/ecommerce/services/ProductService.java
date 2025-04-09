@@ -44,7 +44,7 @@ public class ProductService {
 
     // Obtener todos los productos y convertirlos a DTO
     public List<ProductDTO> getAllProducts() {
-        return productRepository.findAll()
+        return productRepository.findAllByOrderByIdAsc()
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());

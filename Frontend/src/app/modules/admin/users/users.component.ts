@@ -67,16 +67,15 @@ export class UsersComponent implements OnInit {
         documentType: 'DNI', // o 'RUC', etc.
         documentNumber: '12345678',
         email: this.usuario.email,
-        firstName: 'Juan',
-        lastName: 'Pérez',
-        country: 'Perú',
-        phone: '123456789'
+        firstName: 'Usuario',
+        lastName: 'Mostrador',
+        country: '-',
         // puedes completar más campos si gustas
       }
     };
-  
+
     console.log('Enviando registerRequest:', registerRequest);
-  
+
     this.userService.registerUserWithInfo(registerRequest).subscribe(
       (created) => {
         console.log('Usuario registrado exitosamente:', created);
@@ -87,7 +86,7 @@ export class UsersComponent implements OnInit {
         console.error('Error al registrar usuario', error);
       }
     );
-  }  
+  }
 
 // Actualizar usuario (PUT)
   onUpdate(): void {
@@ -143,11 +142,11 @@ export class UsersComponent implements OnInit {
       }
     );
   }
-  
+
   compareRoles(role1: Role, role2: Role): boolean {
     return role1 && role2 ? role1.id === role2.id : false;
   }
-  
+
   // Limpiar formulario
   resetUser(): void {
     this.usuario = { id: 0, username: '', email: '', password: '', roles: [] };
