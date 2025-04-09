@@ -36,6 +36,8 @@ export class ProductosComponent implements OnInit {
   categoriasPadre: Category[] = [];
   subcategorias: Category[] = [];
 
+  imagenActual: number = 0;
+
   imageUrl(url: string): string {
     return url ? `${environment.apiUrl}${url}` : 'assets/products/productDefault.jpg';
   }
@@ -58,17 +60,29 @@ export class ProductosComponent implements OnInit {
     this.ordenarPor.valueChanges.subscribe(() => this.aplicarFiltros());
   }
 
+  cambiarImagen(direccion: number) {
+    if (!this.productoSeleccionado?.gallery) return;
+
+    const total = this.productoSeleccionado.gallery.length;
+    this.imagenActual = (this.imagenActual + direccion + total) % total;
+  }
+
+
+
   cargarCategorias() {
     this.categoryService.getCategories().subscribe({
       next: (data: Category[]) => {
         this.categorias = data;
-        this.categoriasPadre = this.categorias.filter(cat => cat.parentId === undefined);
+        console.log('Todas las categorías:', this.categorias);
+        this.categoriasPadre = this.categorias.filter(cat => !cat.parentId);
+        console.log('Categorías padre:', this.categoriasPadre);
       },
       error: (error: any) => {
         console.error('Error al obtener categorías', error);
       }
     });
   }
+
 
   cargarSubcategorias() {
     const categoriaSeleccionada = this.categoriaPadreFiltro.value;
@@ -125,8 +139,21 @@ export class ProductosComponent implements OnInit {
   }
 
   verDetalles(producto: Product) {
-    this.productoSeleccionado = { ...producto, categories: producto.categories || [] };
     this.cantidad = 1;
+    this.imagenActual = 0;
+
+    this.productService.getProductById(producto.id!).subscribe({
+      next: (detalle) => {
+        this.productoSeleccionado = {
+          ...detalle,
+          categories: detalle.categories || [],
+          gallery: detalle.gallery || []
+        };
+      },
+      error: (err) => {
+        console.error('Error cargando detalles del producto', err);
+      }
+    });
   }
 
   cerrarModal() {
