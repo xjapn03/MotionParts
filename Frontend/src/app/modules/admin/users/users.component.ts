@@ -4,6 +4,7 @@ import { User } from '../../../core/models/user.model';
 import { Role } from '../../../core/models/login.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RegisterRequest } from '../../../core/models/register-request.model';
 
 @Component({
   selector: 'app-users',
@@ -51,25 +52,42 @@ export class UsersComponent implements OnInit {
   }
 
   // Crear usuario (POST)
-onCreate(): void {
-  const dto = {
-    ...this.usuario,
-    roleId: this.usuario.roles.map(role => role.id)
-  };
-
-  console.log('Creando usuario:', dto); //  Log al crear
-
-  this.userService.createUser(dto).subscribe(
-    (created) => {
-      console.log('Usuario creado exitosamente:', created); // Log al crear exitosamente
-      this.getUsers();
-      this.resetUser();
-    },
-    (error) => {
-      console.error('Error al crear usuario', error);
-    }
-  );
-}
+  onCreate(): void {
+    const registerRequest: RegisterRequest = {
+      user: {
+        id: this.usuario.id,
+        username: this.usuario.username,
+        email: this.usuario.email,
+        password: this.usuario.password,
+        roles: this.usuario.roles
+      },
+      userInfo: {
+        userId: 0, // Este se ignora al crear, el backend lo llena
+        type: 'Natural', // o 'Jurídica', según el caso
+        documentType: 'DNI', // o 'RUC', etc.
+        documentNumber: '12345678',
+        email: this.usuario.email,
+        firstName: 'Juan',
+        lastName: 'Pérez',
+        country: 'Perú',
+        phone: '123456789'
+        // puedes completar más campos si gustas
+      }
+    };
+  
+    console.log('Enviando registerRequest:', registerRequest);
+  
+    this.userService.registerUserWithInfo(registerRequest).subscribe(
+      (created) => {
+        console.log('Usuario registrado exitosamente:', created);
+        this.getUsers();
+        this.resetUser();
+      },
+      (error) => {
+        console.error('Error al registrar usuario', error);
+      }
+    );
+  }  
 
 // Actualizar usuario (PUT)
   onUpdate(): void {
