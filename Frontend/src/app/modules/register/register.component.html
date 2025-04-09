@@ -8,28 +8,40 @@
       <ul class="flex -mb-px">
         <li class="mr-2">
           <a href="#" 
-             class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent hover:border-blue-500 hover:text-blue-600"
-             id="tab-cuenta" (click)="setActiveTab('cuenta'); $event.preventDefault();">
+             (click)="setActiveTab('cuenta'); $event.preventDefault();"
+             [ngClass]="{
+               'text-blue-600 border-blue-500': activeTab === 'cuenta',
+               'text-gray-500 border-transparent hover:border-blue-500 hover:text-blue-600': activeTab !== 'cuenta'
+             }"
+             class="inline-block py-2 px-4 text-sm font-medium text-center border-b-2">
             Datos de cuenta
           </a>
         </li>
         <li class="mr-2">
           <a href="#" 
-             class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent hover:border-blue-500 hover:text-blue-600"
-             id="tab-personal" (click)="setActiveTab('personal'); $event.preventDefault();">
+             (click)="setActiveTab('personal'); $event.preventDefault();"
+             [ngClass]="{
+               'text-blue-600 border-blue-500': activeTab === 'personal',
+               'text-gray-500 border-transparent hover:border-blue-500 hover:text-blue-600': activeTab !== 'personal'
+             }"
+             class="inline-block py-2 px-4 text-sm font-medium text-center border-b-2">
             Información personal
           </a>
         </li>
         <li>
           <a href="#" 
-             class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 border-b-2 border-transparent hover:border-blue-500 hover:text-blue-600"
-             id="tab-contacto" (click)="setActiveTab('contacto'); $event.preventDefault();">
+             (click)="setActiveTab('contacto'); $event.preventDefault();"
+             [ngClass]="{
+               'text-blue-600 border-blue-500': activeTab === 'contacto',
+               'text-gray-500 border-transparent hover:border-blue-500 hover:text-blue-600': activeTab !== 'contacto'
+             }"
+             class="inline-block py-2 px-4 text-sm font-medium text-center border-b-2">
             Contacto y Dirección
           </a>
         </li>
       </ul>
     </div>
-
+    
     <form (ngSubmit)="onSubmit()" class="space-y-6">
       
       <!-- Sección de Datos de cuenta -->
