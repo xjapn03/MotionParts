@@ -13,4 +13,7 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
     void deleteByProductId(Long productId);
 
     boolean existsByImageUrl(String imageUrl); // ← ahora sí funcionará
+
+    boolean existsByProductIdAndOriginalFilename(Long productId, String originalFilename);
+
 }

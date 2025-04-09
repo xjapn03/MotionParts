@@ -1,10 +1,7 @@
 package com.motionParts.ecommerce.Controllers;
 
-import com.motionParts.ecommerce.Models.Product;
-import com.motionParts.ecommerce.Models.ProductImage;
+
 import com.motionParts.ecommerce.dto.ProductDTO;
-import com.motionParts.ecommerce.repositories.ProductImageRepository;
-import com.motionParts.ecommerce.repositories.ProductRepository;
 import com.motionParts.ecommerce.services.ProductService;
 import com.motionParts.ecommerce.services.ImageStorageService;
 
@@ -15,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Optional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;       
 
@@ -27,14 +22,10 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private ProductImageRepository productImageRepository;
 
     @Autowired
     private ImageStorageService imageStorageService;
 
-    @Autowired
-    private ProductRepository productRepository;
 
     // Obtener todos los productos en formato DTO
     @GetMapping
@@ -102,23 +93,13 @@ public class ProductController {
             List<String> urls = imageStorageService.storeImages(id, images);
             System.out.println("Rutas generadas: " + urls);
 
-            Optional<Product> optionalProduct = productRepository.findById(id);
-            if (optionalProduct.isPresent()) {
-                Product product = optionalProduct.get();
-                List<ProductImage> savedImages = new ArrayList<>();
-                for (String url : urls) {
-                    ProductImage image = new ProductImage();
-                    image.setImageUrl(url);
-                    image.setProduct(product);
-                    savedImages.add(productImageRepository.save(image));
-                }
-            }
             return ResponseEntity.ok(urls);
         } catch (IOException e) {
             System.err.println("Error al subir imágenes: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     // 🔧 Este método fue corregido para devolver JSON en lugar de texto plano
     @PostMapping("/{id}/upload-main-image")
