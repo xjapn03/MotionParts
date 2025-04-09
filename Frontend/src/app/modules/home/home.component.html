@@ -1,231 +1,281 @@
-<!-- Sección Principal (Hero) -->
-<section id="hero" class="relative text-white text-center h-screen flex flex-col justify-center items-center" 
-    style="background-image: url('https://www.namesnack.com/images/namesnack-auto-parts-supply-business-names-5996x3374-20200915.jpeg?crop=16:9,smart&width=1200&dpr=2'); 
-           background-size: cover; background-position: center;">
-    
-    <!-- Capa de overlay -->
-    <div class="absolute inset-0 bg-black opacity-70"></div>
-
-    <!-- Contenido -->
-    <div class="relative z-10 text-center px-6 max-w-4xl">
-        <h2 class="text-6xl md:text-7xl font-extrabold mb-6 tracking-wide text-white" 
-            style="font-family: 'Poppins', sans-serif; text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);">
-            MOTION PARTS
-        </h2>
-
-        <p class="text-lg md:text-xl text-gray-300 mb-6">
-            Encuentra las mejores partes para el movimiento de tu motor con la mejor calidad y garantía del mercado.
-        </p>
-
-        <!-- Frase motivadora -->
-        <p class="text-xl md:text-2xl font-semibold text-white mb-8">
-            "Potencia, calidad y resistencia en cada pieza."
-        </p>
-
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
-            <a href="#nosotros" class="bg-gray-800 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition">
-                Conócenos
-            </a>
-            <a href="#testimonios" class="bg-gray-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-lg transition">
-                Opiniones
-            </a>
-        </div>
+<!-- Hero Section -->
+<!-- Hero Section with Background Slider -->
+<section id="hero" class="hero-section">
+    <div class="overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">MOTION PARTS</h1>
+      <p class="hero-description">
+        Encuentra las mejores partes para el movimiento de tu motor con la mejor calidad y garantía del mercado.
+      </p>
+      <p class="hero-tagline">"Potencia, calidad y resistencia en cada pieza."</p>
+      <div class="hero-buttons">
+        <a href="#nosotros" class="btn btn-primary">Conócenos</a>
+        <a href="#testimonios" class="btn btn-secondary">Opiniones</a>
+      </div>
     </div>
     
-
-</section>
-
-<!-- Sección de estadísticas -->
-<section class="bg-gray-800 text-white py-12">
-    <div class="container mx-auto flex flex-wrap justify-center text-center gap-10">
-        <div>
-            <h3 class="text-4xl font-bold text-yellow-400" id="clientes-contador">+5000</h3>
-            <p class="text-lg">Clientes satisfechos</p>
-        </div>
-        <div>
-            <h3 class="text-4xl font-bold text-yellow-400" id="ventas-contador">+12000</h3>
-            <p class="text-lg">Productos vendidos</p>
-        </div>
-        <div>
-            <h3 class="text-4xl font-bold text-yellow-400" id="experiencia-contador">10 años</h3>
-            <p class="text-lg">De experiencia</p>
-        </div>
+    <!-- Indicadores de diapositivas para el fondo -->
+    <div class="background-indicators">
+      <span class="background-indicator active" data-index="0"></span>
+      <span class="background-indicator" data-index="1"></span>
+      <span class="background-indicator" data-index="2"></span>
+      <span class="background-indicator" data-index="3"></span>
+      <span class="background-indicator" data-index="4"></span>
     </div>
-</section>
-
-<script>
-    // Simulación de contador animado
-    function animateCounter(id, start, end, duration) {
-        let obj = document.getElementById(id);
-        let range = end - start;
-        let increment = range / (duration / 50);
-        let current = start;
-        let timer = setInterval(() => {
-            current += increment;
-            obj.innerText = Math.floor(current);
-            if (current >= end) {
-                obj.innerText = end;
-                clearInterval(timer);
-            }
-        }, 50);
-    }
-
-    window.onload = function() {
-        animateCounter("clientes-contador", 0, 5000, 2000);
-        animateCounter("ventas-contador", 0, 12000, 2000);
-        animateCounter("experiencia-contador", 0, 10, 1500);
-    };
-</script>
-
-
-<!-- Sección Productos con Carrusel (Swiper) -->
-<section id="products" class="relative py-12 bg-transparent flex justify-center">
-    <div class="relative bg-gray-900 shadow-lg rounded-t-3xl w-full max-w-6xl mx-auto pb-12 pt-8 px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center mb-8 text-white">Productos en oferta</h2>
-        
-        <!-- Carrusel Swiper -->
-        <div class="swiper mySwiper w-full">
-            <div class="swiper-wrapper">
-                <!-- Producto 1 -->
-                <div class="swiper-slide flex justify-center">
-                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
-                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2FwAbQkbehxT5km1VG9rS5c8uKRRWSHPxiA&s');">
-                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Motores</h3>
-                    </div>
-                </div>
-
-                <!-- Producto 2 -->
-                <div class="swiper-slide flex justify-center">
-                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
-                        style="background-image: url('https://d100mj7v0l85u5.cloudfront.net/s3fs-public/2023-03/fabricantes-de-llantas-en-mexico.jpg');">
-                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Llantas</h3>
-                    </div>
-                </div>
-
-                <!-- Producto 3 -->
-                <div class="swiper-slide flex justify-center">
-                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
-                        style="background-image: url('https://www.nissanuniversidad.com/static/agency-go-virtual/Nissan/Landings/Baterias/nissan-2023-baterias-grupo_de_baterias-d.jpg');">
-                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Baterías</h3>
-                    </div>
-                </div>
-
-                <!-- Producto 4 -->
-                <div class="swiper-slide flex justify-center">
-                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
-                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNR6z421LHTFt8xUBcgIzipNghoJB4H6Jbfw&s');">
-                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Frenos</h3>
-                    </div>
-                </div>
-
-                <!-- Producto 5 -->
-                <div class="swiper-slide flex justify-center">
-                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
-                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCDAtZ1MZXfoZUPGBXRAuDyYrjtChyeCIm5A&s');">
-                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Luces</h3>
-                    </div>
-                </div>
-
-                <!-- Producto 6 -->
-                <div class="swiper-slide flex justify-center">
-                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
-                        style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfowsUuvrObdHG1qP7JBwuJEqwPB1OqW4EOA&s');">
-                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Correas de Auto</h3>
-                    </div>
-                </div>
-
-                <!-- Producto 7 -->
-                <div class="swiper-slide flex justify-center">
-                    <div class="product-card bg-cover bg-center rounded-lg shadow-lg w-full max-w-sm h-52"
-                        style="background-image: url('https://www.bardahl.com.mx/wp-content/uploads/2019/01/Tipos-Transmisiones-Mantenimiento.jpg');">
-                        <h3 class="text-2xl font-semibold text-white text-center mt-20">Transmisiones</h3>
-                    </div>
-                </div>
+  </section>
+  
+  <!-- Statistics Section -->
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-item">
+        <h3 class="stat-number" id="clientes-contador">+5000</h3>
+        <p class="stat-label">Clientes satisfechos</p>
+      </div>
+      <div class="stat-item">
+        <h3 class="stat-number" id="ventas-contador">+12000</h3>
+        <p class="stat-label">Productos vendidos</p>
+      </div>
+      <div class="stat-item">
+        <h3 class="stat-number" id="experiencia-contador">10 años</h3>
+        <p class="stat-label">De experiencia</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Featured Products Section -->
+  <section id="products" class="products-section">
+    <div class="products-container">
+      <h2 class="section-title" style="color: white;">Productos en oferta</h2>
+      
+      <!-- Swiper Carousel -->
+      <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+          <!-- Product 1 -->
+          <div class="swiper-slide">
+            <div class="product-card">
+              <div class="product-image" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2FwAbQkbehxT5km1VG9rS5c8uKRRWSHPxiA&s');">
+                <div class="product-overlay"></div>
+                <h3 class="product-title">Motores</h3>
+              </div>
+              <div class="product-info">
+                <p class="product-description">Motores de alto rendimiento para todo tipo de vehículos</p>
+                <button class="product-btn">Ver detalles</button>
+              </div>
             </div>
-            
-            <!-- Flechas de navegación -->
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
+          </div>
+  
+          <!-- Product 2 -->
+          <div class="swiper-slide">
+            <div class="product-card">
+              <div class="product-image" style="background-image: url('https://d100mj7v0l85u5.cloudfront.net/s3fs-public/2023-03/fabricantes-de-llantas-en-mexico.jpg');">
+                <div class="product-overlay"></div>
+                <h3 class="product-title">Llantas</h3>
+              </div>
+              <div class="product-info">
+                <p class="product-description">Llantas de todas las marcas con agarre superior</p>
+                <button class="product-btn">Ver detalles</button>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Product 3 -->
+          <div class="swiper-slide">
+            <div class="product-card">
+              <div class="product-image" style="background-image: url('https://www.nissanuniversidad.com/static/agency-go-virtual/Nissan/Landings/Baterias/nissan-2023-baterias-grupo_de_baterias-d.jpg');">
+                <div class="product-overlay"></div>
+                <h3 class="product-title">Baterías</h3>
+              </div>
+              <div class="product-info">
+                <p class="product-description">Baterías duraderas para máxima potencia</p>
+                <button class="product-btn">Ver detalles</button>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Product 4 -->
+          <div class="swiper-slide">
+            <div class="product-card">
+              <div class="product-image" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNR6z421LHTFt8xUBcgIzipNghoJB4H6Jbfw&s');">
+                <div class="product-overlay"></div>
+                <h3 class="product-title">Frenos</h3>
+              </div>
+              <div class="product-info">
+                <p class="product-description">Sistemas de frenos confiables para tu seguridad</p>
+                <button class="product-btn">Ver detalles</button>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Product 5 -->
+          <div class="swiper-slide">
+            <div class="product-card">
+              <div class="product-image" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCDAtZ1MZXfoZUPGBXRAuDyYrjtChyeCIm5A&s');">
+                <div class="product-overlay"></div>
+                <h3 class="product-title">Luces</h3>
+              </div>
+              <div class="product-info">
+                <p class="product-description">Sistemas de iluminación para toda condición</p>
+                <button class="product-btn">Ver detalles</button>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Product 6 -->
+          <div class="swiper-slide">
+            <div class="product-card">
+              <div class="product-image" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfowsUuvrObdHG1qP7JBwuJEqwPB1OqW4EOA&s');">
+                <div class="product-overlay"></div>
+                <h3 class="product-title">Correas de Auto</h3>
+              </div>
+              <div class="product-info">
+                <p class="product-description">Correas de distribución de alta calidad</p>
+                <button class="product-btn">Ver detalles</button>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Product 7 -->
+          <div class="swiper-slide">
+            <div class="product-card">
+              <div class="product-image" style="background-image: url('https://www.bardahl.com.mx/wp-content/uploads/2019/01/Tipos-Transmisiones-Mantenimiento.jpg');">
+                <div class="product-overlay"></div>
+                <h3 class="product-title">Transmisiones</h3>
+              </div>
+              <div class="product-info">
+                <p class="product-description">Transmisiones automáticas y manuales de calidad</p>
+                <button class="product-btn">Ver detalles</button>
+              </div>
+            </div>
+          </div>
         </div>
+        
+        <!-- Navigation Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
     </div>
-</section>
-
-
-<!-- Sección Acerca de Nosotros -->
-<section class="about-section">
+  </section>
+  
+  <!-- About Us Section -->
+  <section id="nosotros" class="about-section">
     <h2 class="section-title">Sobre Nosotros</h2>
   
-    <div class="offers-container">
-      <div class="offer-card">
-        <img src="https://www.lujosylataslizcars.co/wp-content/uploads/elementor/thumbs/farolas-y-autopartes-liz-cars-p77kv3dbtz20sfpd74klpggbtqnuag71aszai6x69o.jpg" alt="Nuestra historia" />
-        <div class="offer-text">
-          <h3>Nuestra Historia</h3>
-          <p>Con más de 10 años en el mercado, nos hemos convertido en líderes en ofrecer los mejores servicios y experiencias únicas.</p>
+    <div class="about-cards">
+      <div class="about-card">
+        <div class="about-image">
+          <img src="https://www.lujosylataslizcars.co/wp-content/uploads/elementor/thumbs/farolas-y-autopartes-liz-cars-p77kv3dbtz20sfpd74klpggbtqnuag71aszai6x69o.jpg" alt="Nuestra historia" />
+        </div>
+        <div class="about-content">
+          <h3 class="about-title">Nuestra Historia</h3>
+          <p class="about-description">Con más de 10 años en el mercado, nos hemos convertido en líderes en ofrecer los mejores servicios y experiencias únicas.</p>
         </div>
       </div>
   
-      <div class="offer-card">
-        <img src="https://cdn.shopify.com/s/files/1/0229/0839/files/tienda_en_linea_autopartes_ed316b20-ade7-4b91-a85d-c12ea0cfa81a.jpg?v=1729373783" alt="Nuestra misión" />
-        <div class="offer-text">
-          <h3>Nuestra Misión</h3>
-          <p>Nos enfocamos en brindar calidad, confianza y compromiso en cada uno de nuestros proyectos para garantizar la satisfacción de nuestros clientes.</p>
+      <div class="about-card">
+        <div class="about-image">
+          <img src="https://cdn.shopify.com/s/files/1/0229/0839/files/tienda_en_linea_autopartes_ed316b20-ade7-4b91-a85d-c12ea0cfa81a.jpg?v=1729373783" alt="Nuestra misión" />
+        </div>
+        <div class="about-content">
+          <h3 class="about-title">Nuestra Misión</h3>
+          <p class="about-description">Nos enfocamos en brindar calidad, confianza y compromiso en cada uno de nuestros proyectos para garantizar la satisfacción de nuestros clientes.</p>
         </div>
       </div>
   
-      <div class="offer-card">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOCwh31ZODfMZlE6liG0rffmoenWst933Y3A&s" alt="Nuestros valores" />
-        <div class="offer-text">
-          <h3>Nuestros Valores</h3>
-          <p>La honestidad, el compromiso y la innovación son los pilares fundamentales que nos representan.</p>
+      <div class="about-card">
+        <div class="about-image">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOCwh31ZODfMZlE6liG0rffmoenWst933Y3A&s" alt="Nuestros valores" />
+        </div>
+        <div class="about-content">
+          <h3 class="about-title">Nuestros Valores</h3>
+          <p class="about-description">La honestidad, el compromiso y la innovación son los pilares fundamentales que nos representan.</p>
         </div>
       </div>
     </div>
   </section>
   
-
-<!-- Sección Beneficios -->
-<section id="benefits" class="py-16 bg-blue-100 text-center">
-    <h2 class="text-3xl font-bold mb-8">¿Por qué elegirnos?</h2>
-    <div class="flex justify-around items-center">
-        <div class="w-1/3">
-            <h3 class="text-2xl font-semibold mb-4">Calidad Garantizada</h3>
-            <p>Trabajamos con las mejores marcas para asegurar productos duraderos y eficientes.</p>
+  <!-- Benefits Section -->
+  <section id="benefits" class="benefits-section">
+    <div class="benefits-container">
+      <h2 class="section-title">¿Por qué elegirnos?</h2>
+      
+      <div class="benefits-cards">
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3 class="benefit-title">Calidad Garantizada</h3>
+          <p class="benefit-description">Trabajamos con las mejores marcas para asegurar productos duraderos y eficientes.</p>
         </div>
-        <div class="w-1/3">
-            <h3 class="text-2xl font-semibold mb-4">Precios Competitivos</h3>
-            <p>Ofrecemos precios accesibles sin comprometer la calidad de los productos.</p>
+        
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <h3 class="benefit-title">Precios Competitivos</h3>
+          <p class="benefit-description">Ofrecemos precios accesibles sin comprometer la calidad de los productos.</p>
         </div>
-        <div class="w-1/3">
-            <h3 class="text-2xl font-semibold mb-4">Soporte 24/7</h3>
-            <p>Estamos disponibles para ayudarte con cualquier duda o problema, siempre que lo necesites.</p>
+        
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h3 class="benefit-title">Soporte 24/7</h3>
+          <p class="benefit-description">Estamos disponibles para ayudarte con cualquier duda o problema, siempre que lo necesites.</p>
         </div>
+      </div>
     </div>
-</section>
-
-<!-- Sección Testimonios -->
-<section id="testimonials" class="py-16 bg-white text-center">
-    <h2 class="text-3xl font-bold mb-8">Lo que dicen nuestros clientes</h2>
-    <div class="flex justify-around items-center">
-        <div class="w-1/3">
-            <blockquote class="text-lg italic mb-4">"Excelente servicio y productos de calidad. Recomiendo ampliamente esta empresa!"</blockquote>
-            <p class="font-semibold">Juan Pérez</p>
+  </section>
+  
+  <!-- Testimonials Section -->
+  <section id="testimonios" class="testimonials-section">
+    <div class="testimonials-container">
+      <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+      
+      <div class="testimonials-slider">
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p class="testimonial-text">"Excelente servicio y productos de calidad. Recomiendo ampliamente esta empresa!"</p>
+          </div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <p class="testimonial-name">Juan Pérez</p>
+          </div>
         </div>
-        <div class="w-1/3">
-            <blockquote class="text-lg italic mb-4">"Muy buenos precios y un catálogo de autopartes impresionante. ¡Mi vehículo está como nuevo!"</blockquote>
-            <p class="font-semibold">Laura Gómez</p>
+        
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p class="testimonial-text">"Muy buenos precios y un catálogo de autopartes impresionante. ¡Mi vehículo está como nuevo!"</p>
+          </div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <p class="testimonial-name">Laura Gómez</p>
+          </div>
         </div>
-        <div class="w-1/3">
-            <blockquote class="text-lg italic mb-4">"La atención al cliente es excelente, siempre me ayudan a encontrar lo que necesito." </blockquote>
-            <p class="font-semibold">Carlos Martínez</p>
+        
+        <div class="testimonial-card">
+          <div class="testimonial-content">
+            <p class="testimonial-text">"La atención al cliente es excelente, siempre me ayudan a encontrar lo que necesito."</p>
+          </div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <p class="testimonial-name">Carlos Martínez</p>
+          </div>
         </div>
+      </div>
     </div>
-</section>
-
-<!-- Sección CTA (Llamada a la acción) -->
-<section id="cta" class="py-16 bg-gray-900 text-white text-center">
-    <h2 class="text-3xl font-bold mb-4">¿Estás listo para mejorar tu vehículo?</h2>
-    <p class="text-lg mb-8">Explora nuestros productos y encuentra lo que tu auto necesita para su máximo rendimiento.</p>
-    <a href="#products" class="px-6 py-3 bg-red-600 text-white font-semibold rounded-full hover:bg-red-700">
-        Ver Productos
-    </a>
-</section>
+  </section>
+  
+  <!-- Call to Action Section -->
+  <section id="cta" class="cta-section" style="color: white;">
+    <div class="cta-container">
+      <h2 class="cta-title">¿Estás listo para mejorar tu vehículo?</h2>
+      <p class="cta-description">Explora nuestros productos y encuentra lo que tu auto necesita para su máximo rendimiento.</p>
+      <a href="#products" class="cta-button">Ver Productos</a>
+    </div>
+  </section>
