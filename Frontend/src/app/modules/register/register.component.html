@@ -1,149 +1,152 @@
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 
-<form (ngSubmit)="onSubmit()" class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-xl space-y-6">
+<!-- Contenedor principal con el degradado -->
+<div class="min-h-screen py-8 bg-gradient-to-b from-gray-900 via-gray-900 to-purple-800">
+  <form (ngSubmit)="onSubmit()" class="max-w-4xl mx-auto p-6 bg-gray-100 shadow-md rounded-xl space-y-6">
 
-  <!-- Datos de cuenta -->
-  <h2 class="text-xl font-semibold text-gray-800">Datos de cuenta</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
-      <input type="text" [(ngModel)]="form.user.username" name="username" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-      <input type="email" [(ngModel)]="form.user.email" name="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Contraseña</label>
-      <input type="password" [(ngModel)]="form.user.password" name="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
-    </div>
-  </div>
-
-  <!-- Información personal -->
-  <h2 class="text-xl font-semibold text-gray-800 pt-4">Información personal</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-    <!-- Tipo y Documento -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Tipo</label>
-      <select [(ngModel)]="form.userInfo.type" name="type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-        <option value="natural">Persona Natural</option>
-        <option value="juridica">Persona Jurídica</option>
-      </select>
+    <!-- Datos de cuenta -->
+    <h2 class="text-xl font-semibold text-gray-800">Datos de cuenta</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
+        <input type="text" [(ngModel)]="form.user.username" name="username" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+        <input type="email" [(ngModel)]="form.user.email" name="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+        <input type="password" [(ngModel)]="form.user.password" name="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
+      </div>
     </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Tipo de documento</label>
-      <input type="text" [(ngModel)]="form.userInfo.documentType" name="documentType" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    <!-- Información personal -->
+    <h2 class="text-xl font-semibold text-gray-800 pt-4">Información personal</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Tipo y Documento -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Tipo</label>
+        <select [(ngModel)]="form.userInfo.type" name="type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+          <option value="natural">Persona Natural</option>
+          <option value="juridica">Persona Jurídica</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Tipo de documento</label>
+        <input type="text" [(ngModel)]="form.userInfo.documentType" name="documentType" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Número de documento</label>
+        <input type="text" [(ngModel)]="form.userInfo.documentNumber" name="documentNumber" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Fecha de expedición</label>
+        <input type="date" [(ngModel)]="form.userInfo.documentExp" name="documentExp" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">País de expedición</label>
+        <input type="text" [(ngModel)]="form.userInfo.expCountry" name="expCountry" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Región de expedición</label>
+        <input type="text" [(ngModel)]="form.userInfo.expRegion" name="expRegion" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Ciudad de expedición</label>
+        <input type="text" [(ngModel)]="form.userInfo.expCity" name="expCity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <!-- Nombres -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Primer nombre</label>
+        <input type="text" [(ngModel)]="form.userInfo.firstName" name="firstName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Segundo nombre</label>
+        <input type="text" [(ngModel)]="form.userInfo.middleName" name="middleName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Apellido paterno</label>
+        <input type="text" [(ngModel)]="form.userInfo.lastName" name="lastName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Apellido materno</label>
+        <input type="text" [(ngModel)]="form.userInfo.secondLastName" name="secondLastName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Otros nombres</label>
+        <input type="text" [(ngModel)]="form.userInfo.otherNames" name="otherNames" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Nombre legal</label>
+        <input type="text" [(ngModel)]="form.userInfo.legalName" name="legalName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <!-- Contacto y Dirección -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+        <input type="email" [(ngModel)]="form.userInfo.email" name="infoEmail" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">País</label>
+        <input type="text" [(ngModel)]="form.userInfo.country" name="country" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Región</label>
+        <input type="text" [(ngModel)]="form.userInfo.region" name="region" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Ciudad</label>
+        <input type="text" [(ngModel)]="form.userInfo.city" name="city" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-700">Dirección</label>
+        <input type="text" [(ngModel)]="form.userInfo.address" name="address" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Detalle dirección</label>
+        <input type="text" [(ngModel)]="form.userInfo.addressDetail" name="addressDetail" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Código postal</label>
+        <input type="text" [(ngModel)]="form.userInfo.postalCode" name="postalCode" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Teléfono principal</label>
+        <input type="text" [(ngModel)]="form.userInfo.phone" name="phone" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Teléfono secundario</label>
+        <input type="text" [(ngModel)]="form.userInfo.phone2" name="phone2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+      </div>
     </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Número de documento</label>
-      <input type="text" [(ngModel)]="form.userInfo.documentNumber" name="documentNumber" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+    <!-- Botón de envío -->
+    <div class="pt-4">
+      <button type="submit" class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow">
+        Registrarse
+      </button>
     </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Fecha de expedición</label>
-      <input type="date" [(ngModel)]="form.userInfo.documentExp" name="documentExp" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">País de expedición</label>
-      <input type="text" [(ngModel)]="form.userInfo.expCountry" name="expCountry" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Región de expedición</label>
-      <input type="text" [(ngModel)]="form.userInfo.expRegion" name="expRegion" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Ciudad de expedición</label>
-      <input type="text" [(ngModel)]="form.userInfo.expCity" name="expCity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <!-- Nombres -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Primer nombre</label>
-      <input type="text" [(ngModel)]="form.userInfo.firstName" name="firstName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Segundo nombre</label>
-      <input type="text" [(ngModel)]="form.userInfo.middleName" name="middleName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Apellido paterno</label>
-      <input type="text" [(ngModel)]="form.userInfo.lastName" name="lastName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Apellido materno</label>
-      <input type="text" [(ngModel)]="form.userInfo.secondLastName" name="secondLastName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div class="md:col-span-2">
-      <label class="block text-sm font-medium text-gray-700">Otros nombres</label>
-      <input type="text" [(ngModel)]="form.userInfo.otherNames" name="otherNames" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div class="md:col-span-2">
-      <label class="block text-sm font-medium text-gray-700">Nombre legal</label>
-      <input type="text" [(ngModel)]="form.userInfo.legalName" name="legalName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <!-- Contacto y Dirección -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-      <input type="email" [(ngModel)]="form.userInfo.email" name="infoEmail" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">País</label>
-      <input type="text" [(ngModel)]="form.userInfo.country" name="country" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Región</label>
-      <input type="text" [(ngModel)]="form.userInfo.region" name="region" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Ciudad</label>
-      <input type="text" [(ngModel)]="form.userInfo.city" name="city" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div class="md:col-span-2">
-      <label class="block text-sm font-medium text-gray-700">Dirección</label>
-      <input type="text" [(ngModel)]="form.userInfo.address" name="address" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Detalle dirección</label>
-      <input type="text" [(ngModel)]="form.userInfo.addressDetail" name="addressDetail" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Código postal</label>
-      <input type="text" [(ngModel)]="form.userInfo.postalCode" name="postalCode" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Teléfono principal</label>
-      <input type="text" [(ngModel)]="form.userInfo.phone" name="phone" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Teléfono secundario</label>
-      <input type="text" [(ngModel)]="form.userInfo.phone2" name="phone2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-    </div>
-  </div>
-
-  <!-- Botón de envío -->
-  <div class="pt-4">
-    <button type="submit" class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow">
-      Registrarse
-    </button>
-  </div>
-</form>
+  </form>
+</div>
