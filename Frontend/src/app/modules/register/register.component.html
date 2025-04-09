@@ -1,201 +1,324 @@
 <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 <div class="min-h-screen py-8 bg-gradient-to-b from-gray-900 via-gray-900 to-purple-800">
-  <div class="max-w-4xl mx-auto p-6 bg-gray-100 shadow-md rounded-xl">
+  <div class="max-w-4xl mx-auto p-4 md:p-6 bg-gray-100 shadow-md rounded-xl">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Registro de Usuario</h1>
 
-    <div class="border-b border-gray-200 mb-4">
-      <ul class="flex -mb-px">
-        <li class="mr-2">
-          <a href="#" 
-             (click)="setActiveTab('cuenta'); $event.preventDefault();"
-             [ngClass]="{
-               'text-blue-600 border-blue-500': activeTab === 'cuenta',
-               'text-gray-500 border-transparent hover:border-blue-500 hover:text-blue-600': activeTab !== 'cuenta'
-             }"
-             class="inline-block py-2 px-4 text-sm font-medium text-center border-b-2">
-            Datos de cuenta
-          </a>
-        </li>
-        <li class="mr-2">
-          <a href="#" 
-             (click)="setActiveTab('personal'); $event.preventDefault();"
-             [ngClass]="{
-               'text-blue-600 border-blue-500': activeTab === 'personal',
-               'text-gray-500 border-transparent hover:border-blue-500 hover:text-blue-600': activeTab !== 'personal'
-             }"
-             class="inline-block py-2 px-4 text-sm font-medium text-center border-b-2">
-            Información personal
-          </a>
-        </li>
-        <li>
-          <a href="#" 
-             (click)="setActiveTab('contacto'); $event.preventDefault();"
-             [ngClass]="{
-               'text-blue-600 border-blue-500': activeTab === 'contacto',
-               'text-gray-500 border-transparent hover:border-blue-500 hover:text-blue-600': activeTab !== 'contacto'
-             }"
-             class="inline-block py-2 px-4 text-sm font-medium text-center border-b-2">
-            Contacto y Dirección
-          </a>
-        </li>
-      </ul>
+    <!-- Indicador de progreso -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between">
+        <div class="flex flex-col items-center">
+          <div [ngClass]="{'bg-blue-600': activeTab === 'cuenta', 'bg-green-500': activeTab === 'personal' || activeTab === 'contacto', 'bg-gray-300': false}" 
+               class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold">1</div>
+          <span class="text-xs mt-1">Cuenta</span>
+        </div>
+        <div class="flex-1 h-1 mx-2" [ngClass]="{'bg-blue-600': activeTab === 'personal' || activeTab === 'contacto', 'bg-gray-300': activeTab === 'cuenta'}"></div>
+        <div class="flex flex-col items-center">
+          <div [ngClass]="{'bg-blue-600': activeTab === 'personal', 'bg-green-500': activeTab === 'contacto', 'bg-gray-300': activeTab === 'cuenta'}" 
+               class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold">2</div>
+          <span class="text-xs mt-1">Personal</span>
+        </div>
+        <div class="flex-1 h-1 mx-2" [ngClass]="{'bg-blue-600': activeTab === 'contacto', 'bg-gray-300': activeTab === 'cuenta' || activeTab === 'personal'}"></div>
+        <div class="flex flex-col items-center">
+          <div [ngClass]="{'bg-blue-600': activeTab === 'contacto', 'bg-gray-300': activeTab === 'cuenta' || activeTab === 'personal'}" 
+               class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold">3</div>
+          <span class="text-xs mt-1">Contacto</span>
+        </div>
+      </div>
     </div>
     
-    <form (ngSubmit)="onSubmit()" class="space-y-6">
-      
-      <!-- Sección de Datos de cuenta -->
-      <div id="content-cuenta" [ngClass]="{ 'hidden': activeTab !== 'cuenta' }">
-        <h2 class="text-xl font-semibold text-gray-800">Datos de cuenta</h2>
+    <!-- Sección de Datos de cuenta -->
+    <div id="content-cuenta" [ngClass]="{ 'hidden': activeTab !== 'cuenta' }">
+      <h2 class="text-xl font-semibold text-gray-800">Datos de cuenta</h2>
+      <form [formGroup]="accountForm" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
-            <input type="text" [(ngModel)]="form.user.username" name="username" id="username" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
+            <input type="text" formControlName="username" id="username" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': accountForm.get('username')?.invalid && (accountForm.get('username')?.touched || formSubmitted)}" />
+            <div *ngIf="accountForm.get('username')?.invalid && (accountForm.get('username')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="accountForm.get('username')?.errors?.['required']">El nombre de usuario es requerido.</div>
+              <div *ngIf="accountForm.get('username')?.errors?.['minlength']">El nombre de usuario debe tener al menos 4 caracteres.</div>
+            </div>
           </div>
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-            <input type="email" [(ngModel)]="form.user.email" name="email" id="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
+            <input type="email" formControlName="email" id="email" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': accountForm.get('email')?.invalid && (accountForm.get('email')?.touched || formSubmitted)}" />
+            <div *ngIf="accountForm.get('email')?.invalid && (accountForm.get('email')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="accountForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</div>
+              <div *ngIf="accountForm.get('email')?.errors?.['email']">Debe ingresar un correo electrónico válido.</div>
+            </div>
           </div>
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-            <input type="password" [(ngModel)]="form.user.password" name="password" id="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200" required />
+            <div class="relative">
+              <input [type]="passwordVisible ? 'text' : 'password'" formControlName="password" id="password" 
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2 pr-10"
+                    [ngClass]="{'border-red-500': accountForm.get('password')?.invalid && (accountForm.get('password')?.touched || formSubmitted)}" />
+              <button type="button" (click)="togglePasswordVisibility()" class="absolute inset-y-0 right-0 px-3 flex items-center" tabindex="-1">
+                <i class="fas" [ngClass]="passwordVisible ? 'fa-eye-slash' : 'fa-eye'"></i>
+              </button>
+            </div>
+            <div *ngIf="accountForm.get('password')?.invalid && (accountForm.get('password')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="accountForm.get('password')?.errors?.['required']">La contraseña es requerida.</div>
+              <div *ngIf="accountForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 8 caracteres.</div>
+            </div>
+          </div>
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
+            <div class="relative">
+              <input [type]="confirmPasswordVisible ? 'text' : 'password'" formControlName="confirmPassword" id="confirmPassword" 
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2 pr-10"
+                    [ngClass]="{'border-red-500': (accountForm.get('confirmPassword')?.invalid || accountForm.hasError('passwordMismatch')) && (accountForm.get('confirmPassword')?.touched || formSubmitted)}" />
+              <button type="button" (click)="toggleConfirmPasswordVisibility()" class="absolute inset-y-0 right-0 px-3 flex items-center" tabindex="-1">
+                <i class="fas" [ngClass]="confirmPasswordVisible ? 'fa-eye-slash' : 'fa-eye'"></i>
+              </button>
+            </div>
+            <div *ngIf="(accountForm.get('confirmPassword')?.invalid || accountForm.hasError('passwordMismatch')) && (accountForm.get('confirmPassword')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="accountForm.get('confirmPassword')?.errors?.['required']">La confirmación de contraseña es requerida.</div>
+              <div *ngIf="accountForm.hasError('passwordMismatch')">Las contraseñas no coinciden.</div>
+            </div>
           </div>
         </div>
-        <div class="pt-4">
-          <button type="button" (click)="setActiveTab('personal')" class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow">
+        <div class="pt-4 flex justify-end">
+          <button type="button" (click)="continue()" 
+                  class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors shadow">
             Continuar
           </button>
         </div>
-      </div>
+        <div *ngIf="formSubmitted && accountForm.invalid" class="bg-red-100 text-red-700 p-3 rounded-md mt-4">
+          Por favor, complete todos los campos requeridos antes de continuar.
+        </div>
+      </form>
+    </div>
 
-      <!-- Sección de Información Personal -->
-      <div id="content-personal" [ngClass]="{ 'hidden': activeTab !== 'personal' }">
-        <h2 class="text-xl font-semibold text-gray-800 pt-4">Información personal</h2>
+    <!-- Sección de Información Personal -->
+    <div id="content-personal" [ngClass]="{ 'hidden': activeTab !== 'personal' }">
+      <h2 class="text-xl font-semibold text-gray-800 pt-4">Información personal</h2>
+      <form [formGroup]="personalForm" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="type" class="block text-sm font-medium text-gray-700">Tipo</label>
-            <select [(ngModel)]="form.userInfo.type" name="type" id="type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            <label for="type" class="block text-sm font-medium text-gray-700">Tipo de persona</label>
+            <select formControlName="type" (change)="onPersonTypeChange()" id="type" 
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                    [ngClass]="{'border-red-500': personalForm.get('type')?.invalid && (personalForm.get('type')?.touched || formSubmitted)}">
               <option value="natural">Persona Natural</option>
               <option value="juridica">Persona Jurídica</option>
             </select>
+            <div *ngIf="personalForm.get('type')?.invalid && (personalForm.get('type')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('type')?.errors?.['required']">Debe seleccionar un tipo de persona.</div>
+            </div>
           </div>
           <div>
             <label for="documentType" class="block text-sm font-medium text-gray-700">Tipo de documento</label>
-            <input type="text" [(ngModel)]="form.userInfo.documentType" name="documentType" id="documentType" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <select formControlName="documentType" id="documentType" 
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                    [ngClass]="{'border-red-500': personalForm.get('documentType')?.invalid && (personalForm.get('documentType')?.touched || formSubmitted)}">
+              <option value="">Seleccione</option>
+              <option *ngIf="isPersonaNatural()" value="cedula">Cédula de Ciudadanía</option>
+              <option *ngIf="isPersonaNatural()" value="pasaporte">Pasaporte</option>
+              <option *ngIf="isPersonaNatural()" value="extranjeria">Cédula de Extranjería</option>
+              <option *ngIf="!isPersonaNatural()" value="nit">NIT</option>
+              <option *ngIf="!isPersonaNatural()" value="rut">RUT</option>
+            </select>
+            <div *ngIf="personalForm.get('documentType')?.invalid && (personalForm.get('documentType')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('documentType')?.errors?.['required']">El tipo de documento es requerido.</div>
+            </div>
           </div>
           <div>
             <label for="documentNumber" class="block text-sm font-medium text-gray-700">Número de documento</label>
-            <input type="text" [(ngModel)]="form.userInfo.documentNumber" name="documentNumber" id="documentNumber" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="documentNumber" id="documentNumber" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': personalForm.get('documentNumber')?.invalid && (personalForm.get('documentNumber')?.touched || formSubmitted)}" />
+            <div *ngIf="personalForm.get('documentNumber')?.invalid && (personalForm.get('documentNumber')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('documentNumber')?.errors?.['required']">El número de documento es requerido.</div>
+            </div>
           </div>
           <div>
             <label for="documentExp" class="block text-sm font-medium text-gray-700">Fecha de expedición</label>
-            <input type="date" [(ngModel)]="form.userInfo.documentExp" name="documentExp" id="documentExp" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="date" formControlName="documentExp" id="documentExp" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': personalForm.get('documentExp')?.invalid && (personalForm.get('documentExp')?.touched || formSubmitted)}" />
+            <div *ngIf="personalForm.get('documentExp')?.invalid && (personalForm.get('documentExp')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('documentExp')?.errors?.['required']">La fecha de expedición es requerida.</div>
+            </div>
           </div>
           <div>
             <label for="expCountry" class="block text-sm font-medium text-gray-700">País de expedición</label>
-            <input type="text" [(ngModel)]="form.userInfo.expCountry" name="expCountry" id="expCountry" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="expCountry" id="expCountry" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': personalForm.get('expCountry')?.invalid && (personalForm.get('expCountry')?.touched || formSubmitted)}" />
+            <div *ngIf="personalForm.get('expCountry')?.invalid && (personalForm.get('expCountry')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('expCountry')?.errors?.['required']">El país de expedición es requerido.</div>
+            </div>
           </div>
           <div>
             <label for="expRegion" class="block text-sm font-medium text-gray-700">Región de expedición</label>
-            <input type="text" [(ngModel)]="form.userInfo.expRegion" name="expRegion" id="expRegion" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="expRegion" id="expRegion" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2" />
           </div>
           <div>
             <label for="expCity" class="block text-sm font-medium text-gray-700">Ciudad de expedición</label>
-            <input type="text" [(ngModel)]="form.userInfo.expCity" name="expCity" id="expCity" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="expCity" id="expCity" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2" />
           </div>
-          <div>
-            <label for="firstName" class="block text-sm font-medium text-gray-700">Primer nombre</label>
-            <input type="text" [(ngModel)]="form.userInfo.firstName" name="firstName" id="firstName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+          
+          <!-- Campos condicionales para persona natural -->
+          <div *ngIf="isPersonaNatural()">
+            <label for="firstName" class="block text-sm font-medium text-gray-700">Nombres</label>
+            <input type="text" formControlName="firstName" id="firstName" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': personalForm.get('firstName')?.invalid && (personalForm.get('firstName')?.touched || formSubmitted)}" />
+            <div *ngIf="personalForm.get('firstName')?.invalid && (personalForm.get('firstName')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('firstName')?.errors?.['required']">El nombre es requerido.</div>
+            </div>
           </div>
-          <div>
+          <div *ngIf="isPersonaNatural()">
             <label for="middleName" class="block text-sm font-medium text-gray-700">Segundo nombre</label>
-            <input type="text" [(ngModel)]="form.userInfo.middleName" name="middleName" id="middleName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="middleName" id="middleName" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2" />
           </div>
-          <div>
-            <label for="lastName" class="block text-sm font-medium text-gray-700">Apellido paterno</label>
-            <input type="text" [(ngModel)]="form.userInfo.lastName" name="lastName" id="lastName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+          <div *ngIf="isPersonaNatural()">
+            <label for="lastName" class="block text-sm font-medium text-gray-700">Primer apellido</label>
+            <input type="text" formControlName="lastName" id="lastName" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': personalForm.get('lastName')?.invalid && (personalForm.get('lastName')?.touched || formSubmitted)}" />
+            <div *ngIf="personalForm.get('lastName')?.invalid && (personalForm.get('lastName')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('lastName')?.errors?.['required']">El apellido es requerido.</div>
+            </div>
           </div>
-          <div>
-            <label for="secondLastName" class="block text-sm font-medium text-gray-700">Apellido materno</label>
-            <input type="text" [(ngModel)]="form.userInfo.secondLastName" name="secondLastName" id="secondLastName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+          <div *ngIf="isPersonaNatural()">
+            <label for="secondLastName" class="block text-sm font-medium text-gray-700">Segundo apellido</label>
+            <input type="text" formControlName="secondLastName" id="secondLastName" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2" />
           </div>
-          <div class="md:col-span-2">
+          <div *ngIf="isPersonaNatural()">
             <label for="otherNames" class="block text-sm font-medium text-gray-700">Otros nombres</label>
-            <input type="text" [(ngModel)]="form.userInfo.otherNames" name="otherNames" id="otherNames" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="otherNames" id="otherNames" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2" />
           </div>
-          <div class="md:col-span-2">
+          <div *ngIf="isPersonaNatural()">
             <label for="legalName" class="block text-sm font-medium text-gray-700">Nombre legal</label>
-            <input type="text" [(ngModel)]="form.userInfo.legalName" name="legalName" id="legalName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="legalName" id="legalName" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2" />
+          </div>
+
+          <!-- Campos para persona jurídica -->
+          <div *ngIf="!isPersonaNatural()">
+            <label for="companyName" class="block text-sm font-medium text-gray-700">Nombre de la empresa</label>
+            <input type="text" formControlName="companyName" id="companyName" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': personalForm.get('companyName')?.invalid && (personalForm.get('companyName')?.touched || formSubmitted)}" />
+            <div *ngIf="personalForm.get('companyName')?.invalid && (personalForm.get('companyName')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('companyName')?.errors?.['required']">El nombre de la empresa es requerido.</div>
+            </div>
+          </div>
+          <div *ngIf="!isPersonaNatural()">
+            <label for="nit" class="block text-sm font-medium text-gray-700">NIT</label>
+            <input type="text" formControlName="nit" id="nit" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': personalForm.get('nit')?.invalid && (personalForm.get('nit')?.touched || formSubmitted)}" />
+            <div *ngIf="personalForm.get('nit')?.invalid && (personalForm.get('nit')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('nit')?.errors?.['required']">El NIT es requerido.</div>
+            </div>
+          </div>
+          <div *ngIf="!isPersonaNatural()">
+            <label for="legalRepresentative" class="block text-sm font-medium text-gray-700">Representante legal</label>
+            <input type="text" formControlName="legalRepresentative" id="legalRepresentative" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': personalForm.get('legalRepresentative')?.invalid && (personalForm.get('legalRepresentative')?.touched || formSubmitted)}" />
+            <div *ngIf="personalForm.get('legalRepresentative')?.invalid && (personalForm.get('legalRepresentative')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="personalForm.get('legalRepresentative')?.errors?.['required']">El representante legal es requerido.</div>
+            </div>
           </div>
         </div>
-        <div class="pt-4">
-          <!-- Botón Atras -->
-          <button 
-            *ngIf="activeTab !== 'cuenta'" 
-            (click)="goBack()" 
-            class="w-full md:w-auto px-6 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 shadow">
-            Atras
-          </button>
         
-          <!-- Botón Continuar -->
-          <button 
-            *ngIf="activeTab !== 'contacto'" 
-            (click)="continue()" 
-            class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow">
+        <div class="pt-4 flex justify-between">
+          <button type="button" (click)="goBack()" 
+                  class="px-6 py-2 bg-gray-400 text-white rounded-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors shadow">
+            Atrás
+          </button>
+          <button type="button" (click)="continue()" 
+                  class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors shadow">
             Continuar
           </button>
         </div>
-      </div>
+        <div *ngIf="formSubmitted && personalForm.invalid" class="bg-red-100 text-red-700 p-3 rounded-md mt-4">
+          Por favor, complete todos los campos requeridos antes de continuar.
+        </div>
+      </form>
+    </div>
 
-      <!-- Sección de Contacto y Dirección -->
-      <div id="content-contacto" [ngClass]="{ 'hidden': activeTab !== 'contacto' }">
-        <h2 class="text-xl font-semibold text-gray-800 pt-4">Contacto y Dirección</h2>
+    <!-- Sección de Información de Contacto -->
+    <div id="content-contacto" [ngClass]="{ 'hidden': activeTab !== 'contacto' }">
+      <h2 class="text-xl font-semibold text-gray-800 pt-4">Información de contacto</h2>
+      <form [formGroup]="contactForm" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label for="infoEmail" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-            <input type="email" [(ngModel)]="form.userInfo.email" name="infoEmail" id="infoEmail" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <label for="contact-email" class="block text-sm font-medium text-gray-700">Correo electrónico de contacto</label>
+            <input type="email" formControlName="email" id="contact-email" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': contactForm.get('email')?.invalid && (contactForm.get('email')?.touched || formSubmitted)}" />
+            <div *ngIf="contactForm.get('email')?.invalid && (contactForm.get('email')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="contactForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</div>
+              <div *ngIf="contactForm.get('email')?.errors?.['email']">Debe ingresar un correo electrónico válido.</div>
+            </div>
           </div>
           <div>
             <label for="country" class="block text-sm font-medium text-gray-700">País</label>
-            <input type="text" [(ngModel)]="form.userInfo.country" name="country" id="country" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="country" id="country" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': contactForm.get('country')?.invalid && (contactForm.get('country')?.touched || formSubmitted)}" />
+            <div *ngIf="contactForm.get('country')?.invalid && (contactForm.get('country')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="contactForm.get('country')?.errors?.['required']">El país es requerido.</div>
+            </div>
           </div>
           <div>
             <label for="region" class="block text-sm font-medium text-gray-700">Región</label>
-            <input type="text" [(ngModel)]="form.userInfo.region" name="region" id="region" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="region" id="region" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2" />
           </div>
           <div>
             <label for="city" class="block text-sm font-medium text-gray-700">Ciudad</label>
-            <input type="text" [(ngModel)]="form.userInfo.city" name="city" id="city" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-          </div>
-          <div class="md:col-span-2">
-            <label for="address" class="block text-sm font-medium text-gray-700">Dirección</label>
-            <input type="text" [(ngModel)]="form.userInfo.address" name="address" id="address" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="city" id="city" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': contactForm.get('city')?.invalid && (contactForm.get('city')?.touched || formSubmitted)}" />
+            <div *ngIf="contactForm.get('city')?.invalid && (contactForm.get('city')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="contactForm.get('city')?.errors?.['required']">La ciudad es requerida.</div>
+            </div>
           </div>
           <div>
-            <label for="addressDetail" class="block text-sm font-medium text-gray-700">Detalle dirección</label>
-            <input type="text" [(ngModel)]="form.userInfo.addressDetail" name="addressDetail" id="addressDetail" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <label for="address" class="block text-sm font-medium text-gray-700">Dirección</label>
+            <input type="text" formControlName="address" id="address" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': contactForm.get('address')?.invalid && (contactForm.get('address')?.touched || formSubmitted)}" />
+            <div *ngIf="contactForm.get('address')?.invalid && (contactForm.get('address')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="contactForm.get('address')?.errors?.['required']">La dirección es requerida.</div>
+            </div>
+          </div>
+          <div>
+            <label for="addressDetail" class="block text-sm font-medium text-gray-700">Detalle de dirección</label>
+            <input type="text" formControlName="addressDetail" id="addressDetail" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2" />
           </div>
           <div>
             <label for="postalCode" class="block text-sm font-medium text-gray-700">Código postal</label>
-            <input type="text" [(ngModel)]="form.userInfo.postalCode" name="postalCode" id="postalCode" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="text" formControlName="postalCode" id="postalCode" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2" />
           </div>
           <div>
             <label for="phone" class="block text-sm font-medium text-gray-700">Teléfono principal</label>
-            <input type="text" [(ngModel)]="form.userInfo.phone" name="phone" id="phone" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
+            <input type="tel" formControlName="phone" id="phone" 
+                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200 px-3 py-2"
+                   [ngClass]="{'border-red-500': contactForm.get('phone')?.invalid && (contactForm.get('phone')?.touched || formSubmitted)}" />
+            <div *ngIf="contactForm.get('phone')?.invalid && (contactForm.get('phone')?.touched || formSubmitted)" class="text-red-500 text-xs mt-1">
+              <div *ngIf="contactForm.get('phone')?.errors?.['required']">El teléfono es requerido.</div>
+              <div *ngIf="contactForm.get('phone')?.errors?.['pattern']">Ingrese un número de teléfono válido.</div>
+            </div>
           </div>
           <div>
-            <label for="phone2" class="block text-sm font-medium text-gray-700">Teléfono secundario</label>
-            <input type="text" [(ngModel)]="form.userInfo.phone2" name="phone2" id="phone2" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" />
-          </div>
-        </div>
-        <div class="pt-4">
-          <button type="submit" class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow">
-            Registrarse
-          </button>
-        </div>
-      </div>
-
-    </form>
-</div>
-
-</div>
+            <label for="phone2" class="block text-sm font-medium text-gray-700">Teléfono alternativo</label>

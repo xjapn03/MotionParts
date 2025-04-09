@@ -1,70 +1,176 @@
-<div class="max-w-6xl mx-auto p-8 bg-white shadow-lg rounded-lg">
-  <h2 class="text-3xl font-bold mb-6 text-center text-purple-700">Reporte de Ventas</h2>
-
+<div class="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 bg-white shadow-lg rounded-lg">
+  <h2 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-purple-700">Panel de Ventas</h2>
+  
   <!-- Filtros -->
-  <div class="flex justify-center space-x-4 mb-6">
-    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700" (click)="selectedFilter='day'; applyFilter()">Día</button>
-    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700" (click)="selectedFilter='week'; applyFilter()">Semana</button>
-    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700" (click)="selectedFilter='month'; applyFilter()">Mes</button>
-  </div>
-
-  <!-- Gráfica de Ventas -->
-  <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-    <canvas #salesChart></canvas>
-  </div>
-
-  <!-- Lista de ventas -->
-  <div class="bg-white p-6 rounded-lg shadow-md mt-6">
-    <h3 class="text-xl font-semibold text-purple-700 mb-4">Detalle de Ventas</h3>
-    <table class="w-full border-collapse border border-gray-300">
-      <thead>
-        <tr class="bg-purple-200">
-          <th class="border border-gray-300 px-4 py-2">Producto</th>
-          <th class="border border-gray-300 px-4 py-2">Cantidad</th>
-          <th class="border border-gray-300 px-4 py-2">Precio</th>
-          <th class="border border-gray-300 px-4 py-2">Fecha</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let sale of filteredSales" class="border-b hover:bg-purple-100">
-          <td class="border border-gray-300 px-4 py-2">{{ sale.name }}</td>
-          <td class="border border-gray-300 px-4 py-2">{{ sale.quantity }}</td>
-          <td class="border border-gray-300 px-4 py-2">${{ sale.price | number }}</td>
-          <td class="border border-gray-300 px-4 py-2">{{ sale.date | date:'short' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Productos más vendidos -->
-  <div class="bg-purple-100 p-6 rounded-lg shadow-md mt-6">
-    <h3 class="text-xl font-semibold text-purple-800 mb-4">Productos Más Vendidos</h3>
-    <ul>
-      <li *ngFor="let product of topSellingProducts" class="mb-2 text-purple-900">
-        {{ product.name }} - {{ product.quantity }} vendidos
-      </li>
-    </ul>
-  </div>
-
-  <!-- Productos menos vendidos -->
-  <div class="bg-purple-100 p-6 rounded-lg shadow-md mt-6">
-    <h3 class="text-xl font-semibold text-purple-800 mb-4">Productos Menos Vendidos</h3>
-    <ul>
-      <li *ngFor="let product of leastSellingProducts" class="mb-2 text-purple-900">
-        {{ product.name }} - {{ product.quantity }} vendidos
-      </li>
-    </ul>
-  </div>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Resumen -->
-    <div class="bg-purple-100 p-6 rounded-lg shadow-md mt-6 text-center" >
-      <p class="text-2xl font-semibold text-purple-800">Total Productos Vendidos</p>
-      <p class="text-3xl font-bold text-purple-900">{{ totalProductsSold }}</p>
+  <div class="mb-6 sm:mb-8">
+    <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-purple-700">Filtros</h3>
+    
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-purple-50 p-3 sm:p-4 rounded-lg">
+      <!-- Botones de filtro rápido -->
+      <div class="flex flex-wrap gap-2 w-full sm:w-auto mb-4 sm:mb-0">
+        <button class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-purple-600 text-white text-sm sm:text-base rounded-lg hover:bg-purple-700 transition-colors" 
+                [ngClass]="{'bg-purple-800': selectedFilter === 'day'}"
+                (click)="selectedFilter='day'; applyFilter()">
+          Hoy
+        </button>
+        <button class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-purple-600 text-white text-sm sm:text-base rounded-lg hover:bg-purple-700 transition-colors" 
+                [ngClass]="{'bg-purple-800': selectedFilter === 'week'}"
+                (click)="selectedFilter='week'; applyFilter()">
+          Última Semana
+        </button>
+        <button class="flex-1 sm:flex-none px-3 sm:px-4 py-2 bg-purple-600 text-white text-sm sm:text-base rounded-lg hover:bg-purple-700 transition-colors" 
+                [ngClass]="{'bg-purple-800': selectedFilter === 'month'}"
+                (click)="selectedFilter='month'; applyFilter()">
+          Último Mes
+        </button>
+      </div>
+      
+      <!-- Selector de fechas personalizado -->
+      <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 w-full sm:w-auto">
+          <label for="startDate" class="text-sm sm:text-base text-purple-700 font-medium mb-1 sm:mb-0 sm:mr-2">Desde:</label>
+          <input type="date" id="startDate" #startDateInput class="w-full sm:w-auto border border-purple-300 rounded px-2 py-1 sm:px-3 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+        </div>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 w-full sm:w-auto">
+          <label for="endDate" class="text-sm sm:text-base text-purple-700 font-medium mb-1 sm:mb-0 sm:mr-2">Hasta:</label>
+          <input type="date" id="endDate" #endDateInput class="w-full sm:w-auto border border-purple-300 rounded px-2 py-1 sm:px-3 sm:py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+        </div>
+        <button class="w-full sm:w-auto mt-2 sm:mt-0 px-3 sm:px-4 py-2 bg-purple-600 text-white text-sm sm:text-base rounded-lg hover:bg-purple-700 transition-colors"
+                (click)="applyCustomFilter(startDateInput.value, endDateInput.value)">
+          Aplicar
+        </button>
+      </div>
     </div>
-
-    <div class="bg-purple-100 p-6 rounded-lg shadow-md mt-6 text-center">
-      <p class="text-2xl font-semibold text-purple-800">Total Ingresos</p>
-      <p class="text-3xl font-bold text-purple-900">${{ totalRevenue | number }}</p>
+  </div>
+  
+  <!-- Resumen de ventas -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 sm:p-6 rounded-lg shadow-md text-center">
+      <h3 class="text-base sm:text-lg font-semibold text-purple-700 mb-1">Periodo</h3>
+      <p class="text-lg sm:text-xl font-bold text-purple-900">{{ startDate | date:'dd/MM/yyyy' }} - {{ endDate | date:'dd/MM/yyyy' }}</p>
+    </div>
+    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 sm:p-6 rounded-lg shadow-md text-center">
+      <h3 class="text-base sm:text-lg font-semibold text-purple-700 mb-1">Productos Vendidos</h3>
+      <p class="text-2xl sm:text-3xl font-bold text-purple-900">{{ totalProductsSold }}</p>
+    </div>
+    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 sm:p-6 rounded-lg shadow-md text-center">
+      <h3 class="text-base sm:text-lg font-semibold text-purple-700 mb-1">Ingresos Totales</h3>
+      <p class="text-2xl sm:text-3xl font-bold text-purple-900">${{ totalRevenue | number:'1.2-2' }}</p>
+    </div>
+  </div>
+  
+  <!-- Gráficos -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 sm:mb-8">
+    <!-- Gráfica de Ventas -->
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+      <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4">Ventas por Día</h3>
+      <div class="h-48 sm:h-64">
+        <canvas #salesChart></canvas>
+      </div>
+    </div>
+    
+    <!-- Gráfica de Productos -->
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+      <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4">Top Productos</h3>
+      <div class="h-48 sm:h-64">
+        <canvas #productChart></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Productos más vendidos y menos vendidos -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 sm:mb-8">
+    <!-- Productos más vendidos -->
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+      <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4">Productos Más Vendidos</h3>
+      <div class="overflow-hidden shadow-md rounded-lg">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-purple-200">
+            <thead class="bg-purple-100">
+              <tr>
+                <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-purple-800">Producto</th>
+                <th class="px-2 sm:px-4 py-2 sm:py-3 text-right text-xs sm:text-sm font-medium text-purple-800">Cantidad</th>
+                <th class="px-2 sm:px-4 py-2 sm:py-3 text-right text-xs sm:text-sm font-medium text-purple-800">Ingresos</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-purple-100">
+              <tr *ngFor="let product of topSellingProducts; let i = index" 
+                  [ngClass]="{'bg-purple-50': i % 2 === 0}">
+                <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-gray-800">{{ product.name }}</td>
+                <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-right text-gray-800">{{ product.quantity }}</td>
+                <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-right text-gray-800">${{ product.revenue | number:'1.2-2' }}</td>
+              </tr>
+              <tr *ngIf="topSellingProducts.length === 0">
+                <td colspan="3" class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-center text-gray-500">No hay datos disponibles</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Productos menos vendidos -->
+    <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
+      <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4">Productos Menos Vendidos</h3>
+      <div class="overflow-hidden shadow-md rounded-lg">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-purple-200">
+            <thead class="bg-purple-100">
+              <tr>
+                <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-purple-800">Producto</th>
+                <th class="px-2 sm:px-4 py-2 sm:py-3 text-right text-xs sm:text-sm font-medium text-purple-800">Cantidad</th>
+                <th class="px-2 sm:px-4 py-2 sm:py-3 text-right text-xs sm:text-sm font-medium text-purple-800">Ingresos</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-purple-100">
+              <tr *ngFor="let product of leastSellingProducts; let i = index" 
+                  [ngClass]="{'bg-purple-50': i % 2 === 0}">
+                <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-gray-800">{{ product.name }}</td>
+                <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-right text-gray-800">{{ product.quantity }}</td>
+                <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-right text-gray-800">${{ product.revenue | number:'1.2-2' }}</td>
+              </tr>
+              <tr *ngIf="leastSellingProducts.length === 0">
+                <td colspan="3" class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-center text-gray-500">No hay datos disponibles</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Lista detallada de ventas -->
+  <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md mb-6 sm:mb-8">
+    <h3 class="text-lg sm:text-xl font-semibold text-purple-700 mb-3 sm:mb-4">Detalle de Ventas</h3>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-purple-200 shadow-md rounded-lg">
+        <thead class="bg-purple-100">
+          <tr>
+            <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-purple-800">ID</th>
+            <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-purple-800">Producto</th>
+            <th class="px-2 sm:px-4 py-2 sm:py-3 text-right text-xs sm:text-sm font-medium text-purple-800">Cantidad</th>
+            <th class="px-2 sm:px-4 py-2 sm:py-3 text-right text-xs sm:text-sm font-medium text-purple-800">Precio</th>
+            <th class="px-2 sm:px-4 py-2 sm:py-3 text-right text-xs sm:text-sm font-medium text-purple-800">Total</th>
+            <th class="px-2 sm:px-4 py-2 sm:py-3 text-left text-xs sm:text-sm font-medium text-purple-800">Fecha</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-purple-100">
+          <tr *ngFor="let sale of filteredSales; let i = index" 
+              [ngClass]="{'bg-purple-50': i % 2 === 0}" 
+              class="hover:bg-purple-100 transition-colors">
+            <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-gray-800">{{ sale.id }}</td>
+            <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-gray-800">{{ sale.name }}</td>
+            <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-right text-gray-800">{{ sale.quantity }}</td>
+            <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-right text-gray-800">${{ sale.price | number:'1.2-2' }}</td>
+            <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-right font-medium text-gray-800">${{ sale.total | number:'1.2-2' }}</td>
+            <td class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-gray-800">{{ sale.date | date:'dd/MM/yyyy HH:mm' }}</td>
+          </tr>
+          <tr *ngIf="filteredSales.length === 0">
+            <td colspan="6" class="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-center text-gray-500">No hay ventas en el periodo seleccionado</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
