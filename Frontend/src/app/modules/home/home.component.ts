@@ -4,17 +4,20 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import { RouterModule } from '@angular/router'; // 👈 Importa esto
 
 @Component({
   selector: 'app-home',
+  standalone: true, // 👈 importante
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
+  imports: [RouterModule], // 👈 agrega esto
 })
 export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   private countersInitialized = false;
   private backgroundInterval: any;
   private currentBgIndex = 0;
-  
+
   // Array de imágenes de fondo para el hero
   private backgroundImages = [
     'https://www.namesnack.com/images/namesnack-auto-parts-supply-business-names-5996x3374-20200915.jpeg?crop=16:9,smart&width=1200&dpr=2',
@@ -29,7 +32,7 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
   ngOnInit(): void {
     // Iniciar el carrusel de imágenes de fondo
     this.startBackgroundSlider();
-    
+
     // Initialize counter animations when page loads
     window.addEventListener('load', () => {
       this.initCounters();
@@ -83,7 +86,7 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
       }
     });
   }
-  
+
   ngOnDestroy(): void {
     // Limpiar el intervalo cuando el componente se destruye
     if (this.backgroundInterval) {
@@ -96,14 +99,14 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   private startBackgroundSlider(): void {
     this.changeBackgroundImage();
-    
+
     // Cambiar la imagen cada 5 segundos
     this.backgroundInterval = setInterval(() => {
       this.currentBgIndex = (this.currentBgIndex + 1) % this.backgroundImages.length;
       this.changeBackgroundImage();
     }, 5000);
   }
-  
+
   /**
    * Cambia la imagen de fondo con una transición suave
    */
@@ -127,7 +130,7 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     this.animateCounter('clientes-contador', 0, 5000, 2000);
     this.animateCounter('ventas-contador', 0, 12000, 2000);
     this.animateCounter('experiencia-contador', 0, 10, 1500);
-    
+
     this.countersInitialized = true;
   }
 
@@ -143,7 +146,7 @@ export class HomeComponent implements AfterViewInit, OnInit, OnDestroy {
     const increment = range / (duration / 50);
     const prefix = id === 'experiencia-contador' ? '' : '+';
     const suffix = id === 'experiencia-contador' ? ' años' : '';
-    
+
     const timer = setInterval(() => {
       current += increment;
       if (current >= end) {

@@ -8,7 +8,7 @@ import { ShoppingCartService } from './core/services/shoppingCart.service';
 import { CartItem } from './core/models/cartItem.model';
 import { Observable, Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
-
+import { NgModule } from '@angular/core';
 
 @Component({
   selector: 'app-root',
