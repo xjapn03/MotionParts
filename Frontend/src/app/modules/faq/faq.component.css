@@ -1,135 +1,71 @@
 /* faq.component.css */
-.flex-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 15px;
+/* Puedes eliminar la mayoría del CSS anterior ya que usaremos Tailwind */
+/* Solo mantendremos algunas animaciones y efectos específicos */
+
+.faq-item {
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover con iconos de autopartes */
+.faq-item:hover::before {
+  opacity: 0.05;
+}
+
+/* Animación para abrir/cerrar preguntas */
+@keyframes slideDown {
+  from {
+    max-height: 0;
+    opacity: 0;
   }
-  
-  .faq-container {
-    flex: 1;
-    margin-right: 20px;
-    min-width: 300px;
-    max-width: 600px;
-    font-family: Arial, sans-serif;
+  to {
+    max-height: 500px;
+    opacity: 1;
   }
-  
-  .contact-form-container {
-    flex: 1;
-    min-width: 300px;
-    max-width: 500px;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    background-color: #e7e7e7;
-    align-self: flex-start;
+}
+
+@keyframes slideUp {
+  from {
+    max-height: 500px;
+    opacity: 1;
   }
-  
-  .faq-item {
-    background: #e7e7e7;
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    border-left: 4px solid #3b82f6;
+  to {
+    max-height: 0;
+    opacity: 0;
   }
-  
-  .faq-item:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-  }
-  
-  h3 {
-    margin: 0;
-    color: #333;
-    font-weight: 600;
-  }
-  
-  p {
-    margin-top: 10px;
-    color: #555;
-  }
-  
-  .contact-form-container h3 {
-    margin-top: 0;
-    color: #333;
-    text-align: center;
-    font-weight: 600;
-  }
-  
-  .contact-form-container p {
-    text-align: center;
-    color: #555;
-    margin-bottom: 20px;
-  }
-  
-  .contact-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .contact-form .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .contact-form label {
-    display: block;
-    margin-bottom: 5px;
-    color: #333;
-    font-weight: 500;
-  }
-  
-  .contact-form input,
-  .contact-form textarea {
-    width: calc(100% - 22px);
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
-  }
-  
-  .contact-form input:focus,
-  .contact-form textarea:focus {
-    border-color: #3b82f6;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-  }
-  
-  .contact-form textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-  
-  .contact-form button {
-    background-color: #3b82f6;
-    color: #e7e7e7;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-  }
-  
-  .contact-form button:hover {
-    background-color: #2563eb;
-  }
-  
-  /* Responsive design */
-  @media (max-width: 768px) {
-    .flex-container {
-      flex-direction: column;
-    }
-    
-    .faq-container, .contact-form-container {
-      margin-right: 0;
-      max-width: 100%;
-      margin-bottom: 20px;
-    }
-  }
+}
+
+.slide-down {
+  overflow: hidden;
+  animation: slideDown 0.3s ease forwards;
+}
+
+.slide-up {
+  overflow: hidden;
+  animation: slideUp 0.3s ease forwards;
+}
+
+/* Estilo para iconos específicos de autopartes (opcional) */
+.auto-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  opacity: 0.8;
+}
+
+/* Personalización scrollbar para navegadores webkit */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(236, 72, 72, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 72, 72, 0.8);
+}

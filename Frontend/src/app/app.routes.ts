@@ -19,8 +19,9 @@ import { MyOrdersComponent } from './modules/orders/my-orders/my-orders.componen
 import { OrderDetailsComponent } from './modules/orders/order-details/order-details.component';
 import { AdminOrderDetailsComponent } from './modules/admin/orders/order-details/order-details.component'; // Para admin
 import { RegisterComponent } from './modules/register/register.component';
-
 import { ProfileComponent } from './modules/user/profile/profile.component';
+import { ReportsComponent } from './modules/admin/reports/reports.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent }, // ✅ Ruta de registro
@@ -35,7 +36,8 @@ export const routes: Routes = [
       { path: 'orders', component: OrdersComponent },
       { path: 'order-details/:id', component: AdminOrderDetailsComponent },
       { path: 'invoices', component: InvoicesComponent },
-      { path: 'sales', component: SalesComponent }
+      { path: 'sales', component: SalesComponent },
+      { path: 'reports', component: ReportsComponent }
     ]
   },
 

@@ -1,0 +1,397 @@
+<!-- dashboard.component.html -->
+<div class="min-h-screen bg-gray-50 pb-12">
+    <!-- Header del dashboard -->
+    <div class="bg-gradient-to-r from-blue-700 to-blue-900 text-white">
+      <div class="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 class="text-2xl font-bold">Panel de Reportes</h1>
+            <p class="mt-1 text-blue-100">Monitorea usuarios, visitas y ventas de tu plataforma</p>
+          </div>
+          
+          <!-- Filtros para pantallas grandes -->
+          <div class="mt-4 md:mt-0 hidden md:flex items-center space-x-2">
+            <button 
+              (click)="setTimeRange('week')" 
+              [ngClass]="{'bg-blue-900 text-white': selectedTimeRange === 'week', 'bg-blue-800 text-blue-100 hover:bg-blue-900': selectedTimeRange !== 'week'}"
+              class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+              Semana
+            </button>
+            <button 
+              (click)="setTimeRange('month')" 
+              [ngClass]="{'bg-blue-900 text-white': selectedTimeRange === 'month', 'bg-blue-800 text-blue-100 hover:bg-blue-900': selectedTimeRange !== 'month'}"
+              class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+              Mes
+            </button>
+            <button 
+              (click)="setTimeRange('quarter')" 
+              [ngClass]="{'bg-blue-900 text-white': selectedTimeRange === 'quarter', 'bg-blue-800 text-blue-100 hover:bg-blue-900': selectedTimeRange !== 'quarter'}"
+              class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+              Trimestre
+            </button>
+            <button 
+              (click)="setTimeRange('year')" 
+              [ngClass]="{'bg-blue-900 text-white': selectedTimeRange === 'year', 'bg-blue-800 text-blue-100 hover:bg-blue-900': selectedTimeRange !== 'year'}"
+              class="px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+              Año
+            </button>
+          </div>
+          
+          <!-- Botón filtro para móvil -->
+          <div class="mt-4 md:hidden">
+            <button 
+              (click)="toggleMobileFilters()" 
+              class="w-full flex items-center justify-center px-4 py-2 bg-blue-800 hover:bg-blue-900 rounded-md transition-colors">
+              <span>{{ selectedTimeRange === 'week' ? 'Semana' : selectedTimeRange === 'month' ? 'Mes' : selectedTimeRange === 'quarter' ? 'Trimestre' : 'Año' }}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            
+            <!-- Menú móvil -->
+            <div 
+              *ngIf="showMobileFilters" 
+              class="absolute inset-x-0 z-10 mt-2 mx-4 bg-white rounded-md shadow-lg border border-gray-200 py-2">
+              <button 
+                (click)="setTimeRange('week')" 
+                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                Semana
+              </button>
+              <button 
+                (click)="setTimeRange('month')" 
+                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                Mes
+              </button>
+              <button 
+                (click)="setTimeRange('quarter')" 
+                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                Trimestre
+              </button>
+              <button 
+                (click)="setTimeRange('year')" 
+                class="w-full text-left px-4 py-2 text-sm hover:bg-gray-100">
+                Año
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Overlay para cuando se muestran los filtros en móvil -->
+    <div 
+      *ngIf="showMobileFilters" 
+      (click)="toggleMobileFilters()" 
+      class="fixed inset-0 z-0 bg-black bg-opacity-20">
+    </div>
+    
+    <!-- Contenido principal -->
+    <div class="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <!-- Estado de carga -->
+      <div *ngIf="isLoading" class="w-full flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
+      </div>
+      
+      <!-- Contenido del dashboard -->
+      <div *ngIf="!isLoading" class="grid grid-cols-1 gap-8">
+        <!-- Tarjetas de métricas principales -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Usuarios totales -->
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      Usuarios totales
+                    </dt>
+                    <dd class="flex items-baseline">
+                      <div class="text-2xl font-semibold text-gray-900">
+                        {{ formatNumber(totalUsers) }}
+                      </div>
+                      <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
+                        <svg class="self-center flex-shrink-0 h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="sr-only">Aumento de</span>
+                        {{ newUsersToday }} hoy
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Usuarios activos -->
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      Usuarios activos
+                    </dt>
+                    <dd class="flex items-baseline">
+                      <div class="text-2xl font-semibold text-gray-900">
+                        {{ formatNumber(activeUsers) }}
+                      </div>
+                      <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
+                        <span class="text-gray-500">{{ Math.round((activeUsers / totalUsers) * 100) }}%</span>
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Visitas totales -->
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      Visitas totales
+                    </dt>
+                    <dd class="flex items-baseline">
+                      <div class="text-2xl font-semibold text-gray-900">
+                        {{ formatNumber(totalPageVisits) }}
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Ventas totales -->
+          <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div class="ml-5 w-0 flex-1">
+                  <dl>
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      Ventas del mes
+                    </dt>
+                    <dd class="flex items-baseline">
+                      <div class="text-2xl font-semibold text-gray-900">
+                        {{ formatCurrency(revenueThisMonth) }}
+                      </div>
+                    </dd>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Gráficas y tablas -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Gráfico de usuarios registrados -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-medium text-gray-900">Registro de usuarios</h3>
+            <p class="text-sm text-gray-500 mb-6">Nuevos usuarios registrados por mes</p>
+            
+            <!-- Gráfico de barras para usuarios registrados -->
+            <div class="h-64 mt-4">
+                <div class="flex items-end h-48 space-x-2">
+                  <ng-container *ngFor="let item of userRegistrationData">
+                    <div class="flex flex-col items-center flex-1">
+                      <div 
+                        class="w-full bg-blue-600 rounded-t-sm transition-all duration-500 ease-in-out" 
+                        [style.height]="getUserRegistrationHeight(item.value)">
+                      </div>
+                      <div class="text-xs font-medium text-gray-500 mt-2 truncate max-w-full">
+                        {{ item.name }}
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              
+              <!-- Etiquetas del eje Y -->
+              <div class="flex justify-between text-xs text-gray-400 mt-2">
+                <div>0</div>
+                <div>{{ maxUserRegistration / 2 | number:'1.0-0' }}</div>
+                <div>{{ maxUserRegistration | number:'1.0-0' }}</div>
+              </div>
+            </div>
+            
+          
+          <!-- Estado de usuarios -->
+          <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-medium text-gray-900">Estado de usuarios</h3>
+            <p class="text-sm text-gray-500 mb-6">Distribución de usuarios activos vs inactivos</p>
+            
+            <!-- Gráfico circular para estado de usuarios -->
+            <div class="flex items-center justify-center h-64">
+              <div class="relative w-48 h-48">
+                <!-- Representación simplificada del gráfico circular -->
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                  <!-- Arco para usuarios activos (azul) -->
+                  <path [attr.d]="getActiveArc()" fill="#2563EB"></path>
+                  <!-- Arco para usuarios inactivos (rojo) -->
+                  <path [attr.d]="getInactiveArc()" fill="#EF4444"></path>
+                </svg>
+  
+                <!-- Números en el centro -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <div class="text-2xl font-bold">{{ activeUsers + inactiveUsers }}</div>
+                  <div class="text-sm text-gray-500">Total</div>
+                </div>
+              </div>
+              
+              <!-- Leyenda del gráfico -->
+              <div class="ml-8">
+                <div class="flex items-center mb-4">
+                  <div class="w-4 h-4 bg-blue-600 rounded mr-2"></div>
+                  <div class="text-sm">
+                    <span class="font-medium">{{ activeUsers }}</span> Activos
+                  </div>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
+                  <div class="text-sm">
+                    <span class="font-medium">{{ inactiveUsers }}</span> Inactivos
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Sección de ventas -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <div class="px-6 py-5 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Ventas por mes</h3>
+          </div>
+          
+          <!-- Gráfico de ventas -->
+          <div class="p-6">
+            <div class="h-64">
+                <div class="flex items-end h-48 space-x-2">
+                  <ng-container *ngFor="let item of salesData">
+                    <div class="flex flex-col items-center flex-1">
+                      <div 
+                        class="w-full bg-purple-600 rounded-t-sm transition-all duration-500 ease-in-out" 
+                        [style.height]="getSalesBarHeight(item.revenue)">
+                      </div>
+                      <div class="text-xs font-medium text-gray-500 mt-2 truncate max-w-full">
+                        {{ item.month }}
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              
+              <!-- Etiquetas del eje Y -->
+  <div class="flex justify-between text-xs text-gray-400 mt-2">
+    <div>0€</div>
+    <div>{{ maxSalesRevenue / 2 | currency:'EUR':'symbol':'1.0-0' }}</div>
+    <div>{{ maxSalesRevenue | currency:'EUR':'symbol':'1.0-0' }}</div>
+  </div>
+</div>
+          
+          <!-- Tabla de ventas -->
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Mes
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Transacciones
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Ingresos
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Promedio
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of salesData">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {{ item.month }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ formatNumber(item.transactions) }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ formatCurrency(item.revenue) }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ formatCurrency(item.revenue / item.transactions) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Sección de visitas a páginas -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <div class="px-6 py-5 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Visitas por página</h3>
+          </div>
+          
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Página
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Visitas totales
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Visitantes únicos
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tiempo Promedio
+                  </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr *ngFor="let item of pageVisitsData">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ item.page }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ formatNumber(item.views) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {{ formatNumber(item.uniqueVisitors) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ getAverageTime(item.views, item.uniqueVisitors) }} segundos
+                </td>
+              </tr>
+            </tbody>
+            </table>
+            </div> 
+            </div>

@@ -13,7 +13,7 @@ import { filter } from 'rxjs/operators';
 export class AdminComponent implements OnInit {
   sidebarOpen = false;
   isDesktop = false;
-  showWelcome = true;
+  showWelcome = false; // Inicializar como false por defecto
   currentRoute = '';
 
   constructor(private router: Router) { }
@@ -21,24 +21,36 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
     this.checkScreenSize();
     
+    // Comprueba la ruta actual al inicio
+    this.checkCurrentRoute(this.router.url);
+    
     // Detectar cambios de ruta para controlar el mensaje de bienvenida
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: NavigationEnd) => {
-      this.currentRoute = event.url;
-      
-      // Mostrar el mensaje de bienvenida solo cuando estemos en /admin
-      if (this.currentRoute === '/admin') {
-        this.showWelcome = true;
-      } else {
-        this.showWelcome = false;
-      }
+    ).subscribe((event: any) => {
+      this.checkCurrentRoute(event.url);
     });
+  }
+  
+  // Método para verificar la ruta actual
+  checkCurrentRoute(url: string) {
+    this.currentRoute = url;
+    // Mostrar el mensaje de bienvenida SOLO cuando estemos exactamente en /admin
+    this.showWelcome = (this.currentRoute === '/admin');
   }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.checkScreenSize();
+  }
+
+  // Para cerrar el sidebar al hacer scroll en móviles
+  @HostListener('window:scroll', ['$event'])
+  onScroll() {
+    // Solo en dispositivos móviles
+    if (!this.isDesktop) {
+      this.closeSidebar();
+    }
   }
 
   checkScreenSize() {
@@ -60,9 +72,8 @@ export class AdminComponent implements OnInit {
     }
   }
   
-  // Método para navegar a una ruta y ocultar el mensaje de bienvenida
+  // Método para navegar a una ruta
   navigateTo(route: string) {
-    this.showWelcome = false;
     this.router.navigate([route]);
     
     // En dispositivos móviles, cerrar el sidebar después de la navegación
