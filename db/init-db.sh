@@ -1,4 +1,4 @@
 #!/bin/bash
 echo "Restaurando backup..."
-pg_restore -U postgres -d motionParts /docker-entrypoint-initdb.d/backup.dump
+psql -U postgres -d motionparts -f /docker-entrypoint-initdb.d/motionparts.sql
 echo "Backup restaurado correctamente."

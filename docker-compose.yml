@@ -6,16 +6,17 @@ services:
     container_name: motionparts_db
     restart: always
     environment:
-      POSTGRES_DB: motionParts
+      POSTGRES_DB: motionparts
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./db/backup.dump:/docker-entrypoint-initdb.d/backup.dump
+      - ./db/motionparts.sql:/docker-entrypoint-initdb.d/motionparts.sql
       - ./db/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
-    command: [ "postgres" ]
+    networks:
+      - motionparts_net
 
   backend:
     build: ./Backend
@@ -24,11 +25,27 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/motionParts
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/motionparts
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin
     ports:
       - "8080:8080"
+    networks:
+      - motionparts_net
+
+  frontend:
+    build: ./Frontend
+    container_name: motionparts_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+    networks:
+      - motionparts_net
 
 volumes:
   postgres_data:
+
+networks:
+  motionparts_net:

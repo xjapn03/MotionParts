@@ -5,9 +5,9 @@
 <div class="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent rounded-3xl shadow-xl">
   <div class="flex-col flex self-center lg:px-14 sm:max-w-4xl xl:max-w-md z-10">
     <div class="self-start hidden lg:flex flex-col text-gray-300">
-      <h1 class="my-3 font-semibold text-4xl">Welcome back</h1>
+      <h1 class="my-3 font-semibold text-4xl">¡Bienvenido de nuevo!</h1>
       <p class="pr-3 text-sm opacity-75">
-        Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups.
+        Ingresa a tu cuenta para continuar comprando las mejores autopartes del mercado. Calidad, confianza y rendimiento al alcance de un click.
       </p>
     </div>
   </div>
@@ -15,35 +15,35 @@
   <div class="flex justify-center self-center z-10">
     <div class="p-12 bg-white mx-auto rounded-3xl w-96">
       <div class="mb-7">
-        <h3 class="font-semibold text-2xl text-gray-800">Sign In</h3>
+        <h3 class="font-semibold text-2xl text-gray-800">Inicio de Sesion</h3>
         <p class="text-gray-400">
-          Don't have an account?
-          <button routerLink="/register" class="text-sm text-purple-700 hover:text-purple-900 ml-1 underline">Sign Up</button>
+          ¿Aun no tienes cuenta?
+          <button routerLink="/register" class="text-sm text-purple-700 hover:text-purple-900 ml-1 underline">Registrate</button>
         </p>
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="space-y-6">
           <div>
-            <input id="username" formControlName="username" type="text" placeholder="Username"
+            <input id="username" formControlName="username" type="text" placeholder="Usuario"
               class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400">
           </div>
 
           <div class="relative">
-            <input id="password" formControlName="password" type="password" placeholder="Password"
+            <input id="password" formControlName="password" type="password" placeholder="Contraseña"
               class="text-sm text-black px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-purple-400">
           </div>
 
           <div class="flex items-center justify-between">
             <div class="text-sm ml-auto">
-              <a href="#" class="text-purple-700 hover:text-purple-600">Forgot your password?</a>
+              <a href="#" class="text-purple-700 hover:text-purple-600">¿Olvidaste tu contraseña?</a>
             </div>
           </div>
 
           <div>
             <button type="submit" [disabled]="loginForm.invalid"
               class="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500">
-              Sign in
+              Iniciar Sesion
             </button>
           </div>
 
@@ -86,8 +86,7 @@
 
       <div class="mt-7 text-center text-gray-300 text-xs">
         <span>
-          Copyright ©️ 2021–2023
-          <a href="https://codepen.io/uidesignhub" target="_blank" class="underline">uidesignhub</a>
+          Copyright ©️ 2025
         </span>
       </div>
     </div>

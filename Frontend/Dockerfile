@@ -1,29 +1,35 @@
-# Imagen base de Node.js (usamos la versión LTS)
-FROM node:16 AS build
+# Etapa 1: Construcción con Node.js
+FROM node:slim AS build
 
-# Definir el directorio de trabajo en el contenedor
+# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copiar package.json y package-lock.json
+# Copia archivos de dependencias
 COPY package*.json ./
 
-# Instalar las dependencias de Angular
+# Instala dependencias
 RUN npm install
 
-# Copiar el código fuente de la aplicación
+# Copia el resto del código fuente
 COPY . .
 
-# Construir la aplicación Angular para producción
-RUN npm run build --prod
+# Compila la aplicación Angular para producción
+RUN npm run build --configuration=production
 
-# Servir la aplicación Angular usando un servidor HTTP (nginx)
-FROM nginx:alpine
+# Etapa 2: Servir con Nginx
+FROM nginx:1.27.4-alpine-slim
 
-# Copiar los archivos de la aplicación Angular construidos en la etapa anterior
-COPY --from=build /app/dist/motion-parts-angular /usr/share/nginx/html
+# Elimina configuración por defecto de nginx (opcional pero recomendado)
+RUN rm -rf /usr/share/nginx/html/*
 
-# Exponer el puerto 80 (nginx por defecto)
+# Copia la app compilada desde la etapa anterior
+COPY --from=build /app/dist/nombre-del-proyecto-angular/browser /usr/share/nginx/html
+
+# (Opcional) Copia configuración personalizada de nginx si la tienes
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+# Expone el puerto 80
 EXPOSE 80
 
-# Iniciar nginx para servir la aplicación
+# Comando por defecto
 CMD ["nginx", "-g", "daemon off;"]

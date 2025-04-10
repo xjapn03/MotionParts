@@ -124,7 +124,7 @@ export class AppComponent implements OnInit, OnDestroy {
       document.body.classList.add('overflow-hidden');
     } else {
       // Opcionalmente, redirigir a la página de productos
-      this.router.navigate(['/products']);
+      this.router.navigate(['/cart']);
     }
   }
 
