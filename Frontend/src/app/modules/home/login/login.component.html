@@ -15,45 +15,45 @@
   <div class="flex justify-center self-center z-10">
     <div class="p-12 bg-white mx-auto rounded-3xl w-96">
       <div class="mb-7">
-        <h3 class="font-semibold text-2xl text-gray-800">Sign In</h3>
+        <h3 class="font-semibold text-2xl text-gray-800">iniciar sesion</h3>
         <p class="text-gray-400">
-          Don't have an account?
-          <button routerLink="/register" class="text-sm text-purple-700 hover:text-purple-900 ml-1 underline">Sign Up</button>
+          No tienes una cuenta?
+          <button routerLink="/register" class="text-sm text-purple-700 hover:text-purple-900 ml-1 underline">registrarse</button>
         </p>
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="space-y-6">
           <div>
-            <input id="username" formControlName="username" type="text" placeholder="Username"
+            <input id="username" formControlName="username" type="text" placeholder="Usuario"
               class="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400">
           </div>
 
           <div class="relative">
-            <input id="password" formControlName="password" type="password" placeholder="Password"
+            <input id="password" formControlName="password" type="password" placeholder="Contraseña"
               class="text-sm text-black px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-purple-400">
           </div>
 
           <div class="flex items-center justify-between">
             <div class="text-sm ml-auto">
-              <a href="#" class="text-purple-700 hover:text-purple-600">Forgot your password?</a>
+              <a href="#" class="text-purple-700 hover:text-purple-600"></a>
             </div>
           </div>
 
           <div>
             <button type="submit" [disabled]="loginForm.invalid"
               class="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500">
-              Sign in
+              iniciar sesion
             </button>
           </div>
 
-          <div class="flex items-center justify-center space-x-2 my-5">
+          <!-- <div class="flex items-center justify-center space-x-2 my-5">
             <span class="h-px w-16 bg-gray-100"></span>
             <span class="text-gray-300 font-normal">or</span>
             <span class="h-px w-16 bg-gray-100"></span>
-          </div>
+          </div> -->
 
-          <div class="flex justify-center gap-5 w-full">
+          <!-- <div class="flex justify-center gap-5 w-full">
             <button type="button"
               class="w-full flex items-center justify-center mb-6 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 text-sm text-gray-500 p-3 rounded-lg tracking-wide font-medium cursor-pointer transition ease-in duration-500">
               <svg class="w-4 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -80,7 +80,7 @@
               </svg>
               <span>Facebook</span>
             </button>
-          </div>
+          </div> -->
         </div>
       </form>
 
