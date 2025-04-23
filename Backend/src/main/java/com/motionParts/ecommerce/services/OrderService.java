@@ -7,6 +7,7 @@ import com.motionParts.ecommerce.dto.OrderDetailDTO;
 import com.motionParts.ecommerce.dto.ShippingDataDTO;
 import com.motionParts.ecommerce.repositories.OrderDetailRepository;
 import com.motionParts.ecommerce.repositories.OrderRepository;
+import com.motionParts.ecommerce.repositories.ProductRepository;
 import com.motionParts.ecommerce.repositories.ShoppingCartRepository;
 import com.motionParts.ecommerce.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -48,47 +52,131 @@ public class OrderService {
 
     // ✅ Crear una orden a partir del carrito
     public OrderDTO createOrder(Long userId, OrderDTO orderDTO) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + userId));
+        User user = null;
+        if (userId != null) {
+            user = userRepository.findById(userId).orElse(null); // 🔹 NO lanzar error, permitir null
+        }
     
-        // 🔹 Validar y asignar un valor predeterminado a pickupLocation si es null o vacío
+        // 🔹 Si pickupLocation no viene, asignar valor default
         if (orderDTO.getPickupLocation() == null || orderDTO.getPickupLocation().trim().isEmpty()) {
             orderDTO.setPickupLocation("default_location");
         }
     
-        // Buscar carrito activo
-        ShoppingCart cart = shoppingCartRepository.findByUserAndStatus(user, ShoppingCartStatus.ACTIVE)
-                .stream().findFirst()
-                .orElseThrow(() -> new RuntimeException("No se encontró un carrito activo para el usuario"));
+        // 🔹 No buscar carrito si es invitado
+        ShoppingCart cart = null;
+        if (user != null) {
+            cart = shoppingCartRepository.findByUserAndStatus(user, ShoppingCartStatus.ACTIVE)
+                    .stream().findFirst()
+                    .orElse(null); // Si no hay carrito activo, igual seguimos
+        }
     
-        // Calcular total del pedido
-        double total = cart.getCartItems().stream()
-                .mapToDouble(item -> item.getQuantity() * item.getUnitPrice())
-                .sum();
+        double total;
+        List<OrderDetail> orderDetails;
     
-        // ✅ Validar que `billingData` y `shippingData` existan en `orderDTO`
+        if (cart != null) {
+            total = cart.getCartItems().stream()
+                    .mapToDouble(item -> item.getQuantity() * item.getUnitPrice())
+                    .sum();
+            
+            orderDetails = cart.getCartItems().stream().map(cartItem -> 
+                new OrderDetail(null, cartItem.getProduct(), cartItem.getQuantity(), cartItem.getUnitPrice())
+            ).collect(Collectors.toList());
+        } else {
+            // 🔹 Si es guest, calculamos el total basado en lo que mandaron en el OrderDTO
+            total = orderDTO.getOrderDetails().stream()
+                    .mapToDouble(detail -> detail.getQuantity() * detail.getUnitPrice())
+                    .sum();
+            
+                    orderDetails = orderDTO.getOrderDetails().stream().map(detailDTO -> {
+                        Product product = productRepository.findById(detailDTO.getProductId())
+                                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + detailDTO.getProductId()));
+                    
+                        return new OrderDetail(null, product, detailDTO.getQuantity(), detailDTO.getUnitPrice());
+                    }).collect(Collectors.toList());
+                    
+        }
+    
         BillingData billingData = (orderDTO.getBillingData() != null) ? new BillingData(orderDTO.getBillingData()) : null;
         ShippingData shippingData = (orderDTO.getShippingData() != null) ? new ShippingData(orderDTO.getShippingData()) : null;
     
-        // ✅ Crear la orden sin reasignar `order`
-        Order newOrder = new Order(user, cart, total, orderDTO.getPaymentMethod(), orderDTO.getPickupLocation(),
+        // 🔹 Crear orden
+        Order newOrder = new Order(user, total, orderDTO.getPaymentMethod(), orderDTO.getPickupLocation(),
                                    billingData, shippingData, orderDTO.getCouponCode(), orderDTO.getShippingMethod(),
                                    orderDTO.getAcceptedTerms());
-        orderRepository.save(newOrder);  // ✅ Guardamos la orden
+        
+        orderRepository.save(newOrder);  // ✅ Guardar orden primero
     
-        // ✅ Crear y guardar los detalles de la orden
-        List<OrderDetail> orderDetails = cart.getCartItems().stream().map(cartItem -> 
-            new OrderDetail(newOrder, cartItem.getProduct(), cartItem.getQuantity(), cartItem.getUnitPrice())
-        ).collect(Collectors.toList());
-    
+        // 🔹 Ahora asociar detalles de la orden con la orden ya guardada
+        for (OrderDetail detail : orderDetails) {
+            detail.setOrder(newOrder);
+        }
         orderDetailRepository.saveAll(orderDetails);
     
-        // ✅ Actualizar carrito como completado
-        cart.setStatus(ShoppingCartStatus.COMPLETED);
-        shoppingCartRepository.save(cart);
+        // 🔹 Si era un carrito de usuario, marcarlo como completado
+        if (cart != null) {
+            cart.setStatus(ShoppingCartStatus.COMPLETED);
+            shoppingCartRepository.save(cart);
+        }
     
         return convertToDTO(newOrder);
     }
+
+    public OrderDTO createGuestOrder(OrderDTO orderDTO) {
+        // 🔹 Para invitados no hay usuario
+        User user = null;
+    
+        // 🔹 Si pickupLocation no viene, asignar valor default
+        if (orderDTO.getPickupLocation() == null || orderDTO.getPickupLocation().trim().isEmpty()) {
+            orderDTO.setPickupLocation("default_location");
+        }
+    
+        // 🔹 No hay carrito para invitados
+    
+        double total;
+        List<OrderDetail> orderDetails;
+    
+        // 🔹 Calculamos el total basado en lo que mandaron en el OrderDTO
+        total = orderDTO.getOrderDetails().stream()
+                .mapToDouble(detail -> detail.getQuantity() * detail.getUnitPrice())
+                .sum();
+    
+        orderDetails = orderDTO.getOrderDetails().stream().map(detailDTO -> {
+            Product product = productRepository.findById(detailDTO.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + detailDTO.getProductId()));
+    
+            return new OrderDetail(null, product, detailDTO.getQuantity(), detailDTO.getUnitPrice());
+        }).collect(Collectors.toList());
+    
+        BillingData billingData = (orderDTO.getBillingData() != null) ? new BillingData(orderDTO.getBillingData()) : null;
+        ShippingData shippingData = (orderDTO.getShippingData() != null) ? new ShippingData(orderDTO.getShippingData()) : null;
+    
+        // 🔹 Crear orden
+        Order newOrder = new Order(
+            user, // Es null para invitados
+            total,
+            orderDTO.getPaymentMethod(),
+            orderDTO.getPickupLocation(),
+            billingData,
+            shippingData,
+            orderDTO.getCouponCode(),
+            orderDTO.getShippingMethod(),
+            orderDTO.getAcceptedTerms()
+        );
+    
+        orderRepository.save(newOrder);  // ✅ Guardar orden primero
+    
+        // 🔹 Asociar detalles de la orden
+        for (OrderDetail detail : orderDetails) {
+            detail.setOrder(newOrder);
+        }
+        orderDetailRepository.saveAll(orderDetails);
+    
+        // 🔹 No hay carrito que actualizar para invitados
+    
+        return convertToDTO(newOrder);
+    }
+    
+    
 
     // ✅ Cambiar estado de una orden
     public OrderDTO updateOrderStatus(Long orderId, OrderStatus newStatus) {

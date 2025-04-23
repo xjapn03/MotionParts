@@ -1,8 +1,8 @@
 package com.motionParts.ecommerce.dto;  // Solo esta línea debe existir
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 //USerimport javax.validation.Valid;
 
 public class UserDTO {

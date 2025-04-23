@@ -36,8 +36,13 @@ public class User {
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+
     @JsonManagedReference // Evita la serialización recursiva
     private Set<Role> roles = new HashSet<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private UserInfo userInfo;
 
     public User() {}
 
@@ -80,6 +85,9 @@ public class User {
 
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
+
+    public UserInfo getUserInfo() { return userInfo; }
+    public void setUserInfo(UserInfo userInfo) { this.userInfo = userInfo; }
 
     // Sobrescribir equals y hashCode
     @Override

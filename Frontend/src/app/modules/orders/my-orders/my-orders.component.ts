@@ -4,12 +4,13 @@ import { OrderService } from '../../../core/services/order.service';
 import { Order } from '../../../core/models/order.model';
 import { AuthService } from '../../../core/services/auth.service'; // Para obtener el usuario autenticado
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-my-orders',
   standalone: true, // Si usas standalone components
   imports: [CommonModule], // ✅ Agregar CommonModule para pipes y directivas como *ngFor
   templateUrl: './my-orders.component.html',
-  styleUrl: './my-orders.component.css'
+  styleUrls: ['./my-orders.component.css']
 })
 export class MyOrdersComponent implements OnInit {
   orders: Order[] = [];
@@ -24,7 +25,8 @@ export class MyOrdersComponent implements OnInit {
   ngOnInit(): void {
     const user = this.authService.getUser();
     if (user && user.id) {
-      this.userId = user.id;
+      // Asegurarse de que user.id sea un número antes de asignarlo
+      this.userId = typeof user.id === 'string' ? Number(user.id) : user.id;
       this.loadOrders();
     } else {
       console.error('No se pudo obtener el ID del usuario');

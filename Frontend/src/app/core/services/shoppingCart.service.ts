@@ -6,6 +6,7 @@ import { CartItem } from '../models/cartItem.model';
 import { tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AuthService } from '../../core/services/auth.service';
 
 
 @Injectable({
@@ -20,7 +21,10 @@ export class ShoppingCartService {
   private cartItems = new BehaviorSubject<CartItem[]>([]);
   cartItems$ = this.cartItems.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService  // Inyecta AuthService aquí
+  ) {
     this.updateCartCount();
   }
 
@@ -37,12 +41,14 @@ export class ShoppingCartService {
 
 
   getUserShoppingCart(): Observable<ShoppingCart> {
-    if (!this.userId) {
-      const guestCart = this.getGuestCart();
-      return of({ cartItems: guestCart } as ShoppingCart); // ✅ Devolver carrito de invitados
+    const userId = this.userId || this.authService.getGuestId(); // Usar el guestId si no hay userId
+    if (userId) {
+      return this.http.get<ShoppingCart>(`${this.apiUrl}/users/${userId}`);
     }
-    return this.http.get<ShoppingCart>(`${this.apiUrl}/users/${this.userId}`);
+    const guestCart = this.getGuestCart();
+    return of({ cartItems: guestCart } as ShoppingCart); // Devolver carrito de invitado si no hay usuario
   }
+
 
   addToCart(item: CartItem): Observable<ShoppingCart> {
     if (!this.userId) {

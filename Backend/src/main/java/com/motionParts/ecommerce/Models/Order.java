@@ -19,7 +19,7 @@ public class Order {
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", nullable = false)
+    @JoinColumn(name = "cart_id", nullable = true)
     private ShoppingCart shoppingCart;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -85,12 +85,13 @@ public class Order {
     }
 
     // ✅ Constructor vacío
+  // Constructor vacío
     public Order() {}
 
-    // ✅ Constructor completo
+    // Constructor completo (con ShoppingCart)
     public Order(User user, ShoppingCart shoppingCart, Double total, String paymentMethod, 
-                 String pickupLocation, BillingData billingData, ShippingData shippingData,
-                 String couponCode, String shippingMethod, Boolean acceptedTerms) {
+                String pickupLocation, BillingData billingData, ShippingData shippingData,
+                String couponCode, String shippingMethod, Boolean acceptedTerms) {
         this.user = user;
         this.shoppingCart = shoppingCart;
         this.total = total;
@@ -104,10 +105,26 @@ public class Order {
         this.acceptedTerms = acceptedTerms;
     }
 
-    // ✅ Constructor sin `couponCode`, `shippingMethod`, `acceptedTerms`
+    // Constructor sin couponCode, shippingMethod, acceptedTerms (pero todavía con carrito)
     public Order(User user, ShoppingCart shoppingCart, Double total, String paymentMethod, 
-                 String pickupLocation, BillingData billingData, ShippingData shippingData) {
+                String pickupLocation, BillingData billingData, ShippingData shippingData) {
         this(user, shoppingCart, total, paymentMethod, pickupLocation, billingData, shippingData, null, null, true);
+    }
+
+    // 🔥 NUEVO CONSTRUCTOR SIN SHOPPINGCART
+    public Order(User user, Double total, String paymentMethod, String pickupLocation,
+                BillingData billingData, ShippingData shippingData,
+                String couponCode, String shippingMethod, Boolean acceptedTerms) {
+        this.user = user;
+        this.total = total;
+        this.paymentMethod = paymentMethod;
+        this.pickupLocation = pickupLocation;
+        this.status = OrderStatus.PENDING;
+        this.billingData = billingData;
+        this.shippingData = shippingData;
+        this.couponCode = couponCode;
+        this.shippingMethod = shippingMethod;
+        this.acceptedTerms = acceptedTerms;
     }
 
     // 🔹 Getters y Setters

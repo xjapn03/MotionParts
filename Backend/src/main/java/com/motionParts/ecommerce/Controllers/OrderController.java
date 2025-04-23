@@ -3,6 +3,7 @@ package com.motionParts.ecommerce.Controllers;
 import com.motionParts.ecommerce.dto.OrderDTO;
 import com.motionParts.ecommerce.services.OrderService;
 import com.motionParts.ecommerce.Models.OrderStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,27 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    // ✅ Crear una nueva orden desde el carrito de compras
-    @PostMapping("/users/{userId}")
-    public ResponseEntity<OrderDTO> createOrder(
-            @PathVariable Long userId,
-            @RequestBody OrderDTO orderDTO) {  // ✅ Recibir todo en el cuerpo
+    // ✅ Crear una nueva orden para un usuario logueado
+    @PostMapping("/users")
+    public ResponseEntity<OrderDTO> createOrder(Authentication authentication, @RequestBody OrderDTO orderDTO) {
+        Long userId = (Long) authentication.getDetails();  // Obtener el userId de los detalles de autenticación
+
+        // Log para depurar
+        System.out.println("UserId from Authentication: " + userId);  // Ver si el userId está correctamente extraído
+
+        if (userId == null) {
+            return ResponseEntity.status(401).build(); // Unauthorized
+        }
+
         OrderDTO createdOrder = orderService.createOrder(userId, orderDTO);
+        return ResponseEntity.ok(createdOrder);
+    }
+
+
+    // ✅ Crear una nueva orden para un invitado (sin userId)
+    @PostMapping("/guests")
+    public ResponseEntity<OrderDTO> createGuestOrder(@RequestBody OrderDTO orderDTO) {
+        OrderDTO createdOrder = orderService.createGuestOrder(orderDTO);
         return ResponseEntity.ok(createdOrder);
     }
 
@@ -32,11 +48,23 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
-
-
-    // ✅ Obtener todas las órdenes de un usuario
+    // ✅ Obtener todas las órdenes de un usuario por ID (administrador o casos especiales)
     @GetMapping("/users/{userId}")
-    public ResponseEntity<List<OrderDTO>> getUserOrders(@PathVariable Long userId) {
+    public ResponseEntity<List<OrderDTO>> getUserOrders(@PathVariable Long userId, Authentication authentication) {
+        Long currentUserId = (Long) authentication.getDetails(); // Obtener el userId del Authentication
+
+        if (currentUserId == null) {
+            return ResponseEntity.status(401).build(); // Unauthorized
+        }
+
+        // Verificar si el usuario es el mismo que el del token o si es un administrador
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
+
+        if (!currentUserId.equals(userId) && !isAdmin) {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+
         List<OrderDTO> orders = orderService.getOrdersByUser(userId);
         return ResponseEntity.ok(orders);
     }

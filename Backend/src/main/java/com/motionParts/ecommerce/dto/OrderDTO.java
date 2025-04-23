@@ -28,7 +28,8 @@ public class OrderDTO {
 
     public OrderDTO(Order order) {
         this.id = order.getId();
-        this.userId = order.getUser().getId();
+        // Verifica si el usuario es null antes de acceder al ID
+        this.userId = (order.getUser() != null) ? order.getUser().getId() : null;  // Si no hay usuario, asigna null
         this.total = order.getTotal();
         this.paymentMethod = order.getPaymentMethod();
         this.pickupLocation = order.getPickupLocation();
@@ -39,7 +40,7 @@ public class OrderDTO {
         this.shippingMethod = order.getShippingMethod();
         this.acceptedTerms = (order.getAcceptedTerms() != null) ? order.getAcceptedTerms() : false;
         this.status = order.getStatus().toString(); // Convertimos el ENUM a String
-
+    
         // Convertir detalles de la orden a DTOs (evitamos posibles NPE)
         this.orderDetails = (order.getOrderDetails() != null) ? 
             order.getOrderDetails().stream()
@@ -47,6 +48,7 @@ public class OrderDTO {
                 .collect(Collectors.toList()) 
             : null;
     }
+    
 
     // ✅ Constructor con todos los atributos
     public OrderDTO(Long id, Long userId, List<OrderDetailDTO> orderDetails, String status, 

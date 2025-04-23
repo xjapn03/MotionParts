@@ -18,31 +18,43 @@ repositories {
 }
 
 dependencies {
-	implementation 'commons-io:commons-io:2.15.1'
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation 'commons-io:commons-io:2.15.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    
+    // Dependencias de JWT (sin cambios)
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5' // Para usar JSON con JWT
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Dependencias de Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Base de datos
     implementation 'org.postgresql:postgresql:42.5.0'
-	implementation 'org.postgresql:postgresql'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	// Hibernate Validator (JSR 380)
-    implementation 'org.hibernate:hibernate-validator:6.1.5.Final'
-    // API de Validación de Java (JSR 303/JSR 380)
-    implementation 'javax.validation:validation-api:2.0.1.Final'
-    // Spring Boot Starter Validation
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // Validación y Hibernate Validator (actualizado para Jakarta)
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
+    implementation 'org.hibernate.validator:hibernate-validator:7.0.0.Final'
+
+    // DevTools para desarrollo
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // Para pruebas
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Procesador de anotaciones
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    
+    // Dependencia para Jakarta Servlet API (reemplaza javax.servlet)
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0' // Reemplazo de javax.servlet
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()

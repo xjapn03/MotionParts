@@ -62,15 +62,23 @@ public class AuthService {
         Set<String> roles = user.getRoles().stream()
                                 .map(Role::getName)
                                 .collect(Collectors.toSet());
-
-        return Jwts.builder()
-                .setSubject(user.getUsername())
-                .claim("roles", roles) // ✅ Agregamos roles al token
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(signingKey, SignatureAlgorithm.HS256)
-                .compact();
+    
+        // Incluye el userId en el token
+        String token = Jwts.builder()
+                           .setSubject(user.getUsername())
+                           .claim("roles", roles)
+                           .claim("userId", user.getId()) // Aquí estamos añadiendo el userId
+                           .setIssuedAt(new Date())
+                           .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                           .signWith(signingKey, SignatureAlgorithm.HS256)
+                           .compact();
+    
+        // Imprime el token para verificarlo
+        System.out.println("Generated Token: " + token);
+    
+        return token;
     }
+    
 
     public boolean isAdmin(User user) {
         return user.getRoles().stream()

@@ -35,10 +35,14 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     // 🔹 Suscribirse a cambios en la autenticación
     const authSub = this.authService.user$.subscribe((user) => {
       console.log('Usuario autenticado:', user);
+
       if (user?.id) {
+        // Asegurarse de que user.id sea un número antes de asignarlo
+        const userId = typeof user.id === 'string' ? Number(user.id) : user.id;
+
         // Usuario autenticado
-        this.user = user;
-        this.shoppingCartService.setUserId(user.id);
+        this.user = { id: userId, username: user.username };
+        this.shoppingCartService.setUserId(userId); // Pasar userId como número
         this.loadUserCart();
       } else {
         // Usuario invitado (sin ID de usuario)
@@ -63,6 +67,7 @@ export class ShoppingCartComponent implements OnInit, OnDestroy {
     // Guardar suscripciones para limpiar después
     this.subscriptions.push(authSub, cartItemsSub, cartCountSub);
   }
+
 
   // Cargar carrito de usuario autenticado
   loadUserCart(): void {

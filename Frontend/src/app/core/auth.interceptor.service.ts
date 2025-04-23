@@ -6,6 +6,8 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getToken(); // Obtiene el token
 
+  console.log("Token en el interceptor: ", token);  // Imprimir el token
+
   const authReq = token
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
     : req;

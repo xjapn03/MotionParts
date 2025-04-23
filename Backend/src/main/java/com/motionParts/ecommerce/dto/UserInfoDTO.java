@@ -1,8 +1,10 @@
 package com.motionParts.ecommerce.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+
 import java.time.LocalDate;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
 
 public class UserInfoDTO {
     private Long id;

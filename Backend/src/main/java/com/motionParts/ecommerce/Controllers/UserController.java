@@ -10,10 +10,11 @@ import com.motionParts.ecommerce.dto.RoleDTO;
 import com.motionParts.ecommerce.dto.UserDTO;
 
 import org.springframework.http.ResponseEntity;
-import javax.validation.Valid;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/users")

@@ -1,14 +1,16 @@
 package com.motionParts.ecommerce.config;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
-@Component
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 @ConfigurationProperties(prefix = "app.jwt")
 public class JwtProperties {
-    private String secret;
-    private Long expiration;
 
-    // Getters y setters
+    private String secret;
+    private long expiration;
+
+    // Getters y Setters
     public String getSecret() {
         return secret;
     }
@@ -17,11 +19,11 @@ public class JwtProperties {
         this.secret = secret;
     }
 
-    public Long getExpiration() {
+    public long getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(Long expiration) {
+    public void setExpiration(long expiration) {
         this.expiration = expiration;
     }
 }

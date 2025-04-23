@@ -1,8 +1,9 @@
 package com.motionParts.ecommerce.Models;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+
 
 
 @Entity
@@ -15,6 +16,7 @@ public class UserInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore // Evitar la serialización recursiva
     private User user;
 
     @Column(nullable = false)

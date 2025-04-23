@@ -44,37 +44,46 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Inicializar carrito para invitados
-    this.shoppingCartService.initializeGuestCart();
+    // Inicializar carrito para invitados (verifica que guestId y guestCart estén configurados correctamente)
+    this.authService.initializeGuestSession(); // Establece guestId si no está disponible
+    this.shoppingCartService.initializeGuestCart(); // Asegura que el carrito de invitado esté disponible
 
     // Suscribirse a cambios en la autenticación
     const authSub = this.authService.user$.subscribe((authResponse: AuthResponse | null) => {
       if (authResponse) {
+        // Si el usuario está autenticado, actualiza la información del usuario
         this.user = {
-          id: authResponse.id,
+          id: typeof authResponse.id === 'string' ? parseInt(authResponse.id, 10) : authResponse.id,
           username: authResponse.username,
           roles: authResponse.roles ?? [],
         };
-        this.shoppingCartService.setUserId(authResponse.id);
+        // Asegúrate de que el id sea un número antes de pasarlo a setUserId
+        this.shoppingCartService.setUserId(
+          typeof authResponse.id === 'string' ? parseInt(authResponse.id, 10) : authResponse.id
+        );
       } else {
+        // Si no hay usuario autenticado, asigna un objeto de usuario vacío
         this.user = { id: undefined, username: '', roles: [] };
       }
-      // Cargar carrito según el estado de autenticación
+      // Cargar carrito de compras (invitado o autenticado)
       this.shoppingCartService.loadShoppingCart();
     });
 
-    // Actualizar contador del carrito
+    // Actualizar contador de productos en el carrito
     const countSub = this.shoppingCartService.cartCount$.subscribe(count => {
       this.cartItemCount = count;
     });
 
-    // Guardar items del carrito localmente para cálculos
+    // Guardar items del carrito localmente para cálculos y mostrar en la UI
     const itemsSub = this.cartItems$.subscribe(items => {
       this.cartItems = items;
     });
 
+    // Guardar las suscripciones para su desuscripción más tarde
     this.subscriptions.push(authSub, countSub, itemsSub);
   }
+
+
 
   // Método para calcular subtotal
   getSubtotal(): number {
