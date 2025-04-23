@@ -43,4 +43,22 @@ export class LoginComponent {
       });
     }
   }
+  
+  // Método para iniciar sesión con Google
+  signInWithGoogle(): void {
+    // Redirección simple a la página de inicio de sesión de Google
+    window.location.href = 'https://accounts.google.com/signin';
+    
+    // Para una implementación OAuth completa, usarías:
+    // this.authService.signInWithGoogle();
+  }
+  
+  // Método para iniciar sesión con Facebook
+  signInWithFacebook(): void {
+    // Redirección simple a la página de inicio de sesión de Facebook
+    window.location.href = 'https://www.facebook.com/login';
+    
+    // Para una implementación OAuth completa, usarías:
+    // this.authService.signInWithFacebook();
+  }
 }
