@@ -55,6 +55,7 @@
 
           <div class="flex justify-center gap-5 w-full">
             <button type="button"
+              (click)="signInWithGoogle()"
               class="w-full flex items-center justify-center mb-6 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 text-sm text-gray-500 p-3 rounded-lg tracking-wide font-medium cursor-pointer transition ease-in duration-500">
               <svg class="w-4 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path fill="#EA4335"
@@ -68,8 +69,9 @@
               </svg>
               <span>Google</span>
             </button>
-
+          
             <button type="button"
+              (click)="signInWithFacebook()"
               class="w-full flex items-center justify-center mb-6 border border-gray-300 hover:border-gray-900 hover:bg-gray-900 text-sm text-gray-500 p-3 rounded-lg tracking-wide font-medium cursor-pointer transition ease-in duration-500">
               <svg class="w-4 mr-2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                 <path d="M50 2.5c-58.892 1.725-64.898 84.363-7.46 95h14.92c57.451-10.647 51.419-93.281-7.46-95z"
