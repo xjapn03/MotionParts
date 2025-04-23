@@ -39,7 +39,8 @@ public class SecurityConfig {
                 "/assets/**"
             ).permitAll()
             .requestMatchers("/api/orders/users/**").hasAnyRole("USER", "ADMIN")  // Permitir acceso a usuarios y administradores
-            .requestMatchers("/api/orders").hasRole("ADMIN")  // Asegura que solo administradores puedan ver todas las órdenes
+            .requestMatchers("/api/orders").hasRole("ADMIN")
+            .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "USER")  // 👈🏼 AGREGA ESTO  // Asegura que solo administradores puedan ver todas las órdenes
             .anyRequest().authenticated()
         )
 
