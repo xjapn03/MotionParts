@@ -72,9 +72,9 @@
     <div id="user-menu"
          class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5"
          [hidden]="!isDropdownOpen">
-      <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
-                <a routerLink="/my-orders" class="block px-4 py-2 text-sm text-gray-700">My orders</a>
-      <button class="block px-4 py-2 text-sm text-gray-700 w-full text-left" (click)="logout()">Sign out</button>
+      <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700">Mi perfil</a>
+                <a routerLink="/my-orders" class="block px-4 py-2 text-sm text-gray-700">Mis pedidos</a>
+      <button class="block px-4 py-2 text-sm text-gray-700 w-full text-left" (click)="logout()">Cerrar sesión</button>
     </div>
   </div>
 
@@ -355,63 +355,61 @@
                 d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z" />
             </svg>
           </span>
-          TW Elements
+          MotionParts
         </h6>
         <p class="text-white">
-          Here you can use rows and columns
-           to organize your footer content.
-           Lorem ipsum dolor sit amet, consectetur
-           adipisicing elit.
+          Todo lo que necesitas saber de nosotros
+          Nuestras redes sociales, contacto y productos!
         </p>
       </div>
       <!-- Products section -->
       <div>
         <h6
           class="mb-4 flex justify-center font-semibold uppercase md:justify-start text-white">
-          Products
+          Productos
         </h6>
         <p class="mb-4 text-white">
-          <a href="#!">Angular</a>
+          <a href="#!">Baterias</a>
         </p>
         <p class="mb-4 text-white">
-          <a href="#!">React</a>
+          <a href="#!">Luces</a>
         </p>
         <p class="mb-4 text-white">
-          <a href="#!">Vue</a>
+          <a href="#!">Motores</a>
         </p>
         <p class="text-white">
-          <a href="#!">Laravel</a>
+          <a href="#!">Arranques</a>
         </p>
       </div>
       <!-- Useful links section -->
       <div>
         <h6
           class="mb-4 flex justify-center font-semibold uppercase md:justify-start text-white">
-          social networks
+          Redes Sociales
         </h6>
         <p class="flex items-center gap-3 md:justify-start text-white">
           <span class="h-5 w-5">
             <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ffffff"><title fill="#ffffff">Facebook</title><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z" fill="#ffffff"/></svg>
           </span>
-          <a href="#!">facebook</a>
+          <a href="https://www.facebook.com/?locale=es_LA&utm_source=gocuotas">facebook</a>
         </p>
         <p class="flex items-center gap-3 md:justify-start text-white">
           <span class="h-5 w-5">
             <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ffffff"><title fill="#ffffff">Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z" fill="#ffffff"/></svg>
         </span>
-          <a href="#!">instagram</a>
+          <a href="https://www.instagram.com/">instagram</a>
         </p>
         <p class="flex items-center gap-3 md:justify-start text-white">
           <span class="h-5 w-5">
             <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ffffff"><title fill="#ffffff">Twitter</title><path d="M21.543 7.104c.015.211.015.423.015.636 0 6.507-4.954 14.01-14.01 14.01v-.003A13.94 13.94 0 0 1 0 19.539a9.88 9.88 0 0 0 7.287-2.041 4.93 4.93 0 0 1-4.6-3.42 4.916 4.916 0 0 0 2.223-.084A4.926 4.926 0 0 1 .96 9.167v-.062a4.887 4.887 0 0 0 2.235.616A4.928 4.928 0 0 1 1.67 3.148 13.98 13.98 0 0 0 11.82 8.292a4.929 4.929 0 0 1 8.39-4.49 9.868 9.868 0 0 0 3.128-1.196 4.941 4.941 0 0 1-2.165 2.724A9.828 9.828 0 0 0 24 4.555a10.019 10.019 0 0 1-2.457 2.549z" fill="#ffffff"/></svg>
         </span>
-          <a href="#!">twitter</a>
+          <a href="https://x.com/?lang=es">X / twitter</a>
         </p>
         <p class="flex items-center gap-3 md:justify-start text-white">
           <span class="h-5 w-5">
             <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ffffff"><title fill="#ffffff">GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" fill="#ffffff"/></svg>
           </span>
-          <a href="#!">github</a>
+          <a href="https://github.com/xjapn03/MotionParts">github</a>
       </div>
       <!-- Contact section -->
       <div>
@@ -424,7 +422,7 @@
             <span class="h-5 w-5">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#ffffff"><path d="M10 0l10 10-10 10L0 10 10 0zM6 10v3h2v-3h3v3l4-4-4-4v3H8a2 2 0 0 0-2 2z" fill="#ffffff"/></svg>
             </span>
-            <span>Calle 68 #64d-11</span>
+            <span>Cra.27a #63g-46, Bogotá</span>
           </p>
 
           <p class="flex items-center gap-3 md:justify-start text-white">
@@ -434,7 +432,7 @@
                 <path d="M3 5L12 14L21 5" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
-            <span>infomaluuma.com</span>
+            <span>infomcorreo.com</span>
           </p>
 
           <p class="flex items-center gap-3 md:justify-start text-white">
@@ -462,9 +460,8 @@
 
   <!--Copyright section-->
   <div class="bg-black/5 p-6 text-center text-white">
-    <span>© 2025 Copyright:</span>
+    <span>© 2025 Copyright: </span>
     <a class="font-semibold text-white" href="https://tw-elements.com/"
-      >TW Elements</a
-    >
+      >MotionParts. Todos los derechos reservados</a>
   </div>
 </footer>

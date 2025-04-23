@@ -21,10 +21,12 @@ import { AdminOrderDetailsComponent } from './modules/admin/orders/order-details
 import { RegisterComponent } from './modules/register/register.component';
 import { ProfileComponent } from './modules/user/profile/profile.component';
 import { ReportsComponent } from './modules/admin/reports/reports.component';
+import { PasswordRecoveryComponent } from './modules/password-recovery/password-recovery.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent }, // ✅ Ruta de registro
+  { path: 'password-recovery', component: PasswordRecoveryComponent },
   {
     path: 'admin',
     component: AdminComponent,
@@ -50,6 +52,7 @@ export const routes: Routes = [
   { path: 'acerca', component: AcercaComponent },
   { path: 'cart', component: ShoppingCartComponent },
   { path: 'checkout', component: CheckoutComponent }, // ✅ Agregada la ruta de checkout
+  { path: 'password-recovery', component: PasswordRecoveryComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'my-orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
   { path: 'my-orders/:id', component: OrderDetailsComponent, canActivate: [AuthGuard] },
