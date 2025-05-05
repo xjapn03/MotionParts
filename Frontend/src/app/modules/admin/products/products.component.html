@@ -277,7 +277,7 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="bg-gray-100 text-gray-800 border-b border-gray-300">
-            <th class="p-3 font-semibold whitespace-nowrap">ID</th>
+            
             <th class="p-3 font-semibold whitespace-nowrap">Referencia</th>
             <th class="p-3 font-semibold whitespace-nowrap">Nombre</th>
             <th class="p-3 font-semibold whitespace-nowrap">Precio</th>
@@ -293,7 +293,7 @@
             <td colspan="9" class="p-4 text-center text-gray-500">No se encontraron productos</td>
           </tr>
           <tr *ngFor="let product of filteredProducts" class="border-b border-gray-200 hover:bg-gray-50 transition">
-            <td class="p-3">{{ product.id }}</td>
+            
             <td class="p-3">{{ product.reference }}</td>
             <td class="p-3">{{ product.name }}</td>
             <td class="p-3">{{ product.price | currency }}</td>
