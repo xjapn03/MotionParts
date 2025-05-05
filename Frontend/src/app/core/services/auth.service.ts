@@ -57,6 +57,7 @@ interface RegisterRequest {
 export class AuthService {
   private loginUrl = 'http://localhost:8080/api/auth/login';
   private registerUrl = 'http://localhost:8080/api/auth/register';
+  private userInfoUrl = 'http://localhost:8080/api/user-info/me';  // URL de UserInfo
   private userSubject = new BehaviorSubject<AuthResponse | null>(this.getUserFromStorage());
   user$ = this.userSubject.asObservable();
 
@@ -108,7 +109,7 @@ export class AuthService {
   }
 
 
-
+//UserInfo
   getUserInfo(): Observable<UserInfo> {
     const token = localStorage.getItem('token');  // Obtener el token de localStorage
     if (!token) {
@@ -121,6 +122,16 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
+  // Método para actualizar la información del usuario
+  updateUserInfo(userInfo: UserInfo): Observable<UserInfo> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token no disponible');
+    }
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<UserInfo>(this.userInfoUrl, userInfo, { headers });
+  }
 
   private handleError(error: any): Observable<never> {
     console.error('An error occurred:', error);

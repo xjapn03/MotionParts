@@ -4,7 +4,7 @@
   <!-- Formulario de Usuario -->
   <form (ngSubmit)="usuario.id ? onUpdate() : onCreate()" #usuarioForm="ngForm" class="bg-white p-6 rounded-lg shadow-md space-y-4">
     <div>
-      <label class="block text-sm font-semibold text-gray-700">Nombre</label>
+      <label class="block text-sm font-semibold text-gray-700">Nombre de Usuario</label>
       <input
         type="text"
         class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -15,7 +15,7 @@
     </div>
 
     <div>
-      <label class="block text-sm font-semibold text-gray-700">Correo</label>
+      <label class="block text-sm font-semibold text-gray-700">Correo Electrónico</label>
       <input
         type="email"
         class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -48,6 +48,164 @@
       >
         <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
       </select>
+    </div>
+
+    <!-- Información adicional del usuario -->
+    <h3 class="text-xl font-semibold text-gray-800 mt-6">Información Adicional</h3>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Tipo de Usuario</label>
+      <select
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.type"
+        name="type"
+        required
+      >
+        <option value="Natural">Natural</option>
+        <option value="Jurídica">Jurídica</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Tipo de Documento</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.documentType"
+        name="documentType"
+        required
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Número de Documento</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.documentNumber"
+        name="documentNumber"
+        required
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Fecha de Expiración</label>
+      <input
+        type="date"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.documentExp"
+        name="documentExp"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">País de Expiración</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.expCountry"
+        name="expCountry"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Región de Expiración</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.expRegion"
+        name="expRegion"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Ciudad de Expiración</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.expCity"
+        name="expCity"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Primer Nombre</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.firstName"
+        name="firstName"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Segundo Nombre</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.middleName"
+        name="middleName"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Apellido Paterno</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.lastName"
+        name="lastName"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Apellido Materno</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.secondLastName"
+        name="secondLastName"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Otros Nombres</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.otherNames"
+        name="otherNames"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Razón Social (si aplica)</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.legalName"
+        name="legalName"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Dirección</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.address"
+        name="address"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-semibold text-gray-700">Teléfonos</label>
+      <input
+        type="text"
+        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        [(ngModel)]="usuario.userInfo.phone"
+        name="phone"
+      />
     </div>
 
     <div class="flex gap-4">
