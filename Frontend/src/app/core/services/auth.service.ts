@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { UserInfo } from '../models/user-info.model';
 import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 
 // Token decodificado
@@ -113,7 +114,7 @@ export class AuthService {
   getUserInfo(): Observable<UserInfo> {
     const token = localStorage.getItem('token');  // Obtener el token de localStorage
     if (!token) {
-      throw new Error('Token no disponible');
+      return throwError(() => new Error('Token no disponible'));
     }
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -126,7 +127,7 @@ export class AuthService {
   updateUserInfo(userInfo: UserInfo): Observable<UserInfo> {
     const token = localStorage.getItem('token');
     if (!token) {
-      throw new Error('Token no disponible');
+      return throwError(() => new Error('Token no disponible'));
     }
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);

@@ -96,17 +96,7 @@ export class UsersComponent implements OnInit {
         roles: this.usuario.roles,
         userInfo: this.usuario.userInfo
       },
-      userInfo: {
-        userId: 0, // Este se ignora al crear, el backend lo llena
-        type: 'Natural', // o 'Jurídica', según el caso
-        documentType: 'DNI', // o 'RUC', etc.
-        documentNumber: '12345678',
-        email: this.usuario.email,
-        firstName: 'Usuario',
-        lastName: 'Mostrador',
-        country: '-',
-        // puedes completar más campos si gustas
-      }
+      userInfo: this.usuario.userInfo
     };
 
     console.log('Enviando registerRequest:', registerRequest);
@@ -127,7 +117,8 @@ export class UsersComponent implements OnInit {
   onUpdate(): void {
     const dto = {
       ...this.usuario,
-      roleId: this.usuario.roles.map(role => role.id)
+      roleId: this.usuario.roles.map(role => role.id),
+      userInfo: this.usuario.userInfo
     };
 
     console.log('Actualizando usuario:', dto); // Log al editar
@@ -187,4 +178,6 @@ export class UsersComponent implements OnInit {
     this.usuario = {id: 0,username: '',email: '',roles: [],
       userInfo: {userId: 0,type: '',documentType: '',documentNumber: '',documentExp: '',expCountry: '',expRegion: '',expCity: '',firstName: '',middleName: '',lastName: '',secondLastName: '',otherNames: '',legalName: '',email: '',country: '',region: '',city: '',address: '',addressDetail: '',postalCode: '',phone: '',phone2: '',createdAt: '',updatedAt: ''}};    
   }
+
+  selectedTab: 'cuenta' | 'info' = 'cuenta';
 }
