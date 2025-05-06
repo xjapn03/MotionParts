@@ -7,6 +7,7 @@ import com.motionParts.ecommerce.repositories.UserRepository;
 import com.motionParts.ecommerce.repositories.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,6 +80,7 @@ public class UserInfoController {
     }
 
     // Endpoint para que el administrador pueda actualizar la información de cualquier usuario
+    @PreAuthorize("hasRole('ADMIN')")//Solo los admins pueden usar este endpoint
     @PutMapping("/{userId}")
     public ResponseEntity<UserInfo> updateUserInfo(@PathVariable Long userId, @RequestBody UserInfoDTO userInfoDTO) {
         // Verificar si el administrador o el usuario tiene acceso para modificar esta información

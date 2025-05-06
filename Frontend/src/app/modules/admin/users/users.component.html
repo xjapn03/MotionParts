@@ -85,15 +85,14 @@
       <fieldset>
         <legend class="text-lg font-semibold text-blue-700 mb-2">Información Personal</legend>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700">Tipo de Usuario</label>
-          <select class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" [(ngModel)]="usuario.userInfo.type" name="type" required>
-            <option value="Natural">Natural</option>
-            <option value="Jurídica">Jurídica</option>
-          </select>
-        </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Tipo de Persona</label>
+            <select class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" [(ngModel)]="usuario.userInfo.type" name="type" required>
+              <option value="Natural">Natural</option>
+              <option value="Jurídica">Jurídica</option>
+            </select>
+          </div>
           <div>
             <label class="block text-sm font-semibold text-gray-700">Tipo de Documento</label>
             <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.documentType" name="documentType" required />
@@ -102,26 +101,45 @@
             <label class="block text-sm font-semibold text-gray-700">Número de Documento</label>
             <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.documentNumber" name="documentNumber" required />
           </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label class="block text-sm font-semibold text-gray-700">Fecha de Expiración</label>
             <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="date" [(ngModel)]="usuario.userInfo.documentExp" name="documentExp" />
           </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">País de expedición</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.expCountry" name="country" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Región de expedición</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.expRegion" name="region" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Ciudad de expedición</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.expCity" name="postalCode" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label class="block text-sm font-semibold text-gray-700">País</label>
-            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.expCountry" name="expCountry" />
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.country" name="country" />
           </div>
           <div>
             <label class="block text-sm font-semibold text-gray-700">Región</label>
-            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.expRegion" name="expRegion" />
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.region" name="region" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Código Postal</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.postalCode" name="postalCode" />
           </div>
         </div>
 
         <div>
           <label class="block text-sm font-semibold text-gray-700">Ciudad</label>
-          <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.expCity" name="expCity" />
+          <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.city" name="city" />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -156,17 +174,32 @@
           <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.legalName" name="legalName" />
         </div>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700">Dirección</label>
-          <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.address" name="address" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Dirección</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.address" name="address" />
+          </div>
+  
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Detalle de Dirección</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.addressDetail" name="addressDetail" />
+          </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700">Teléfonos</label>
-          <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.phone" name="phone" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Teléfono principal</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.phone" name="phone" />
+          </div>
+  
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Teléfono Secundario</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.phone2" name="phone2" />
+          </div>
         </div>
       </fieldset>
     </div>
+    <!-- UserInfo -->
 
     <!-- Botones -->
     <div class="flex gap-4 pt-4">
