@@ -28,6 +28,7 @@ export class ProductsComponent implements OnInit {
   galleryFiles: File[] = [];
   mainImagePreview: string | null = null;
   galleryPreviews: string [] = [];
+  activeTab: string = 'form'; // Agregada la propiedad faltante
 
   // Propiedades para el manejo de alertas
   alertMessage: string = '';
@@ -49,6 +50,12 @@ export class ProductsComponent implements OnInit {
     this.loadCategories();
   }
 
+  // Método para cambiar entre pestañas
+  switchTab(tab: string): void {
+    this.activeTab = tab;
+    this.cdr.markForCheck();
+  }
+
   // Función trackBy para optimizar el ngFor
   trackByProductId(index: number, item: Product): number {
     return item.id!;
@@ -65,9 +72,17 @@ export class ProductsComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = () => {
         this.mainImagePreview = reader.result as string;
+        this.cdr.markForCheck();
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  // Método para limpiar la imagen principal
+  clearMainImage(): void {
+    this.mainImageFile = null;
+    this.mainImagePreview = null;
+    this.cdr.markForCheck();
   }
 
   onGalleryImagesSelected(event: Event): void {
@@ -83,10 +98,25 @@ export class ProductsComponent implements OnInit {
         const reader = new FileReader();
         reader.onload = () => {
           this.galleryPreviews.push(reader.result as string);
+          this.cdr.markForCheck();
         };
         reader.readAsDataURL(file);
       }
     }
+  }
+
+  // Método para limpiar todas las imágenes de la galería
+  clearGalleryImages(): void {
+    this.galleryFiles = [];
+    this.galleryPreviews = [];
+    this.cdr.markForCheck();
+  }
+
+  // Método para eliminar una imagen específica de la galería
+  removeGalleryImage(index: number): void {
+    this.galleryFiles.splice(index, 1);
+    this.galleryPreviews.splice(index, 1);
+    this.cdr.markForCheck();
   }
 
   onImageError(event: Event) {
@@ -287,6 +317,9 @@ export class ProductsComponent implements OnInit {
   }
 
   onEdit(product: Product) {
+    // Cambiar a la pestaña de formulario cuando se edita
+    this.switchTab('form');
+    
     // Desplazar al formulario cuando se edita
     window.scrollTo({
       top: 0,
