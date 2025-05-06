@@ -2,7 +2,6 @@ package com.motionParts.ecommerce.services;
 import com.motionParts.ecommerce.repositories.UserInfoRepository;
 import com.motionParts.ecommerce.Models.UserInfo;
 import com.motionParts.ecommerce.dto.UserInfoDTO;
-//import com.motionParts.ecommerce.Models.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

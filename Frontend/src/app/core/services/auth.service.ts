@@ -129,15 +129,17 @@ export class AuthService {
     if (!token) {
       return throwError(() => new Error('Token no disponible'));
     }
-
+  
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.put<UserInfo>(this.userInfoUrl, userInfo, { headers });
+    return this.http.put<UserInfo>(this.userInfoUrl, userInfo, { headers }).pipe(
+      catchError(this.handleError)
+    );
   }
-
+  
   private handleError(error: any): Observable<never> {
-    console.error('An error occurred:', error);
-    throw error;
-  }
+    console.error('Error al actualizar userInfo:', error);
+    return throwError(() => error);
+  }  
 
 
   registerUserWithInfo(data: RegisterRequest): Observable<any> {

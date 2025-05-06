@@ -89,13 +89,21 @@
           <div>
             <label class="block text-sm font-semibold text-gray-700">Tipo de Persona</label>
             <select class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" [(ngModel)]="usuario.userInfo.type" name="type" required>
+              <option value="">Seleccione</option>
               <option value="Natural">Natural</option>
               <option value="Jurídica">Jurídica</option>
             </select>
           </div>
           <div>
             <label class="block text-sm font-semibold text-gray-700">Tipo de Documento</label>
-            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.documentType" name="documentType" required />
+            <select class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" [(ngModel)]="usuario.userInfo.documentType" name="documentType" required>
+              <option value="">Seleccione</option>
+              <option value="cedula">Cédula de Ciudadanía</option>
+              <option value="pasaporte">Pasaporte</option>
+              <option value="extranjeria">Cédula de Extranjería</option>
+              <option value="nit">NIT</option>
+              <option value="rut">RUT</option>
+            </select>
           </div>
           <div>
             <label class="block text-sm font-semibold text-gray-700">Número de Documento</label>
@@ -132,14 +140,20 @@
             <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.region" name="region" />
           </div>
           <div>
-            <label class="block text-sm font-semibold text-gray-700">Código Postal</label>
-            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.postalCode" name="postalCode" />
+            <label class="block text-sm font-semibold text-gray-700">Ciudad</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.city" name="city" />
           </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-semibold text-gray-700">Ciudad</label>
-          <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.city" name="city" />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Código Postal</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.postalCode" name="postalCode" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Correo Electrónico de contacto</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.email" name="email" />
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

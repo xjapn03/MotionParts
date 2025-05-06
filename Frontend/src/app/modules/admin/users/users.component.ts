@@ -121,12 +121,21 @@ export class UsersComponent implements OnInit {
       userInfo: this.usuario.userInfo
     };
 
-    console.log('Actualizando usuario:', dto); // Log al editar
+    console.log('Actualizando usuario:', dto);
 
     if (this.usuario.id) {
       this.userService.updateUser(this.usuario.id, dto).subscribe(
         () => {
-          console.log('Usuario actualizado exitosamente'); // Log al editar exitosamente
+          console.log('Usuario actualizado exitosamente');
+
+          // Aquí llamas a la segunda actualización si quieres separar los flujos
+          if (this.usuario.userInfo) {
+            this.authService.updateUserInfo(this.usuario.userInfo).subscribe(
+              () => console.log('UserInfo actualizado exitosamente'),
+              (error) => console.error('Error al actualizar UserInfo:', error)
+            );
+          }
+
           this.getUsers();
           this.resetUser();
         },
@@ -155,8 +164,38 @@ export class UsersComponent implements OnInit {
 
   // Cargar datos en el formulario (modo edición)
   onEdit(user: User): void {
-    this.usuario = { ...user };
+    this.usuario = {
+      ...user,
+      userInfo: user.userInfo ?? {
+        userId: user.id,
+        type: '',
+        documentType: '',
+        documentNumber: '',
+        documentExp: '',
+        expCountry: '',
+        expRegion: '',
+        expCity: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        secondLastName: '',
+        otherNames: '',
+        legalName: '',
+        email: '',
+        country: '',
+        region: '',
+        city: '',
+        address: '',
+        addressDetail: '',
+        postalCode: '',
+        phone: '',
+        phone2: '',
+        createdAt: '',
+        updatedAt: ''
+      }
+    };
   }
+  
 
   getRoles(): void {
     this.userService.getRoles().subscribe(
