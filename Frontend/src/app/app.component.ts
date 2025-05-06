@@ -9,6 +9,7 @@ import { CartItem } from './core/models/cartItem.model';
 import { Observable, Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
 import { NgModule } from '@angular/core';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -194,4 +195,11 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    if (this.isDropdownOpen) {
+      this.isDropdownOpen = false;
+    }
+  }
+  
 }
