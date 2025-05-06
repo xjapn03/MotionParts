@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User } from '../models/user.model';
 import { Role } from '../models/login.model';
+import { UserInfo } from '../models/user-info.model';
 import { RegisterRequest } from '../models/register-request.model';
 
 
@@ -39,6 +40,20 @@ export class UserService {
   // Actualizar usuario existente
   updateUser(id: number, user: User): Observable<User> {
     return this.http.put<User>(`${this.apiUrl}/${id}`, user).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Actualizar la información del usuario autenticado
+  updateUserInfo(userInfo: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('Token no disponible'));
+    }
+
+    const headers = new HttpHeaders({'Authorization': `Bearer ${token}`});
+
+    return this.http.put<any>('http://localhost:8080/api/user-info/me', userInfo, { headers }).pipe(
       catchError(this.handleError)
     );
   }

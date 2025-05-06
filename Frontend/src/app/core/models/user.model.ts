@@ -1,4 +1,5 @@
 import { Role } from './login.model';
+import { UserInfo } from './user-info.model';
 
 export interface User {
   id: number;
@@ -6,4 +7,5 @@ export interface User {
   email: string;
   roles: Role[]; // Agregamos roles
   password?: string;
+  userInfo: UserInfo;
 }

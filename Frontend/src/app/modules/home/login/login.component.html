@@ -34,17 +34,17 @@
               class="text-sm text-black px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-purple-400">
           </div>
 
-          <div class="flex items-center justify-between">
-            <div class="text-sm ml-auto">
-              <button routerLink="/password-recovery" class="text-sm text-purple-700 hover:text-purple-900 ml-1 underline">¿Olvidaste tu contraseña?</button>
-            </div>
-          </div>
-
           <div>
             <button type="submit" [disabled]="loginForm.invalid"
               class="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500">
               Iniciar Sesion
             </button>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="text-sm ml-auto">
+              <button routerLink="/password-recovery" class="text-sm text-purple-700 hover:text-purple-900 ml-1 underline">¿Olvidaste tu contraseña?</button>
+            </div>
           </div>
 
          <div class="flex items-center justify-center space-x-2 my-5">

@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { UserInfo } from '../models/user-info.model';
 import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 
 // Token decodificado
@@ -57,6 +58,7 @@ interface RegisterRequest {
 export class AuthService {
   private loginUrl = 'http://localhost:8080/api/auth/login';
   private registerUrl = 'http://localhost:8080/api/auth/register';
+  private userInfoUrl = 'http://localhost:8080/api/user-info/me';  // URL de UserInfo
   private userSubject = new BehaviorSubject<AuthResponse | null>(this.getUserFromStorage());
   user$ = this.userSubject.asObservable();
 
@@ -108,11 +110,11 @@ export class AuthService {
   }
 
 
-
+//UserInfo
   getUserInfo(): Observable<UserInfo> {
     const token = localStorage.getItem('token');  // Obtener el token de localStorage
     if (!token) {
-      throw new Error('Token no disponible');
+      return throwError(() => new Error('Token no disponible'));
     }
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -121,11 +123,23 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
-
-  private handleError(error: any): Observable<never> {
-    console.error('An error occurred:', error);
-    throw error;
+  // Método para actualizar la información del usuario
+  updateUserInfo(userInfo: UserInfo): Observable<UserInfo> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('Token no disponible'));
+    }
+  
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<UserInfo>(this.userInfoUrl, userInfo, { headers }).pipe(
+      catchError(this.handleError)
+    );
   }
+  
+  private handleError(error: any): Observable<never> {
+    console.error('Error al actualizar userInfo:', error);
+    return throwError(() => error);
+  }  
 
 
   registerUserWithInfo(data: RegisterRequest): Observable<any> {
