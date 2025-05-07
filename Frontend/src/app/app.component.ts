@@ -1,5 +1,5 @@
 import { AuthResponse } from './core/models/login.model';
-import { Component, OnInit, inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -43,6 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor() {
     this.cartItems$ = this.shoppingCartService.cartItems$;
   }
+  @ViewChild('userMenu', { static: false }) userMenu!: ElementRef;
 
   ngOnInit() {
     // Inicializar carrito para invitados (verifica que guestId y guestCart estén configurados correctamente)
@@ -112,7 +113,8 @@ export class AppComponent implements OnInit, OnDestroy {
     return item.product.id!;
   }
 
-  toggleDropdown() {
+  toggleDropdown(event: MouseEvent) {
+    event.stopPropagation();  // <- Esto evita que el HostListener lo cierre
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
@@ -201,5 +203,17 @@ export class AppComponent implements OnInit, OnDestroy {
       this.isDropdownOpen = false;
     }
   }
+
+  @HostListener('document:click', ['$event'])
+  handleClickOutside(event: Event) {
+    if (this.isDropdownOpen && this.userMenu && !this.userMenu.nativeElement.contains(event.target)) {
+      this.isDropdownOpen = false;
+    }
+  }
+  @HostListener('window:touchmove', ['$event'])
+  onTouchMove(event: TouchEvent): void {
+    this.isMobileMenuOpen = false;
+  }
+
   
 }

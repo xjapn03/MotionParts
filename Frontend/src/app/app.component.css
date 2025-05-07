@@ -41,3 +41,31 @@
   background-color: #374151;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Viewheight completo */
+}
+
+.content-wrapper {
+  flex: 1 0 auto; /* Toma todo el espacio disponible */
+  padding-bottom: 50px; /* Espacio para asegurar que el contenido no se pegue al footer */
+}
+
+.site-footer {
+  flex-shrink: 0; /* Evita que el footer se encoja */
+  width: 100%;
+}
+
+/* Si necesitas que el footer esté siempre en la parte inferior incluso con poco contenido */
+@media screen and (min-height: 700px) {
+  .site-footer {
+    margin-top: auto;
+  }
+}

@@ -1,4 +1,4 @@
-<div class="min-h-full">
+<div class="min-h-full app-container">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <nav class="sticky top-0 z-50 bg-gray-800">
     <div class=" mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -61,7 +61,7 @@
   <div *ngIf="user.username" class="relative">
     <button type="button"
             class="flex items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
-            (click)="toggleDropdown()">
+            (click)="toggleDropdown($event)">
       <svg class="h-8 w-8 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 0112 15a9 9 0 016.879 2.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
@@ -265,12 +265,13 @@
   </div>
 </div>
 
+<div class="content-wrapper">
   <router-outlet></router-outlet>
-
+</div>
 
 
 <!-- Footer container -->
-<footer class="bg-zinc-50 text-center text-surface/75 dark:bg-neutral-700 dark:text-white/75 lg:text-left bg-gray-800">
+<footer class="site-footer bg-zinc-50 text-center text-surface/75 dark:bg-neutral-700 dark:text-white/75 lg:text-left bg-gray-800">
 
 
 
