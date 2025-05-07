@@ -127,15 +127,17 @@ export class UsersComponent implements OnInit {
       this.userService.updateUser(this.usuario.id, dto).subscribe(
         () => {
           console.log('Usuario actualizado exitosamente');
-
-          // Aquí llamas a la segunda actualización si quieres separar los flujos
+    
           if (this.usuario.userInfo) {
-            this.authService.updateUserInfo(this.usuario.userInfo).subscribe(
-              () => console.log('UserInfo actualizado exitosamente'),
-              (error) => console.error('Error al actualizar UserInfo:', error)
+            this.userService.updateUserInfo(this.usuario.userInfo, this.usuario.id).subscribe(
+              (updatedInfo) => {
+                console.log('UserInfo actualizado exitosamente:', updatedInfo);
+                this.usuario.userInfo = updatedInfo;
+              },
+              (error) => console.error('Error al actualizar UserInfo como admin:', error)
             );
           }
-
+    
           this.getUsers();
           this.resetUser();
         },
@@ -143,8 +145,8 @@ export class UsersComponent implements OnInit {
           console.error('Error al actualizar usuario', error);
         }
       );
+    }    
     }
-  }
 
   // Eliminar usuario (DELETE)
   onDelete(id: number): void {

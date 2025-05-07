@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 public class UserInfoService {
 
@@ -70,5 +69,35 @@ public class UserInfoService {
         existingUserInfo.setPhone2(userInfoDTO.getPhone2());
 
         return userInfoRepository.save(existingUserInfo);
+    }
+
+    public UserInfoDTO convertToDTO(UserInfo userInfo) {
+        UserInfoDTO dto = new UserInfoDTO();
+        dto.setId(userInfo.getId());
+        dto.setType(userInfo.getType());
+        dto.setDocumentType(userInfo.getDocumentType());
+        dto.setDocumentNumber(userInfo.getDocumentNumber());
+        dto.setDocumentExp(userInfo.getDocumentExp());
+        dto.setExpCountry(userInfo.getExpCountry());
+        dto.setExpRegion(userInfo.getExpRegion());
+        dto.setExpCity(userInfo.getExpCity());
+        dto.setFirstName(userInfo.getFirstName());
+        dto.setMiddleName(userInfo.getMiddleName());
+        dto.setLastName(userInfo.getLastName());
+        dto.setSecondLastName(userInfo.getSecondLastName());
+        dto.setOtherNames(userInfo.getOtherNames());
+        dto.setLegalName(userInfo.getLegalName());
+        dto.setEmail(userInfo.getEmail());
+        dto.setCountry(userInfo.getCountry());
+        dto.setRegion(userInfo.getRegion());
+        dto.setCity(userInfo.getCity());
+        dto.setAddress(userInfo.getAddress());
+        dto.setAddressDetail(userInfo.getAddressDetail());
+        dto.setPostalCode(userInfo.getPostalCode());
+        dto.setPhone(userInfo.getPhone());
+        dto.setPhone2(userInfo.getPhone2());
+        dto.setCreatedAt(userInfo.getCreatedAt());  // Aquí están las líneas clave
+        dto.setUpdatedAt(userInfo.getUpdatedAt());
+        return dto;
     }
 }

@@ -45,15 +45,20 @@ export class UserService {
   }
 
   // Actualizar la información del usuario autenticado
-  updateUserInfo(userInfo: any): Observable<any> {
+  // Actualizar la información del usuario (autenticado o como admin)
+  updateUserInfo(userInfo: any, userId?: number): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
       return throwError(() => new Error('Token no disponible'));
     }
 
-    const headers = new HttpHeaders({'Authorization': `Bearer ${token}`});
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
 
-    return this.http.put<any>('http://localhost:8080/api/user-info/me', userInfo, { headers }).pipe(
+    const url = userId
+      ? `http://localhost:8080/api/user-info/admin/${userId}`  // Modo admin
+      : `http://localhost:8080/api/user-info/me`;              // Modo usuario
+
+    return this.http.put<any>(url, userInfo, { headers }).pipe(
       catchError(this.handleError)
     );
   }
