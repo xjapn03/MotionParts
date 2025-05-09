@@ -36,4 +36,13 @@ export class OrderDetailsComponent implements OnInit {
       error: (err) => console.error('Error al cargar detalles:', err),
     });
   }
+  calculateTotal(): number {
+    if (!this.order?.orderDetails || this.order.orderDetails.length === 0) {
+      return 0;
+    }
+    
+    return this.order.orderDetails.reduce((sum, detail) => {
+      return sum + (detail.unitPrice * detail.quantity);
+    }, 0);
+  }
 }

@@ -1,153 +1,175 @@
 <div *ngIf="order" class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-  <h2 class="text-2xl font-bold mb-4">Detalles de la Orden #{{ order.id }}</h2>
-
-  <div class="mb-4">
-    <p><strong>Fecha:</strong> {{ order.createdAt | date:'short' }}</p>
-    <div class="flex items-center space-x-4">
-      <p><strong>Total:</strong></p>
-      <input
-        [(ngModel)]="order.total"
-        class="w-32 p-2 border border-gray-300 rounded-md"
-        type="number"
-        step="0.01"
-        min="0"
-      />
+  <!-- Encabezado con información básica y estado -->
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b pb-4">
+    <div>
+      <h2 class="text-2xl font-bold text-gray-800">Detalles de la Orden #{{ order.id }}</h2>
+      <p class="text-gray-600 mt-1"><strong>Fecha:</strong> {{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+      <p class="text-gray-600"><strong>Método de pago:</strong> {{ order.paymentMethod }}</p>
     </div>
-    <div class="flex items-center space-x-4">
-      <p><strong>Estado:</strong></p>
-      <select
-        [(ngModel)]="order.status"
-        class="border-gray-300 rounded-md p-2 w-48"
-        [ngClass]="{
-          'bg-yellow-100': order.status === 'PENDING',
-          'bg-green-100': order.status === 'PAID',
-          'bg-blue-100': order.status === 'SHIPPED',
-          'bg-red-100': order.status === 'CANCELED'
-        }"
-      >
-        <option value="PENDING">Pendiente</option>
-        <option value="PAID">Pagada</option>
-        <option value="SHIPPED">Enviada</option>
-        <option value="CANCELED">Cancelada</option>
-      </select>
-    </div>
-    <p><strong>Método de pago:</strong> {{ order.paymentMethod }}</p>
-  </div>
-
-  <div class="mb-4 p-4 bg-gray-100 rounded-lg">
-    <h3 class="text-lg font-semibold">Información del Cliente</h3>
-    <p *ngIf="order.billingData"><strong>Nombre:</strong> {{ order.billingData.firstName }} {{ order.billingData.lastName }}</p>
-    <p *ngIf="order.billingData"><strong>Email:</strong> {{ order.billingData.email }}</p>
-    <div class="flex items-center space-x-4" *ngIf="order.billingData">
-      <p><strong>Cambiar Email:</strong></p>
-      <input
-        [(ngModel)]="order.billingData.email"
-        class="w-64 p-2 border border-gray-300 rounded-md"
-        type="email"
-        placeholder="Nuevo email"
-      />
+    
+    <div class="mt-4 md:mt-0 flex flex-col items-start md:items-end">
+      <!-- Total (solo lectura) -->
+      <div class="flex items-center mb-2">
+        <p class="mr-2 font-semibold">Total:</p>
+        <div class="bg-gray-100 px-4 py-2 rounded-md font-bold text-gray-800">
+          {{ order.total | currency }}
+        </div>
+      </div>
+      
+      <!-- Estado (selector) -->
+      <div class="flex items-center">
+        <p class="mr-2 font-semibold">Estado:</p>
+        <select
+          [(ngModel)]="order.status"
+          class="border border-gray-300 rounded-md p-2 w-48 font-medium"
+          [ngClass]="{
+            'bg-yellow-100 text-yellow-800': order.status === 'PENDING',
+            'bg-green-100 text-green-800': order.status === 'PAID',
+            'bg-blue-100 text-blue-800': order.status === 'SHIPPED',
+            'bg-red-100 text-red-800': order.status === 'CANCELED'
+          }"
+        >
+          <option value="PENDING">Pendiente</option>
+          <option value="PAID">Pagada</option>
+          <option value="SHIPPED">Enviada</option>
+          <option value="CANCELED">Cancelada</option>
+        </select>
+      </div>
     </div>
   </div>
 
-  <div class="mb-4 p-4 bg-gray-100 rounded-lg">
-    <h3 class="text-lg font-semibold">Dirección de Envío</h3>
-    <div *ngIf="order.shippingData" class="flex items-center space-x-4">
-      <p><strong>Destinatario:</strong></p>
-      <input
-        [(ngModel)]="order.shippingData.firstName"
-        class="w-32 p-2 border border-gray-300 rounded-md"
-        placeholder="Nombre"
-      />
-      <input
-        [(ngModel)]="order.shippingData.lastName"
-        class="w-32 p-2 border border-gray-300 rounded-md"
-        placeholder="Apellido"
-      />
-    </div>
-    <div *ngIf="order.shippingData" class="flex items-center space-x-4">
-      <p><strong>Dirección:</strong></p>
-      <input
-        [(ngModel)]="order.shippingData.address"
-        class="w-full p-2 border border-gray-300 rounded-md"
-        placeholder="Dirección"
-      />
-      <input
-        [(ngModel)]="order.shippingData.addressDetail"
-        class="w-full p-2 border border-gray-300 rounded-md"
-        placeholder="Detalles de la dirección"
-      />
-    </div>
-    <div *ngIf="order.shippingData" class="flex items-center space-x-4">
-      <p><strong>Ciudad:</strong></p>
-      <input
-        [(ngModel)]="order.shippingData.city"
-        class="w-32 p-2 border border-gray-300 rounded-md"
-        placeholder="Ciudad"
-      />
-      <input
-        [(ngModel)]="order.shippingData.region"
-        class="w-32 p-2 border border-gray-300 rounded-md"
-        placeholder="Región"
-      />
-    </div>
-    <div *ngIf="order.shippingData" class="flex items-center space-x-4">
-      <p><strong>País:</strong></p>
-      <input
-        [(ngModel)]="order.shippingData.country"
-        class="w-32 p-2 border border-gray-300 rounded-md"
-        placeholder="País"
-      />
+  <!-- Información del Cliente -->
+  <div class="mb-6 p-4 bg-gray-50 rounded-lg shadow-sm">
+    <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+      </svg>
+      Información del Cliente
+    </h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div *ngIf="order.billingData">
+        <p class="text-sm text-gray-500">Nombre completo</p>
+        <p class="font-medium">{{ order.billingData.firstName }} {{ order.billingData.lastName }}</p>
+      </div>
+      
+      <div *ngIf="order.billingData">
+        <p class="text-sm text-gray-500">Correo electrónico</p>
+        <p class="font-medium">{{ order.billingData.email }}</p>
+      </div>
     </div>
   </div>
 
-  <h3 class="text-lg font-semibold mb-2">Productos</h3>
-  <div class="overflow-x-auto">
-    <table class="w-full bg-gray-50 border rounded-lg">
-      <thead>
-        <tr class="bg-gray-200 text-left">
-          <th class="p-2">Producto</th>
-          <th class="p-2">Cantidad</th>
-          <th class="p-2">Precio Unitario</th>
-          <th class="p-2">Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let detail of order.orderDetails" class="border-t">
-          <td class="p-2">{{ detail.productName }}</td>
-          <td class="p-2">
-            <input
-              [(ngModel)]="detail.quantity"
-              class="w-16 p-2 border border-gray-300 rounded-md"
-              type="number"
-              min="1"
-            />
-          </td>
-          <td class="p-2">
-            <input
-              [(ngModel)]="detail.unitPrice"
-              class="w-24 p-2 border border-gray-300 rounded-md"
-              type="number"
-              step="0.01"
-              min="0"
-            />
-          </td>
-          <td class="p-2">{{ detail.subtotal | currency }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Dirección de Envío -->
+  <div class="mb-6 p-4 bg-gray-50 rounded-lg shadow-sm">
+    <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+      </svg>
+      Dirección de Envío
+    </h3>
+    
+    <div *ngIf="order.shippingData" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <p class="text-sm text-gray-500">Destinatario</p>
+        <p class="font-medium">{{ order.shippingData.firstName }} {{ order.shippingData.lastName }}</p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-500">Dirección</p>
+        <p class="font-medium">{{ order.shippingData.address }}</p>
+        <p *ngIf="order.shippingData.addressDetail" class="text-sm text-gray-600">
+          {{ order.shippingData.addressDetail }}
+        </p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-500">Ciudad / Región</p>
+        <p class="font-medium">{{ order.shippingData.city }}, {{ order.shippingData.region }}</p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-500">País</p>
+        <p class="font-medium">{{ order.shippingData.country }}</p>
+      </div>
+    </div>
   </div>
 
-  <button
-    (click)="updateOrder()"
-    class="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-  >
-    Actualizar Orden
-  </button>
+  <!-- Productos -->
+  <h3 class="text-lg font-semibold mb-3 flex items-center text-gray-700">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />
+      <path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
+    </svg>
+    Productos
+  </h3>
+  
+  <div class="bg-white rounded-lg shadow mb-6 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="bg-gray-100 text-left text-gray-600">
+            <th class="p-3 font-medium">Producto</th>
+            <th class="p-3 font-medium">Cantidad</th>
+            <th class="p-3 font-medium text-right">Precio Unitario</th>
+            <th class="p-3 font-medium text-right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let detail of order.orderDetails" class="border-t border-gray-200 hover:bg-gray-50">
+            <td class="p-3">
+              <div class="font-medium text-gray-800">{{ detail.productName }}</div>
+            </td>
+            <td class="p-3">
+              <div class="font-medium">{{ detail.quantity }}</div>
+            </td>
+            <td class="p-3 text-right">
+              <div class="font-medium">{{ detail.unitPrice | currency }}</div>
+            </td>
+            <td class="p-3 text-right">
+              <div class="font-bold">{{ detail.quantity * detail.unitPrice | currency }}</div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot class="bg-gray-50">
+          <tr class="border-t-2 border-gray-300">
+            <td colspan="3" class="p-3 text-right font-bold">Total:</td>
+            <td class="p-3 text-right font-bold text-xl">{{ calculateTotal() | currency }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
 
-  <button
-    (click)="goBack()"
-    class="mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
-  >
-    Volver
-  </button>
+  <!-- Botones de acción -->
+  <div class="flex flex-wrap gap-3 justify-end mt-6">
+    <button
+      (click)="updateOrder()"
+      class="px-4 py-2 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+      </svg>
+      Actualizar Orden
+    </button>
+
+    <button
+      (click)="goBack()"
+      class="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded hover:bg-gray-300 transition focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 flex items-center"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+      </svg>
+      Volver
+    </button>
+  </div>
+</div>
+
+<!-- Mensaje de carga -->
+<div *ngIf="!order" class="max-w-4xl mx-auto p-6 flex justify-center">
+  <div class="animate-pulse flex space-x-2">
+    <div class="h-3 w-3 bg-blue-500 rounded-full"></div>
+    <div class="h-3 w-3 bg-blue-500 rounded-full"></div>
+    <div class="h-3 w-3 bg-blue-500 rounded-full"></div>
+  </div>
 </div>

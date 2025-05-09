@@ -1,0 +1,37 @@
+.pulse {
+    animation: pulse 1.5s infinite;
+  }
+  
+  /* Estilo para móviles */
+  @media (max-width: 640px) {
+    .p-3 {
+      padding: 0.5rem !important;
+    }
+    
+    table {
+      font-size: 0.9rem;
+    }
+  }
+  
+  /* Estilos para etiquetas de estado */
+  .bg-yellow-100 { transition: background-color 0.3s ease; }
+  .bg-green-100 { transition: background-color 0.3s ease; }
+  .bg-blue-100 { transition: background-color 0.3s ease; }
+  .bg-red-100 { transition: background-color 0.3s ease; }
+  
+  /* Personalización de scrollbars para navegadores webkit */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
