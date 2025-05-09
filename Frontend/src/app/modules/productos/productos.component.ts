@@ -9,6 +9,8 @@ import { Category } from '../../core/models/category.model';
 import { ShoppingCartService } from '../../core/services/shoppingCart.service'; // Importa el servicio
 import { CartItem } from '../../core/models/cartItem.model';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+
 
 
 // ... Importaciones (igual que antes)
@@ -46,7 +48,8 @@ export class ProductosComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
-    private shoppingCartService: ShoppingCartService
+    private shoppingCartService: ShoppingCartService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -171,8 +174,77 @@ export class ProductosComponent implements OnInit {
   }
 
   buyNow() {
-    console.log(`Comprando ${this.cantidad} unidad(es) de ${this.productoSeleccionado?.name}`);
+    if (!this.productoSeleccionado) return;
+    
+    // Guarda una referencia al producto para usar después de añadirlo al carrito
+    const producto = this.productoSeleccionado;
+    const cantidad = this.cantidad;
+    
+    const userId = this.getAuthenticatedUserId();
+    
+    // Para usuarios no autenticados
+    if (!userId) {
+      const guestCartItem: CartItem = {
+        id: 0,
+        product: producto,
+        quantity: cantidad,
+        unitPrice: producto.price,
+        totalPrice: cantidad * producto.price
+      };
+      
+      // Añadir al carrito de invitado y redireccionar
+      this.shoppingCartService.addToGuestCart(guestCartItem);
+      
+      // Almacenar que este producto debe ser comprado de inmediato
+      localStorage.setItem('checkoutDirectProduct', JSON.stringify({
+        productId: producto.id,
+        quantity: cantidad
+      }));
+      
+      // Redireccionar al checkout
+      this.router.navigate(['/checkout']);
+      return;
+    }
+    
+    // Para usuarios autenticados
+    const shoppingCartId = this.getShoppingCartId(userId);
+    
+    if (!shoppingCartId) {
+      console.error('❌ No se pudo obtener el ID del carrito');
+      alert('Error al obtener el carrito de compras.');
+      return;
+    }
+    
+    const cartItem: CartItem = {
+      id: 0,
+      shoppingCartId: shoppingCartId,
+      product: producto,
+      quantity: cantidad,
+      unitPrice: producto.price,
+      totalPrice: cantidad * producto.price
+    };
+    
+    // Añadir al carrito y redireccionar
+    this.shoppingCartService.addToCart(cartItem).subscribe({
+      next: (response) => {
+        console.log('✅ Producto agregado al carrito para compra inmediata');
+        
+        // Almacenar que este producto debe ser comprado de inmediato
+        localStorage.setItem('checkoutDirectProduct', JSON.stringify({
+          productId: producto.id,
+          quantity: cantidad
+        }));
+        
+        // Redireccionar al checkout
+        this.router.navigate(['/checkout']);
+      },
+      error: (err: any) => {
+        console.error('❌ Error al agregar al carrito para compra inmediata', err);
+        alert('❌ Error al procesar la compra inmediata');
+      }
+    });
   }
+
 
   addToCart() {
     if (!this.productoSeleccionado) return;
@@ -242,4 +314,59 @@ export class ProductosComponent implements OnInit {
       event.target.src = 'assets/products/productDefault.jpg';
     }
   }
+
+  // Agrega este nuevo método a tu componente para manejar el agregar al carrito desde la lista
+
+/**
+ * Agrega un producto al carrito directamente desde la lista de productos
+ * sin necesidad de abrir el modal de detalles
+ */
+addToCartFromList(producto: any): void {
+  // Establecemos la cantidad por defecto a 1 cuando se agrega desde la lista
+  const cantidad = 1;
+  
+  const userId = this.getAuthenticatedUserId();
+  
+  if (!userId) {
+    const guestCartItem: CartItem = { 
+      id: 0,
+      product: producto,
+      quantity: cantidad,
+      unitPrice: producto.price,
+      totalPrice: cantidad * producto.price 
+    };
+    
+    this.shoppingCartService.addToGuestCart(guestCartItem);
+    alert('✅ Producto agregado al carrito de invitados');
+    return;
+  }
+  
+  const shoppingCartId = this.getShoppingCartId(userId);
+  
+  if (!shoppingCartId) {
+    console.error('❌ No se pudo obtener el ID del carrito');
+    alert('Error al obtener el carrito de compras.');
+    return;
+  }
+  
+  const cartItem: CartItem = {
+    id: 0,
+    shoppingCartId: shoppingCartId,
+    product: producto,
+    quantity: cantidad,
+    unitPrice: producto.price,
+    totalPrice: cantidad * producto.price
+  };
+  
+  this.shoppingCartService.addToCart(cartItem).subscribe({
+    next: () => {
+      console.log('✅ Producto agregado al carrito');
+      alert('✅ Producto agregado al carrito con éxito');
+    },
+    error: (err: any) => {
+      console.error('❌ Error al agregar al carrito', err);
+      alert('❌ Error al agregar al carrito');
+    }
+  });
+}
 }

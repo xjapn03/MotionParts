@@ -1,4 +1,4 @@
-<div class="min-h-full">
+<div class="min-h-full app-container">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <nav class="sticky top-0 z-50 bg-gray-800">
     <div class=" mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -61,7 +61,7 @@
   <div *ngIf="user.username" class="relative">
     <button type="button"
             class="flex items-center rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-none"
-            (click)="toggleDropdown()">
+            (click)="toggleDropdown($event)">
       <svg class="h-8 w-8 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 0112 15a9 9 0 016.879 2.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
@@ -112,7 +112,8 @@
   <div class="absolute inset-0 bg-black bg-opacity-40 transition-opacity duration-300" (click)="closeCartModal()"></div>
 
   <!-- Sidebar con animación de slide-in -->
-  <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
+  <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out flex flex-col">
+    
     <!-- Encabezado del carrito -->
     <div class="flex items-center justify-between p-4 border-b">
       <h2 class="text-lg font-semibold flex items-center gap-2">
@@ -129,12 +130,12 @@
       </button>
     </div>
 
-    <!-- Contenido del carrito -->
-    <div class="flex flex-col h-[calc(100%-8rem)]">
-      <div class="flex-1 overflow-y-auto p-4">
+    <!-- Contenedor del contenido (con scroll para productos) -->
+    <div class="flex-1 overflow-y-auto">
+      <div class="p-4">
         <ng-container *ngIf="(cartItems$ | async) as cartItems">
           <!-- Estado vacío -->
-          <div *ngIf="cartItems.length === 0" class="flex flex-col items-center justify-center text-center h-full">
+          <div *ngIf="cartItems.length === 0" class="flex flex-col items-center justify-center text-center h-64">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
@@ -216,47 +217,46 @@
           </ul>
         </ng-container>
       </div>
+    </div>
 
-      <!-- Resumen y acciones -->
-        <ng-container *ngIf="cartItems$ | async as items">
-        <div class="border-t p-4 bg-gray-50" *ngIf="items.length > 0">
-          <div class="mb-3">
-            <div class="flex justify-between text-sm mb-1">
-              <span class="text-gray-600">Subtotal</span>
-              <span>{{ getSubtotal() | currency }}</span>
-            </div>
-            <div class="flex justify-between text-sm">
-              <span class="text-gray-600">Impuestos (22%)</span>
-              <span>{{ getTaxes() | currency }}</span>
-            </div>
-            <div class="flex justify-between font-semibold mt-2 pt-2 border-t">
-              <span>Total</span>
-              <span>{{ getTotal() | currency }}</span>
-            </div>
-          </div>
-
-          <!-- Botones de acción -->
-          <div class="grid grid-cols-2 gap-3">
-            <button
-              routerLink="/cart"
-              (click)="closeCartModal()"
-              class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-              Ver carrito
-            </button>
-            <button
-              routerLink="/checkout"
-              (click)="closeCartModal()"
-              [disabled]="hasUnavailableItems()"
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
-              Checkout
-            </button>
-          </div>
+    <!-- Footer (con botones de acción) - ahora fuera del área de scroll -->
+    <div class="border-t p-4 bg-gray-50">
+      <div class="mb-3">
+        <div class="flex justify-between text-sm mb-1">
+          <span class="text-gray-600">Subtotal</span>
+          <span>{{ getSubtotal() | currency }}</span>
         </div>
-</ng-container>
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-600">Impuestos (22%)</span>
+          <span>{{ getTaxes() | currency }}</span>
+        </div>
+        <div class="flex justify-between font-semibold mt-2 pt-2 border-t">
+          <span>Total</span>
+          <span>{{ getTotal() | currency }}</span>
+        </div>
+      </div>
 
+      <!-- Botones de acción -->
+      <div class="grid grid-cols-2 gap-3">
+        <button
+          routerLink="/cart"
+          (click)="closeCartModal()"
+          class="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          Ver carrito
+        </button>
+        <button
+          routerLink="/checkout"
+          (click)="closeCartModal()"
+          [disabled]="hasUnavailableItems()"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+          Checkout
+        </button>
+      </div>
     </div>
   </div>
 </div>
+
+   
 
 <!-- Indicador de carga (spinner) -->
 <div *ngIf="isLoading" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-[60]">
@@ -265,12 +265,13 @@
   </div>
 </div>
 
+<div class="content-wrapper">
   <router-outlet></router-outlet>
-
+</div>
 
 
 <!-- Footer container -->
-<footer class="bg-zinc-50 text-center text-surface/75 dark:bg-neutral-700 dark:text-white/75 lg:text-left bg-gray-800">
+<footer class="site-footer bg-zinc-50 text-center text-surface/75 dark:bg-neutral-700 dark:text-white/75 lg:text-left bg-gray-800">
 
 
 

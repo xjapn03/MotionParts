@@ -20,3 +20,14 @@ th, td {
 th {
   background-color: #f4f4f4;
 }
+
+.cart-container {
+  min-height: 70vh; /* Altura mínima del 70% del viewport */
+  display: block;
+  padding: 0px 0;
+}
+
+/* Para el estado vacío */
+.cart-container > div {
+  min-height: 400px; /* Altura mínima fija para el contenedor interno */
+}

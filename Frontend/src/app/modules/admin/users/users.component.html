@@ -1,56 +1,222 @@
 <div class="max-w-6xl mx-auto p-8 bg-gradient-to-r from-blue-50 to-gray-100 shadow-xl rounded-lg">
   <h2 class="text-4xl font-bold mb-8 text-center text-gray-800">Gestión de Usuarios</h2>
 
-  <!-- Formulario de Usuario -->
+  <!-- Tabs -->
+  <div class="flex justify-center mb-6">
+    <button 
+      (click)="selectedTab = 'cuenta'"
+      class="px-6 py-2 font-semibold rounded-t-lg"
+      [ngClass]="{
+        'bg-white shadow-md text-blue-600': selectedTab === 'cuenta',
+        'bg-gray-200 text-gray-600': selectedTab !== 'cuenta'
+      }">
+      Cuenta
+    </button>
+    <button 
+      (click)="selectedTab = 'info'"
+      class="px-6 py-2 font-semibold rounded-t-lg"
+      [ngClass]="{
+        'bg-white shadow-md text-blue-600': selectedTab === 'info',
+        'bg-gray-200 text-gray-600': selectedTab !== 'info'
+      }">
+      Información adicional
+    </button>
+  </div>
+
+  <!-- Formulario -->
   <form (ngSubmit)="usuario.id ? onUpdate() : onCreate()" #usuarioForm="ngForm" class="bg-white p-6 rounded-lg shadow-md space-y-4">
-    <div>
-      <label class="block text-sm font-semibold text-gray-700">Nombre</label>
-      <input
-        type="text"
-        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        [(ngModel)]="usuario.username"
-        name="username"
-        required
-      />
+    
+    <!-- Sección CUENTA -->
+    <div *ngIf="selectedTab === 'cuenta'" class="space-y-4">
+      <fieldset>
+        <legend class="text-lg font-semibold text-blue-700 mb-2">Datos de Cuenta</legend>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Nombre de Usuario</label>
+          <input
+            type="text"
+            class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+            [(ngModel)]="usuario.username"
+            name="username"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Correo Electrónico</label>
+          <input
+            type="email"
+            class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+            [(ngModel)]="usuario.email"
+            name="email"
+            required
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Contraseña</label>
+          <input
+            type="password"
+            class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+            [(ngModel)]="usuario.password"
+            name="password"
+            [required]="!usuario.id"
+          />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Roles</label>
+          <select
+          class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+            [(ngModel)]="usuario.roles"
+            name="roles"
+            [compareWith]="compareRoles"
+            multiple
+            required
+          >
+            <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
+          </select>
+        </div>
+      </fieldset>
     </div>
 
-    <div>
-      <label class="block text-sm font-semibold text-gray-700">Correo</label>
-      <input
-        type="email"
-        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        [(ngModel)]="usuario.email"
-        name="email"
-        required
-      />
-    </div>
+    <!-- Sección INFORMACIÓN ADICIONAL -->
+    <div *ngIf="selectedTab === 'info'" class="space-y-4">
+      <fieldset>
+        <legend class="text-lg font-semibold text-blue-700 mb-2">Información Personal</legend>
 
-    <div>
-      <label class="block text-sm font-semibold text-gray-700">Contraseña</label>
-      <input
-        type="password"
-        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        [(ngModel)]="usuario.password"
-        name="password"
-        required
-      />
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Tipo de Persona</label>
+            <select class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" [(ngModel)]="usuario.userInfo.type" name="type" required>
+              <option value="">Seleccione</option>
+              <option value="Natural">Natural</option>
+              <option value="Jurídica">Jurídica</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Tipo de Documento</label>
+            <select class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" [(ngModel)]="usuario.userInfo.documentType" name="documentType" required>
+              <option value="">Seleccione</option>
+              <option value="cedula">Cédula de Ciudadanía</option>
+              <option value="pasaporte">Pasaporte</option>
+              <option value="extranjeria">Cédula de Extranjería</option>
+              <option value="nit">NIT</option>
+              <option value="rut">RUT</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Número de Documento</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.documentNumber" name="documentNumber" required />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Fecha de Expiración</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="date" [(ngModel)]="usuario.userInfo.documentExp" name="documentExp" />
+          </div>
+        </div>
 
-    <div>
-      <label class="block text-sm font-semibold text-gray-700">Roles</label>
-      <select
-        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-        [(ngModel)]="usuario.roles"
-        name="roles"
-        [compareWith]="compareRoles"
-        multiple
-        required
-      >
-        <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}</option>
-      </select>
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">País de expedición</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.expCountry" name="country" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Región de expedición</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.expRegion" name="region" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Ciudad de expedición</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.expCity" name="postalCode" />
+          </div>
+        </div>
 
-    <div class="flex gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">País</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.country" name="country" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Región</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.region" name="region" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Ciudad</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.city" name="city" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Código Postal</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.postalCode" name="postalCode" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Correo Electrónico de contacto</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.email" name="email" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Primer Nombre</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.firstName" name="firstName" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Segundo Nombre</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.middleName" name="middleName" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Apellido Paterno</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.lastName" name="lastName" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Apellido Materno</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.secondLastName" name="secondLastName" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Otros Nombres</label>
+          <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.otherNames" name="otherNames" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-gray-700">Razón Social</label>
+          <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.legalName" name="legalName" />
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Dirección</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.address" name="address" />
+          </div>
+  
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Detalle de Dirección</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.addressDetail" name="addressDetail" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Teléfono principal</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.phone" name="phone" />
+          </div>
+  
+          <div>
+            <label class="block text-sm font-semibold text-gray-700">Teléfono Secundario</label>
+            <input class="w-full p-3 border border-blue-500 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" type="text" [(ngModel)]="usuario.userInfo.phone2" name="phone2" />
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <!-- UserInfo -->
+
+    <!-- Botones -->
+    <div class="flex gap-4 pt-4">
       <button
         type="submit"
         class="flex-1 bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md font-semibold"

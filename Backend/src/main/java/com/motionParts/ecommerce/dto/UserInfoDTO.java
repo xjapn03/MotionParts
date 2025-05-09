@@ -2,63 +2,43 @@ package com.motionParts.ecommerce.dto;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 
 public class UserInfoDTO {
     private Long id;
-
     @NotNull(message = "Type is required")
     private String type;  // Persona natural o Jurídica
-
     @NotNull(message = "Document type is required")
     private String documentType;  // Tipo de documento
-
     @NotNull(message = "Document number is required")
     private String documentNumber;  // Número de documento
-
     private LocalDate documentExp;  // Fecha de expedición del documento
-
     private String expCountry;  // País de expedición
-
     private String expRegion;  // Región de expedición
-
     private String expCity;  // Ciudad de expedición
-
     private String firstName;  // Primer nombre
-
     private String middleName;  // Segundo nombre (si aplica)
-
     private String lastName;  // Apellido
-
     private String secondLastName;  // Segundo apellido
-
     private String otherNames;  // Otros nombres (si aplica)
-
     private String legalName;  // Nombre legal (si aplica, para Persona Jurídica)
-
     @Email(message = "Email should be valid")
     private String email;  // Correo electrónico
-
     private String country;  // País
-
     private String region;  // Región
-
     private String city;  // Ciudad
-
     private String address;  // Dirección
-
     private String addressDetail;  // Detalle de la dirección
-
     private String postalCode;  // Código postal
-
     private String phone;  // Teléfono principal
-
     private String phone2;  // Teléfono secundario (si aplica)
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     // Getters y Setters
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -128,14 +108,20 @@ public class UserInfoDTO {
     public String getPhone2() { return phone2; }
     public void setPhone2(String phone2) { this.phone2 = phone2; }
 
+    public LocalDateTime getCreatedAt() {return createdAt;}
+    public void setCreatedAt(LocalDateTime createdAt) {this.createdAt = createdAt;}
+    
+    public LocalDateTime getUpdatedAt() {return updatedAt;}
+    public void setUpdatedAt(LocalDateTime updatedAt) {this.updatedAt = updatedAt;}
+
     public UserInfoDTO() {}
 
     // Constructor con todos los campos
     public UserInfoDTO(Long id, String type, String documentType, String documentNumber, LocalDate documentExp, 
-                       String expCountry, String expRegion, String expCity, String firstName, String middleName, 
-                       String lastName, String secondLastName, String otherNames, String legalName, String email, 
-                       String country, String region, String city, String address, String addressDetail, 
-                       String postalCode, String phone, String phone2) {
+                    String expCountry, String expRegion, String expCity, String firstName, String middleName, 
+                    String lastName, String secondLastName, String otherNames, String legalName, String email, 
+                    String country, String region, String city, String address, String addressDetail, 
+                    String postalCode, String phone, String phone2, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.type = type;
         this.documentType = documentType;
@@ -159,5 +145,37 @@ public class UserInfoDTO {
         this.postalCode = postalCode;
         this.phone = phone;
         this.phone2 = phone2;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
+
+    @Override
+    public String toString() {
+    return "UserInfoDTO{" +
+            "id=" + id +
+            ", type='" + type + '\'' +
+            ", documentType='" + documentType + '\'' +
+            ", documentNumber='" + documentNumber + '\'' +
+            ", documentExp=" + documentExp +
+            ", expCountry='" + expCountry + '\'' +
+            ", expRegion='" + expRegion + '\'' +
+            ", expCity='" + expCity + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", middleName='" + middleName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", secondLastName='" + secondLastName + '\'' +
+            ", otherNames='" + otherNames + '\'' +
+            ", legalName='" + legalName + '\'' +
+            ", email='" + email + '\'' +
+            ", country='" + country + '\'' +
+            ", region='" + region + '\'' +
+            ", city='" + city + '\'' +
+            ", address='" + address + '\'' +
+            ", addressDetail='" + addressDetail + '\'' +
+            ", postalCode='" + postalCode + '\'' +
+            ", phone='" + phone + '\'' +
+            ", phone2='" + phone2 + '\'' +
+            '}';
+    }
+
 }

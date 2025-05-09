@@ -3,6 +3,7 @@ package com.motionParts.ecommerce.Models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 
@@ -14,7 +15,7 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore // Evitar la serialización recursiva
     private User user;
@@ -86,10 +87,10 @@ public class UserInfo {
     private String phone2;  // Teléfono secundario (opcional)
 
     @Column(name = "created_at", updatable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     // Getters y Setters
     public Long getId() { return id; }
@@ -164,11 +165,40 @@ public class UserInfo {
     public String getPhone2() { return phone2; }
     public void setPhone2(String phone2) { this.phone2 = phone2; }
 
-    public LocalDate getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDate createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public LocalDate getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDate updatedAt) { this.updatedAt = updatedAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 
     // Sobrescribir equals y hashCode (si es necesario)
+    @Override
+    public String toString() {
+    return "UserInfo{" +
+            "id=" + id +
+            ", type='" + type + '\'' +
+            ", documentType='" + documentType + '\'' +
+            ", documentNumber='" + documentNumber + '\'' +
+            ", documentExp=" + documentExp +
+            ", expCountry='" + expCountry + '\'' +
+            ", expRegion='" + expRegion + '\'' +
+            ", expCity='" + expCity + '\'' +
+            ", firstName='" + firstName + '\'' +
+            ", middleName='" + middleName + '\'' +
+            ", lastName='" + lastName + '\'' +
+            ", secondLastName='" + secondLastName + '\'' +
+            ", otherNames='" + otherNames + '\'' +
+            ", legalName='" + legalName + '\'' +
+            ", email='" + email + '\'' +
+            ", country='" + country + '\'' +
+            ", region='" + region + '\'' +
+            ", city='" + city + '\'' +
+            ", address='" + address + '\'' +
+            ", addressDetail='" + addressDetail + '\'' +
+            ", postalCode='" + postalCode + '\'' +
+            ", phone='" + phone + '\'' +
+            ", phone2='" + phone2 + '\'' +
+            ", updatedAt=" + updatedAt +
+            '}';
+}
 }
