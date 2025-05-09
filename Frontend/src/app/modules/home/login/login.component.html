@@ -16,10 +16,6 @@
     <div class="p-12 bg-white mx-auto rounded-3xl w-96">
       <div class="mb-7">
         <h3 class="font-semibold text-2xl text-gray-800">Inicio de Sesion</h3>
-        <p class="text-gray-400">
-          ¿Aun no tienes cuenta?
-          <button routerLink="/register" class="text-sm text-purple-700 hover:text-purple-900 ml-1 underline">Registrate</button>
-        </p>
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -40,6 +36,10 @@
               Iniciar Sesion
             </button>
           </div>
+          <p class="text-gray-400">
+            ¿Aun no tienes cuenta?
+            <button routerLink="/register" class="text-sm text-purple-700 hover:text-purple-900 ml-1 underline">Registrate</button>
+          </p>
 
           <div class="flex items-center justify-between">
             <div class="text-sm ml-auto">
