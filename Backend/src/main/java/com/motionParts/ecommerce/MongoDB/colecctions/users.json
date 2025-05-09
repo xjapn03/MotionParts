@@ -1,0 +1,149 @@
+[
+    {
+      "_id": 1,
+      "username": "juanperez",
+      "email": "juan.perez@example.com",
+      "password": "$2a$10$LMVT0Q8quaPL6FI9wuLfHuJ/vrUm9/s4sxe3LQWwCZZYUCaIlG5lO",
+      "created_at": { "$date": "2025-03-10T19:05:29.907Z" },
+      "updated_at": { "$date": "2025-05-06T17:14:43.478Z" },
+      "roles": [
+        { "id": 1, "name": "ADMIN" }
+      ]
+    },
+    {
+      "_id": 2,
+      "username": "mariagonzalez",
+      "email": "maria.gonzalez@example.com",
+      "password": "$2a$10$2d4QnmBMNZlt8qLwvsqFheQ0kuq6yZ4w7nUd1f5a7NcbcTcjEwlKS",
+      "created_at": { "$date": "2025-03-10T19:05:29.907Z" },
+      "updated_at": { "$date": "2025-05-06T17:09:12.855Z" },
+      "roles": [
+        { "id": 2, "name": "EMPLEADO" }
+      ]
+    },
+    {
+      "_id": 3,
+      "username": "estebancastro",
+      "email": "estebancastro@gmail.com",
+      "password": "$2a$10$PZ8OuQy.5zs4CqlrWa3jZ.NYuDc6WDkkLn4eXg9OIKXslWlnLUf5C",
+      "created_at": { "$date": "2025-04-08T19:43:48.141Z" },
+      "updated_at": { "$date": "2025-05-06T15:20:59.755Z" },
+      "roles": [
+        { "id": 2, "name": "ADMIN" }
+      ]
+    },
+    {
+      "_id": 4,
+      "username": "martin03",
+      "email": "martin@gmail.com",
+      "password": "$2a$10$cB7vjt93AesE9fIqp9VLiuPzkEt1v4FbBSrYBXRtHYIfqNhSsB6ZS",
+      "created_at": { "$date": "2025-04-09T06:51:07.257Z" },
+      "updated_at": { "$date": "2025-04-09T06:51:07.257Z" },
+      "roles": [
+        { "id": 2, "name": "USER" }
+      ]
+    },
+    {
+      "_id": 5,
+      "username": "empleadoprueba",
+      "email": "empleado@gmail.com",
+      "password": "$2a$10$2Er8phV59kP2PHuD53w.D.LbGcE83GCJrvUGy4R5QjjS9l6OkA56W",
+      "created_at": { "$date": "2025-04-09T07:08:16.498Z" },
+      "updated_at": { "$date": "2025-05-05T17:12:00.760Z" },
+      "roles": [
+        { "id": 3, "name": "EMPLEADO" }
+      ]
+    },
+    {
+        "_id": 6,
+        "username": "juanperaza",
+        "email": "juan@gmail.com",
+        "password": "$2a$10$9Xqn7Q2IeczhmOkKzLn0TOLZ7pZ8DTlphCQOvv7y3f1j2MhFHVlQu",
+        "created_at": "2025-04-10T10:44:24.817Z",
+        "updated_at": "2025-04-10T10:44:24.817Z",
+        "roles": [
+          { "id": 2, "name": "USER" }
+        ],
+        "user_info": {
+          "type": "natural",
+          "document_type": "cedula",
+          "document_number": "1000240844",
+          "document_exp": "2008-03-10",
+          "exp_country": "Colombia",
+          "exp_region": "Cundinamarca",
+          "exp_city": "Bogota",
+          "first_name": "Juan",
+          "middle_name": "Esteban",
+          "last_name": "Peraza",
+          "second_last_name": "Pinzon",
+          "other_names": "NA",
+          "legal_name": "Juan SAS",
+          "email": "juan@gmail.com",
+          "country": "Colombia",
+          "region": "Cundinamarca",
+          "city": "Bogota",
+          "address": "Carrera 34 56-5",
+          "address_detail": "torre 4 202",
+          "postal_code": "1110111",
+          "phone": "3228765674",
+          "phone2": "3227654537"
+        }
+      },
+    {
+      "_id": 7,
+      "username": "carlosramirez",
+      "email": "carlos.ramirez@example.com",
+      "password": "$2a$10$3qACbRuOtVAXANhRvViK6OufNENkEZDNYPDD8z/4APfLrIxhhOUW.",
+      "created_at": { "$date": "2025-03-10T19:05:29.907Z" },
+      "updated_at": { "$date": "2025-04-29T15:56:54.577Z" },
+      "roles": [
+        { "id": 3, "name": "EMPLEADO" }
+      ]
+    },
+    {
+        "_id": 8,
+        "username": "sanrio",
+        "email": "sanrio@gmail.com",
+        "password": "$2a$10$MK5UI15NHn/DM2rv7AOxC.fsaGMYSeGq87gui35gxkbL7y2Onl7Ia",
+        "created_at": "2025-05-06T14:12:56.727Z",
+        "updated_at": "2025-05-06T17:00:00.676Z",
+        "roles": [
+          { "id": 3, "name": "USER" }
+        ],
+        "user_info": {
+          "type": "natural",
+          "document_type": "cedula",
+          "document_number": "1016883384",
+          "document_exp": "2025-05-07",
+          "exp_country": "Colombia",
+          "exp_region": "Cundinamarca",
+          "exp_city": "Bogotá",
+          "first_name": "San",
+          "middle_name": "Jose",
+          "last_name": "Rio",
+          "second_last_name": "Gomez",
+          "other_names": "NA",
+          "legal_name": "NA",
+          "email": "sanrio@gmail.com",
+          "country": "Colombia",
+          "region": "Cundinamarca",
+          "city": "Bogotá",
+          "address": "calle 64",
+          "address_detail": "casa",
+          "postal_code": "111000",
+          "phone": "3132547800",
+          "phone2": "312544789"
+        }
+      },   
+    {
+      "_id": 9,
+      "username": "daniel0182",
+      "email": "martin78@gmail.com",
+      "password": "$2a$10$JVntLSWB63u9yC/xkHhneOYnAbxUv/AykQWAP/cK315U4Vy/gU4Hm",
+      "created_at": { "$date": "2025-05-06T14:28:10.591Z" },
+      "updated_at": { "$date": "2025-05-06T15:00:51.883Z" },
+      "roles": [
+        { "id": 2, "name": "USER" }
+      ]
+    }
+]
